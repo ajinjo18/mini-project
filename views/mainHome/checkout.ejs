@@ -1,0 +1,292 @@
+<%- include('./include/header') %>
+
+
+
+    <!-- Checkout Section Begin -->
+    <section class="checkout spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h6 class="coupon__link"><span class="icon_tag_alt"></span> <a href="#">Have a coupon?</a> Click
+                        here to enter your code.</h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <h5>Billing detail</h5>
+                    <div class="form-check">
+                        <div class="card">
+
+
+                            <% let index1=0; %>
+                                <% address.forEach(item=> { %>
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Address
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text">
+                                                <%= item %>
+                                            </p>
+                                            <input style="margin-left: 1px;" class="form-check-input" type="radio"
+                                                name="flexRadioDefault" id="flexRadioDefault<%= index1 %>"
+                                                data-address="<%= item %>">
+                                            <label style="margin-left: 20px;" class="form-check-label"
+                                                for="flexRadioDefault<%= index1 %>">
+                                                Select
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <% index1++; %>
+                                        <% }); %>
+
+                                            <div class="card-header">
+                                                <!-- Address
+                                  </div>
+                                  <div class="card-body">
+                                    <p class="card-text"></p>
+                                    <input style="margin-left: 1px;" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <label style="margin-left: 20px;" class="form-check-label" for="flexRadioDefault1">
+                                      Default radio
+                                    </label> -->
+                                            </div>
+                        </div>
+                        <!-- Scrollable modal -->
+                    </div>
+
+                    <!-- Button trigger modal -->
+                    <!-- <button style="margin-top: 20px;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                Add New Address
+                            </button> -->
+                    <button style="margin-top: 20px;" type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#exampleModal" data-whatever="@mdo">Add New Address</button>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">New Address</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label">Address:</label>
+                                            <textarea name="address" class="form-control" id="message-text"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                            <button id="button" onclick="done" type="submit"
+                                                class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="checkout__order">
+                        <h5>Your order</h5>
+                        <div class="table-responsive checkout__order__product">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="padding-right: 20px;">No</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <!-- <th>Price</th> -->
+                                        <th style="padding-left: 30px;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% let index=1; %>
+                                        <% data.forEach(item=> { %>
+                                            <tr>
+                                                <td style="padding-left: 10px;">
+                                                    <%= index %>
+                                                </td>
+                                                <td style="padding-top: 20px;">
+                                                    <%= item.productname %>
+                                                </td>
+                                                <td style="text-align: center;">
+                                                    <%= item.quantity %>
+                                                </td>
+                                                <td hidden style="text-align: center;">
+                                                    <%= item.productId %>
+                                                </td>
+                                                <td id="totalprice" style="padding-left: 25px; font-weight: 600;">
+                                                    &#x20B9;<%= item.totalprice %>
+                                                </td>
+                                                <td hidden>
+                                                    <%= item.images %>
+                                                </td>
+                                            </tr>
+                                            <% index++; %>
+                                                <% }); %>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="checkout__order__total">
+                            <ul>
+                                <li>Subtotal <span>&#x20B9;<%= grandtotal %></span></li>
+                                <li>Total <span>&#x20B9;<%= grandtotal %></span></li>
+                                <li id="total" hidden>
+                                    <%= grandtotal %>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="checkout__order__widget">
+
+                            <label for="check-payment">
+                                Cash on delivery
+                                <input type="checkbox" id="check-payment">
+                                <span class="checkmark"></span>
+                            </label>
+                            <!-- <label for="paypal">
+                                        UPI
+                                        <input type="checkbox" id="paypal">
+                                        <span class="checkmark"></span>
+                                    </label> -->
+                        </div>
+                        <button onclick="placeOrder()" id="button1" type="submit" class="site-btn">Place oder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Checkout Section End -->
+
+
+
+    <script>
+        // const total=document.getElementById('total')
+        let selectedAddress;
+        // Function to handle radio button change
+        function handleRadioButtonChange(event) {
+            const selectedRadio = event.target;
+            selectedAddress = selectedRadio.getAttribute('data-address');
+            console.log('Selected Address:', selectedAddress);
+        }
+
+        // Add event listeners to radio buttons
+        const radioButtons = document.querySelectorAll('input[name="flexRadioDefault"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', handleRadioButtonChange);
+        });
+    </script>
+
+
+    <script>
+        document.getElementById('button').addEventListener('click', () => {
+            const address = document.getElementById('message-text').value;
+            const url = 'http://localhost:3000/home/addaddress';
+            done(url, address);
+        });
+
+        done(url, address)
+
+        function done(url, address) {
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ address: address })
+            })
+        }
+
+
+
+
+
+        function collectProductData() {
+            const products = [];
+            const productRows = document.querySelectorAll('.checkout__order__product tbody tr');
+            productRows.forEach((row, index) => {
+                const product = {
+                    productName: row.querySelector('td:nth-child(2)').textContent.trim(),
+                    quantity: parseInt(row.querySelector('td:nth-child(3)').textContent.trim()),
+                    productid: row.querySelector('td:nth-child(4)').textContent.trim(),
+                    totalPrice: row.querySelector('td:nth-child(5)').textContent.trim(),
+                    images: row.querySelector('td:nth-child(6)').textContent.trim(),
+                };
+                products.push(product);
+            });
+            return products;
+        }
+
+
+        function collectFormData() {
+            const isCashOnDelivery = document.getElementById('check-payment').checked;
+            let payment
+            if (isCashOnDelivery) {
+                payment = 'COD'
+            }
+            const messageText = document.getElementById('message-text').value;
+
+            const data = {
+                address: selectedAddress,
+                payment: payment
+            };
+
+            return data;
+        }
+
+
+
+        function placeOrder() {
+            const data1 = collectProductData()
+
+            const data = collectFormData();
+            const grandtotal = total()
+
+            const url = 'http://localhost:3000/home/placeorder';
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: data, data1: data1, grandtotal: grandtotal })
+            })
+                .then(response => {
+                    return response.json();  // Parse the JSON response
+                })
+                .then(data => {
+                    if (data.type == 'success') {
+                        console.log('Response:', data.message);  // Access the message in the response
+                        location.href = '/home/thankyou'
+                    }
+                    else if (data.type == 'danger') {
+                        alert('error happend')
+                        location.href = '/home/checkout'
+                    }
+                    else {
+                        location.href = '/home/checkout'
+                    }
+
+                })
+                .catch(error => {
+                    console.error('There was an error:', error);
+                });
+
+        }
+
+        function total() {
+            const grandtotal = document.getElementById('total').innerText; // Assuming 'total' is the correct ID
+
+            return grandtotal;
+        }
+
+        // Add event listener to the "Place Order" button
+        const placeOrderButton = document.getElementById('button1');
+        placeOrderButton.addEventListener('click', placeOrder);
+
+    </script>
+
+    <%- include('./include/footer') %>

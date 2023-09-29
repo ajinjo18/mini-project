@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <title>GO shop</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+
+    <!-- Css Styles -->
+
+    <link rel="stylesheet" href="/css/home/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/home/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/home/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/home/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/home/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="/css/home/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/home/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/home/style.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__close">+</div>
+        <ul style="margin-top: 30px; margin-left: -10px;" class="offcanvas__widget">
+            <li><span class="fas fa-search-plus"></span></li>
+            <li><a href="#"><span class="fas fa-heart"></span>
+                    <div class="tip">2</div>
+                </a></li>
+            <li><a href="#"><span class="fas fa-shopping-cart"></span>
+                    <div class="tip">2</div>
+                </a></li>
+        </ul>
+
+        <div id="mobile-menu-wrap"></div>
+        <div class="offcanvas__auth">
+            <% if (user || googleuser) { %>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <img style="height: 30px; margin-right: 20px;" src="/img/icons8-male-user-50.png" alt="">
+                        <%= username || googleuser %>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <!-- <button class="dropdown-item" type="button"><a href="/user/login">Login</a></button>
+                        <button class="dropdown-item" type="button"><a href="/user/register">Register</a></button> -->
+                        <button class="dropdown-item" type="button"><a href="/user/logout">Logout</a></button>
+                    </div>
+                </div>
+                <% }else{ %>
+                    <a href="/user/login">Login</a>
+                    <a href="/user/register">Register</a>
+                    <% } %>
+
+        </div>
+        <div style="margin-top: 50%;" class="offcanvas__logo">
+            <img src="img/logo2.png" style="height: 110px;" alt="">
+        </div>
+    </div>
+    <!-- Offcanvas Menu End -->
+
+    <link rel="stylesheet" href="/css/home/quantityincdec.css">
+    <!-- Header Section Begin -->
+    <header class="header">
+       <div class="container-fluid">
+           <div class="row">
+               <div class="col-xl-3 col-lg-2">
+                   <div class="">
+                       <a href="/"><img style="height: 110px;" src="img/logo2.png" alt="">
+                   </div>
+               </div>
+               <div class="col-xl-6 col-lg-7">
+                   <nav style="text-align: center;" class="header__menu">
+                       <ul>
+                           <li><a href="/">Home</a></li>
+                           <!-- <li><a href="#">Women’s</a></li>
+                           <li><a href="#">Men’s</a></li> -->
+                           <li><a href="/home/shop">Shop</a></li>
+                           <!-- <li><a href="#">Pages</a>
+                               <ul class="dropdown">
+                                   <li><a href="">Product Details</a></li>
+                                   <li><a href="">Shop Cart</a></li>
+                                   <li><a href="">Checkout</a></li>
+                               </ul>
+                           </li> -->
+                           <li><a href="">Contact</a></li>
+                       </ul>
+                   </nav>
+               </div>
+               <div class="col-lg-3">
+                   <div class="header__right">
+                       <div class="header__right__auth">
+                           <% if (user || googleuser) { %>
+                               <div style="margin-left: -500px;" class="btn-group">
+                                   <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       <img style="height: 30px; margin-right: 20px;" src="/img/icons8-male-user-50.png" alt="">
+                                       
+                                       <i style="font-size-adjust: inherit;"><%= username || googleuser %></i>
+                                   </button>
+                                   <div class="dropdown-menu dropdown-menu-right">
+                                    <button class="dropdown-item" type="button"><a href="/home/profile">Profile</a></button>
+                                     <button class="dropdown-item" type="button"><a href="/user/logout">Logout</a></button>
+                                   </div>
+                                 </div>
+   
+                   
+                                   
+                           <% } else { %>
+                               <a href="/user/login">Login</a>
+                               <a href="/user/register">Register</a>
+                           <% } %>
+                           
+                           <!-- <a href="/user/login">Login</a>
+                           <a href="/user/register">Register</a> -->
+                       </div>
+                       <% if (user || googleuser) { %>
+                       <ul class="header__right__widget">
+                           <li><span class="fas fa-search"></span></li>
+                           <li><a href="#"><span class="fas fa-heart"></span>
+                               <div class="tip">0</div>
+                           </a></li>
+                           <li><a href="/home/cart"><span class="fas fa-shopping-cart"></span>
+                               <div class="tip"></div>
+                           </a></li>
+                       </ul>
+                       <% } else { %>
+                           <ul class="header__right__widget">
+                               <li><span class="fas fa-search"></span></li>
+                               <li><a href="/user/login"><span class="fas fa-heart"></span>
+                                   <div class="tip">0</div>
+                               </a></li>
+                               <li><a href="/user/login"><span class="fas fa-shopping-cart"></span>
+                                   <div class="tip">0</div>
+                               </a></li>
+                           </ul>
+                       <% } %>
+                   </div>
+               </div>
+           </div>
+           <div class="canvas__open">
+               <i class="fa fa-bars"></i>
+           </div>
+       </div>
+   </header>
+   <!-- Header Section End -->

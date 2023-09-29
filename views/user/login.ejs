@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/user/login.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <section class="vh-100" style="background-color: #eee;">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-12 col-xl-11">
+          <div class="card text-black" style="border-radius: 25px;">
+            <div class="card-body p-md-5">
+              <div class="flex-container">
+                <a href="/"><button type="button" class="justify-content-end btn-close" aria-label="Close"></button></a>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">  
+                  <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
+
+                  <% if(invaliduser) { %>
+                    <div id="alert" class="alert alert-dismissible fade show alert-<%= invaliduser.type %>" role="alert">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="close"></button>
+                        <strong><%= invaliduser.message %></strong>
+                    </div>
+                  <% } %> 
+
+                  <% if(passwordupdated) { %>
+                    <div id="alert" class="alert alert-dismissible fade show alert-<%= passwordupdated.type %>" role="alert">
+                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="close"></button>
+                        <strong><%= passwordupdated.message %></strong>
+                    </div>
+                  <% } %>
+  
+                  <form action="/user/login" method="post">
+                    <!-- Email input -->
+                    <div class="form-outline mb-4">
+                      <label class="form-label" for="form1Example13">Email address</label>
+                      <input value="ajinjo1899@gmail.com" name="email" type="email" id="form1Example13" class="form-control form-control-lg" />
+                    </div>
+          
+                    <!-- Password input -->
+                    <div class="pass_show form-outline mb-4">
+                      <label class="form-label" for="form1Example23">Password</label>
+                      <input value="123456789" name="password" type="password" id="password" class="form-control form-control-lg"  />
+                    </div>
+                    
+                    
+                    <!-- Submit button -->
+                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                      <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 50px;">
+                      <a href="/auth/google"><button type="button" class="google-sign-in-button" >Sign in with Google</button></a>                   
+                    </div>
+        
+                    <div style="margin-top: 20px;" class="d-flex justify-content-around align-items-center mb-4">              
+                      <a href="/user/forget">Forgot password?</a>
+                    </div>
+                    
+                  </form>
+  
+                </div>
+                <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+  
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+                    class="img-fluid" alt="Sample image">
+  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>  
+      $(document).ready(function(){
+      $('.pass_show').append('<span class="ptxt">Show</span>');  
+      });
+        
+
+      $(document).on('click','.pass_show .ptxt', function(){ 
+
+      $(this).text($(this).text() == "Show" ? "Hide" : "Show"); 
+
+      $(this).prev().attr('type', function(index, attr){return attr == 'password' ? 'text' : 'password'; }); 
+
+      });  
+  </script>
+
+  <script>
+    setTimeout(function() {
+      var alertDiv = document.getElementById('alert');
+      if (alertDiv) {
+        alertDiv.remove();
+      }
+    }, 5000);
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>
