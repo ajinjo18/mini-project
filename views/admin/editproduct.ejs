@@ -152,11 +152,11 @@
                     </div>
                     <div class="mb-3">
                       <label class="form-label" for="UrunMiktar">Stock Quantity</label>
-                      <input value="<%= product.stock %>"  name="stockquantity" type="number" class="form-control" id="UrunMiktar" required>
+                      <input min="1" value="<%= product.stock %>"  name="stockquantity" type="number" class="form-control" id="UrunMiktar" required>
                     </div>
                     <div class="mb-3">
                         <label for="UrunAdi" class="form-label">Price</label>
-                        <input value="<%= product.price %>"  name="price" type="text" class="form-control" id="UrunAdi" required>
+                        <input min="1" value="<%= product.price %>"  name="price" type="number" class="form-control" id="UrunAdi" required>
                     </div>
                     <div class="mb-3">
                         <label for="UrunAdi" class="form-label">Description</label>
@@ -174,7 +174,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="UrunImage" class="form-label">Product Image</label>
-                        <input name="productimage" type="file" multiple class="form-control" name="UrunImage" id="UrunImage">
+                        <input name="productimage" accept="image/*" type="file" multiple class="form-control" name="UrunImage" id="UrunImage">
                         <div style="display: flex; margin-top: 20px;">
                             <% product.images.forEach(element => { %>                        
                                 <div style="position: relative;">

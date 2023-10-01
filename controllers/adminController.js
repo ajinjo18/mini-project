@@ -112,12 +112,11 @@ const getorders=async(req,res)=>{
         const user = await registercollection.findOne({},{ orders: 1 });
       
         const ordersWithProducts = user.orders.map((order) => ({
-          // date: order.date.toLocaleDateString(),
           id: order._id,
           address: order.address,
           total: order.total,
           payment: order.payment,
-          products: order.product, // Rename 'product' to 'products' for clarity
+          products: order.product,
           productid: order.productid,
           images: order.images
         }));
@@ -148,8 +147,7 @@ const orderstatus = async (req, res) => {
                 ]
             }
         );
-
-        console.log(updatedUser);
+        
         res.status(200).json({ message: 'Status updated successfully', updatedUser });
     } catch (error) {
         console.error('Error updating status:', error);

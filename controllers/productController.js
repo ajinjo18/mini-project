@@ -3,12 +3,18 @@ const categorycollection = require('../model/categorySchema')
 
 
 
-// -----------------add product-------------------
+// -----------------get add product-------------------
+
 
 const addproduct = async(req, res) => {
     const categories = await categorycollection.find({}, 'category');
     res.render('admin/addproduct',{ category: categories })
 }
+
+
+
+// -----------------------post add product--------------------
+
 
 const postaddproduct = async (req, res) => {
     try {
@@ -58,7 +64,9 @@ const allproducts = async (req, res) => {
 }
 
 
-// -------------------edit product------------------
+
+// -------------------get edit product------------------
+
 
 const productupdate = async (req, res) => {
     try {
@@ -72,6 +80,11 @@ const productupdate = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+
+
+
+// ----------------------post edit product--------------------
+
 
 const postproductupdate = async (req, res) => {
     try {
@@ -144,7 +157,9 @@ const productdelete = async (req, res) => {
 }
 
 
+
 // ------------------delete product img----------------
+
 
 const productimgdelete=async(req,res)=>{
     try {

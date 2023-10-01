@@ -3,6 +3,11 @@ const registercollection = require('../model/registerSchema')
 const categorycollection = require('../model/categorySchema')
 
 
+
+
+// ------------------get home------------------
+
+
 const home=async(req,res)=>{
   try{
     const product=await productCollection.find().limit(30)
@@ -29,6 +34,10 @@ const home=async(req,res)=>{
 }
 
 
+
+// ------------------------get shop---------------------
+
+
 const shop=async(req,res)=>{
   try{
     const category=await categorycollection.find()
@@ -41,18 +50,23 @@ const shop=async(req,res)=>{
       req.session.username=d1.name
     }
     
-  if(req.user) {
-    req.session.googleuser=req.user.name
-  }
-  const username=req.session.username
-  const googleuser=req.session.googleuser
-  res.render('mainHome/shop',{username,user,googleuser,product,category})
+    if(req.user) {
+      req.session.googleuser=req.user.name
+    }
+
+    const username=req.session.username
+    const googleuser=req.session.googleuser
+    res.render('mainHome/shop',{username,user,googleuser,product,category})
   }
   catch(err){
     console.error('Error :', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+
+
+// ---------------------product single view------------------
 
 
 const getproductview=async(req,res)=>{
@@ -67,18 +81,23 @@ const getproductview=async(req,res)=>{
       req.session.username=d1.name
     }
     
-  if(req.user) {
-    req.session.googleuser=req.user.name
-  }
-  const username=req.session.username
-  const googleuser=req.session.googleuser
-  res.render('mainHome/productdetails',{username,user,googleuser,product})
+    if(req.user) {
+      req.session.googleuser=req.user.name
+    }
+    const username=req.session.username
+    const googleuser=req.session.googleuser
+    res.render('mainHome/productdetails',{username,user,googleuser,product})
   }
   catch(err){
     console.error('Error :', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+
+
+// --------------------get category-------------------------
+
 
 const category=async (req,res)=>{
   try{
@@ -93,18 +112,24 @@ const category=async (req,res)=>{
       req.session.username=d1.name
     }
     
-  if(req.user) {
-    req.session.googleuser=req.user.name
-  }
-  const username=req.session.username
-  const googleuser=req.session.googleuser
-  res.render('mainHome/category',{username,user,googleuser,product,category1,id})
+    if(req.user) {
+      req.session.googleuser=req.user.name
+    }
+
+    const username=req.session.username
+    const googleuser=req.session.googleuser
+    res.render('mainHome/category',{username,user,googleuser,product,category1,id})
   }
   catch(err){
     console.error('Error :', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+
+
+// ----------------get address------------------
+
 
 const address=async(req,res)=>{
   const user=req.session.user
@@ -113,12 +138,15 @@ const address=async(req,res)=>{
   res.render('mainHome/address',{address})
 }
 
+
+
+// ------------------post address---------------------
+
+
 const postaddress=async(req,res)=>{
   const address=req.body.address
   const user=req.session.user
 
-  // console.log('running');
-  // console.log(address);
   if(address!=''){
     await registercollection.updateOne(
       { email: user },
@@ -131,18 +159,19 @@ const postaddress=async(req,res)=>{
   }
 }
 
+
+
+
+// ------------------update address------------------
+
+
 const updateaddress=async(req,res)=>{
   try {
-      console.log('running');
       const data=req.body.data
       const address=req.body.data.address
       const address1=req.body.data.address1
       const user=req.session.user
-      console.log(user);
-      console.log(data);
 
-      console.log(address1);
-      console.log(address);
       if(address!=''){
         const updatedUser = await registercollection.findOneAndUpdate(
           { email: user, 'address': address1 },
@@ -152,26 +181,32 @@ const updateaddress=async(req,res)=>{
       
         if (updatedUser) {
           console.log('Address updated successfully:', updatedUser);
-        } else {
+        } 
+        else {
           console.error('No user found or error updating address.');
         }
         res.redirect('/home/address')
-      }
-      else{
-        res.redirect('/home/address')
-      }
+    }
+    else{
+      res.redirect('/home/address')
+    }
     
   } catch (error) {
     console.error('Error updating address:', error);
   }
 }
 
+
+
+// -----------------delete address------------------
+
+
 const deleteaddrress=async(req,res)=>{
   try{
-    console.log('running');
+
     const address=req.body.address
-    const user=req.session.user
-    console.log(address);
+    const user=req.session.user 
+
     await registercollection.updateOne(
       { email: user },
       { $pull: { address: address } },
@@ -192,29 +227,30 @@ const deleteaddrress=async(req,res)=>{
 }
 
 
-// ------------cancel order-------------
+// ---------------cancel order----------------
+
 
 const cancelorder = async (req, res) => {
-  console.log('running');
   const id=req.params.id
   const status='Cancelled'
 
   try {
-      const updatedUser = await registercollection.findOneAndUpdate(
-          { 'orders.product._id': id },
-          { $set: { 'orders.$[i].product.$[j].status': status } },
-          {
-              new: true,
-              arrayFilters: [
-                  { 'i.product._id': id },
-                  { 'j._id': id }
-              ]
-          }
-      );
-      res.redirect('/home/orders')
-  } catch (error) {
-      console.error('Error updating status:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    const updatedUser = await registercollection.findOneAndUpdate(
+      { 'orders.product._id': id },
+      { $set: { 'orders.$[i].product.$[j].status': status } },
+      {
+        new: true,
+        arrayFilters: [
+          { 'i.product._id': id },
+          { 'j._id': id }
+        ]
+      }
+    );
+    res.redirect('/home/orders')
+  } 
+  catch (error) {
+    console.error('Error updating status:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 

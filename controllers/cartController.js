@@ -3,6 +3,10 @@ const productCollection = require('../model/productSchema')
 const { Collection } = require('mongoose')
 
 
+
+// -----------------get cart-----------------
+
+
 const getcart = async (req, res) => {
   const username = req.session.username
   const user = req.session.user
@@ -15,11 +19,11 @@ const getcart = async (req, res) => {
 
 
   const cartTotal = await registercollection.aggregate([
-    { $unwind: "$cart.items" },  // Unwind the cart.items array
+    { $unwind: "$cart.items" }, 
     {
       $group: {
         _id: null,
-        total: { $sum: "$cart.items.totalprice" }  // Calculate the sum of totalprice
+        total: { $sum: "$cart.items.totalprice" }  
       }
     }
   ]);
@@ -35,6 +39,10 @@ const getcart = async (req, res) => {
 
   res.render('mainHome/cart', { user, googleuser, username,totalValue, cartItems:cartProductData})
 }
+
+
+
+// -----------------post cart(quantity updation)---------------------
 
 
 const postcart = async (req, res) => {
@@ -56,9 +64,9 @@ const postcart = async (req, res) => {
     );
 
     const grandtotal=await registercollection.aggregate([
-      { $match: { email: userId } },  // Match the documents with the specified email 
-      { $unwind: '$cart.items' },         // Unwind the 'items' array
-      { $group: { _id: null, total: { $sum: '$cart.items.totalprice' } } }  // Group and calculate the sum
+      { $match: { email: userId } },  
+      { $unwind: '$cart.items' },    
+      { $group: { _id: null, total: { $sum: '$cart.items.totalprice' } } } 
     ])
 
     if (grandtotal.length > 0) {
@@ -86,6 +94,8 @@ const postcart = async (req, res) => {
 };
 
 
+
+// ---------------------get checkout------------------------
 
 
 const getcheckout=async(req,res)=>{
@@ -116,6 +126,12 @@ const getcheckout=async(req,res)=>{
   }
 }
 
+
+
+
+// -------------------delete cart---------------------
+
+
 const getdeletecart=async(req,res)=>{
   const id=req.params.id
   const user=req.session.user
@@ -124,12 +140,17 @@ const getdeletecart=async(req,res)=>{
     { $pull: { 'cart.items': { productId: id } } }
   );
   await registercollection.findOneAndUpdate(
-    { email: user }, // Find the user by their email
-    { $unset: { "cart.grandtotal": 0 } }, // Unset the grandtotal field
-    { new: true } // Return the updated document
+    { email: user }, 
+    { $unset: { "cart.grandtotal": 0 } }, 
+    { new: true } 
   );
   res.redirect('/home/cart')
 }
+
+
+
+// --------------add address------------------
+
 
 const addaddress=async(req,res)=>{
   const address=req.body.address
@@ -146,6 +167,11 @@ const addaddress=async(req,res)=>{
     res.redirect('/home/checkout')
   }
 }
+
+
+
+// -------------------place order------------------
+
 
 const placeorder =async (req, res) => {
   try{
@@ -171,54 +197,43 @@ const placeorder =async (req, res) => {
       console.log('Product not found or no stock information available.');
     }
 
-
+    if(address && payment){
+      const newOrder = {
+        address, 
+        total: grandtotal, 
+        payment
+      }
+      const productOrders = data1.map(product => ({
+        productName: product.productName,
+        quantity: product.quantity,
+        productid: product.productid,
+        totalprice: product.totalPrice,
+        images: product.images
+      }));
+      
+      newOrder.product = productOrders;
     
-
-  if(address && payment){
-    const newOrder = {
-      address, 
-      total: grandtotal, 
-      payment
+      await registercollection.updateOne(
+        {email: user}, 
+        {$push: {orders: newOrder}}
+      )
+      const updatedUser = await registercollection.findOneAndUpdate(
+        { email: user }, 
+        { $set: { "cart.items": [] } }, 
+        { new: true } 
+      );
+    
+      const updatedUser1 = await registercollection.findOneAndUpdate(
+        { email: user }, 
+        { $unset: { "cart.grandtotal": 0 } }, 
+        { new: true } 
+      );
+            
+      res.status(200).json({ message: "logined", type: 'success' })
     }
-    const productOrders = data1.map(product => ({
-      productName: product.productName,
-      quantity: product.quantity,
-      productid: product.productid,
-      totalprice: product.totalPrice,
-      images: product.images
-    }));
-    // console.log(productOrders);
-    
-    newOrder.product = productOrders;
-  
-    await registercollection.updateOne(
-      {email: user}, 
-      {$push: {orders: newOrder}}
-    )
-    const updatedUser = await registercollection.findOneAndUpdate(
-      { email: user }, // Find the user by their email
-      { $set: { "cart.items": [] } }, // Set the cart.items array to an empty array
-      { new: true } // Return the updated document
-    );
-    
-    // console.log("Cart items removed for user:", updatedUser);
-
-    const updatedUser1 = await registercollection.findOneAndUpdate(
-      { email: user }, // Find the user by their email
-      { $unset: { "cart.grandtotal": 0 } }, // Unset the grandtotal field
-      { new: true } // Return the updated document
-    );
-    
-    // console.log("Grandtotal removed for user:", updatedUser);
-    
-    res.status(200).json({ message: "logined", type: 'success' })
-  }
-  else{
-    console.log('no valuee');
-    res.status(400).json({ message: "choose your option", type: 'danger' })
-  }
-
-
+    else{
+      res.status(400).json({ message: "choose your option", type: 'danger' })
+    }
   }
   catch(err){
     console.error('Error :', err);
@@ -228,9 +243,11 @@ const placeorder =async (req, res) => {
 };
   
 
+// -------------order confirmed(thankyou)--------------------
+
+
 const thankyou=async(req,res)=>{
   try{
-    // const product=await productCollection.find().limit(30)
     
     const user=req.session.user
 
@@ -239,12 +256,12 @@ const thankyou=async(req,res)=>{
       req.session.username=d1.name
     }
     
-  if(req.user) {
-    req.session.googleuser=req.user.name
-  }
-  const username=req.session.username
-  const googleuser=req.session.googleuser
-  res.render('mainHome/thankyou',{username,user,googleuser})
+    if(req.user) {
+      req.session.googleuser=req.user.name
+    }
+    const username=req.session.username
+    const googleuser=req.session.googleuser
+    res.render('mainHome/thankyou',{username,user,googleuser})
   }
   catch(err){
     console.error('Error :', err);

@@ -2,6 +2,10 @@ const productCollection=require('../model/productSchema')
 const registercollection = require('../model/registerSchema')
 
 
+
+// ----------------add to cart--------------------
+
+
 const addtocart=async(req,res)=>{
     const id=req.params.id
     const pname=await productCollection.findOne({_id:id},{productname:1,_id:0,price:1,images:1})
@@ -12,15 +16,15 @@ const addtocart=async(req,res)=>{
     const userId=req.session.user
     
     await registercollection.updateOne(
-        { _id: userid, 'cart.items.productId': { $ne: id } }, // Ensure productId is not already in the cart
+        { _id: userid, 'cart.items.productId': { $ne: id } },
         { $push: { 'cart.items': { productId: id , productname:productname , price:price , totalprice:price , images:images} } }
       );  
 
 
     const grandtotal=await registercollection.aggregate([
-        { $match: { email: userId } },  // Match the documents with the specified email 
-        { $unwind: '$cart.items' },         // Unwind the 'items' array
-        { $group: { _id: null, total: { $sum: '$cart.items.totalprice' } } }  // Group and calculate the sum
+        { $match: { email: userId } },
+        { $unwind: '$cart.items' }, 
+        { $group: { _id: null, total: { $sum: '$cart.items.totalprice' } } } 
     ])
 
     if (grandtotal.length > 0) {

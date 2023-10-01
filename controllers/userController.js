@@ -4,6 +4,8 @@ const generateOTP = require('generate-otp');
 require('dotenv').config();
 
 
+// ---------------node mailer--------------
+
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -79,8 +81,6 @@ const userlogin = async (req, res) => {
 
 
 const register = (req, res) => {
-    // const registered = req.session.registered
-    // req.session.registered = null
 
     const userexist = req.session.userexist
     req.session.userexist = null
@@ -92,17 +92,20 @@ const register = (req, res) => {
 
 
 
-// ----------------post register and generate OTP--------------------
+// ----------------post register otp--------------------
 
 
 const getregiserotp = (req, res) => {
-    // const invalidregisterotp = req.session.invalidregisterotp
-    // req.session.invalidregisterotp = null
 
     const invalidregisterotp=req.query.message
 
     res.render('user/registerotp', { invalidregisterotp })
 }
+
+
+
+// ---------------------generate OTP--------------------
+
 
 const postregisterotp = async (req, res) => {
     const registerotp = req.session.registerotp
@@ -128,6 +131,11 @@ const postregisterotp = async (req, res) => {
     }
 }
 
+
+
+// -------------------post register-------------------
+
+
 const postregisteration = async (req, res) => {
     try {
         const check = await registercollection.findOne({ email: req.body.email })
@@ -152,6 +160,10 @@ const postregisteration = async (req, res) => {
 
 }
 
+
+// -----------------register otp generator-------------
+
+
 const registerotpgenerator = (req, res) => {
 
     const registeremail = req.session.registeremail
@@ -172,7 +184,8 @@ const registerotpgenerator = (req, res) => {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log('Error sending email: ' + error);
-            } else {
+            }
+            else {
                 console.log('Email sent: ' + info.response);
                 setTimeout(() => {
                     req.session.registerotp = null
@@ -194,7 +207,6 @@ const registerotpgenerator = (req, res) => {
     }
 
 }
-
 
 
 
@@ -260,7 +272,6 @@ const otpgenerator = (req, res) => {
     req.session.true = true
     const flag = req.session.true
     if (flag) {
-        console.log('running');
         const updateemail = req.session.updateemail
         const newpasswordotp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
 
@@ -276,7 +287,8 @@ const otpgenerator = (req, res) => {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log('Error sending email: ' + error);
-            } else {
+            }
+            else {
                 console.log('Email sent: ' + info.response);
                 setTimeout(() => {
                     req.session.newpasswordotp = null
@@ -293,7 +305,6 @@ const otpgenerator = (req, res) => {
         res.redirect('/user/forgetotp')
     }
     else {
-        console.log('not running');
         res.redirect('/user/forgetotp')
     }
 
@@ -325,13 +336,12 @@ const resetPassword = (req, res) => {
 const updatepassword = async (req, res) => {
     const newpasswordotp = req.session.newpasswordotp
     const enteredpassword = req.body.otp
-    console.log(newpasswordotp, enteredpassword);
 
     if (enteredpassword == newpasswordotp) {
 
         const updateemail = req.session.updateemail
         const newpassword = req.session.newpassword
-        console.log(updateemail, newpassword);
+        
         await registercollection.updateOne({ email: updateemail }, { $set: { password: newpassword } })
         req.session.passwordupdated = {
             message: 'Password Updatd',
