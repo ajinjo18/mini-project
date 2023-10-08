@@ -7,11 +7,11 @@ const productSchema=new mongoose.Schema({
         required: true
     },
     stock: {
-        type: String,
+        type: Number,
         required: true
     },
     price: {
-        type: String,
+        type: Number,
         required: true
     },
     description: {

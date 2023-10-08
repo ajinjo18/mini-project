@@ -150,7 +150,7 @@
                             <table style="text-align: center;" class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <!-- <th scope="col">No</th> -->
+                                        <th scope="col">No</th>
                                         <th scope="col">Id</th>
                                         <th scope="col">Date</th>
                                         <th scope="col">Product Name</th>
@@ -162,18 +162,18 @@
                                     </tr>
                                     <% let index = 1; %>
                                     <% orders.forEach(function(order) { %>
-                                        <% order.products.forEach(function(product) { %>
                                         <tr>
-                                            <td hidden id="orderid<%= index %>"><%= product._id %></td>
+                                            <td><%= index %></td>
+                                            <td hidden id="orderid<%= index %>"><%= order._id %></td>
                                             <td><%= order.id %></td>
-                                            <td><%= product.date %></td>
-                                            <td><%= product.productName %></td>
-                                            <td><%= product.quantity %></td>
-                                            <td><%= product.totalprice %></td>
+                                            <td><%= order.date %></td>
+                                            <td><%= order.productName %></td>
+                                            <td><%= order.quantity %></td>
+                                            <td><%= order.totalprice %></td>
                                             <td><%= order.payment %></td>
-                                            <td><img width="60px" src="<%= product.images %>" class="img-fluid"></td>
+                                            <td><img width="60px" src="<%= order.images %>" class="img-fluid"></td>
                                             <td>
-                                                <%= product.status %> 
+                                                <%= order.status %> 
                                                 <button style="margin-left: 20px;" 
                                                         type="button" 
                                                         class="btn btn-success"
@@ -195,7 +195,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <select name="productcategory" id="Kategori<%= index %>" class="ms-1 d-block w-100">
-                                                                <option><%= product.status %></option>
+                                                                <option><%= order.status %></option>
                                                                 <option>Pending</option>
                                                                 <option>Shipped</option>
                                                                 <option>Out for delivery</option>
@@ -214,7 +214,6 @@
                                         </tr>
                                         <% index++ %>
                                         <% }); %>
-                                    <% }); %>
                                 </thead>
                             </table>
                         </div>

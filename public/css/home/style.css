@@ -149,7 +149,7 @@ ol {
 
 /* Preloder */
 
-/* #preloder {
+#preloder {
 	position: fixed;
 	width: 100%;
 	height: 100%;
@@ -209,7 +209,7 @@ ol {
 		border: 4px solid #f44336;
 		border-left-color: transparent;
 	}
-} */
+}
 
 .spacial-controls {
 	position: fixed;

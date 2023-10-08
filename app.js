@@ -40,9 +40,9 @@ app.use(passport.session());
 // })
 
 
-app.get('/hello',(req,res)=>{
-  res.render('admin/orders')
-})
+// app.get('/hello',(req,res)=>{
+//   res.render('mainHome/wallet')
+// })
 
 
 app.use('/',mainHomeRouter)

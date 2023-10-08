@@ -1,4 +1,6 @@
 const registercollection = require('../model/registerSchema')
+const coupencollection = require('../model/coupenSchema')
+
 const nodemailer = require('nodemailer');
 const generateOTP = require('generate-otp');
 require('dotenv').config();
@@ -41,19 +43,19 @@ const userlogin = async (req, res) => {
 
     try {
         const check = await registercollection.findOne({ email: req.body.email })
-    
+
         req.session.username = check.name
         const blocked = check.blocked
         if (check.password === req.body.password && blocked == 'false') {
             req.session.user = req.body.email
-            req.session.userid=check._id
+            req.session.userid = check._id
             res.redirect('/')
         }
         else {
             if (blocked == 'true') {
-                req.session.invaliduser={
-                    message:'Account Blocked',
-                    type:'danger'
+                req.session.invaliduser = {
+                    message: 'Account Blocked',
+                    type: 'danger'
                 }
                 res.redirect('/user/login')
             }
@@ -85,9 +87,9 @@ const register = (req, res) => {
     const userexist = req.session.userexist
     req.session.userexist = null
 
-    const registered=req.query.success
+    const registered = req.query.success
 
-    res.render('user/signup', {userexist,registered})
+    res.render('user/signup', { userexist, registered })
 }
 
 
@@ -97,7 +99,7 @@ const register = (req, res) => {
 
 const getregiserotp = (req, res) => {
 
-    const invalidregisterotp=req.query.message
+    const invalidregisterotp = req.query.message
 
     res.render('user/registerotp', { invalidregisterotp })
 }
@@ -117,7 +119,7 @@ const postregisterotp = async (req, res) => {
         //     message: 'Successfully Registered',
         //     type: 'success'
         // }
-        const successMessage='Successfully Registered'
+        const successMessage = 'Successfully Registered'
         await registercollection.insertMany([data])
         res.redirect(`/user/register?success=${encodeURIComponent(successMessage)}`)
     }
@@ -126,7 +128,7 @@ const postregisterotp = async (req, res) => {
         //     message: 'Invalid OTP',
         //     type: 'danger'
         // }
-        invalidregisterotp='Invalid OTP'
+        invalidregisterotp = 'Invalid OTP'
         res.redirect(`/user/getotp?message=${encodeURIComponent(invalidregisterotp)}`)
     }
 }
@@ -257,10 +259,10 @@ const verifyForgetUser = async (req, res) => {
 // ----------get forget OTP page--------
 
 const getforgetotp = (req, res) => {
-    const user=req.session.updateemail
+    const user = req.session.updateemail
     const invalidforgetotp = req.session.invalidforgetotp
     req.session.invalidforgetotp = null
-    res.render('user/forgetOTP', { invalidforgetotp,user})
+    res.render('user/forgetOTP', { invalidforgetotp, user })
 }
 
 
@@ -341,7 +343,7 @@ const updatepassword = async (req, res) => {
 
         const updateemail = req.session.updateemail
         const newpassword = req.session.newpassword
-        
+
         await registercollection.updateOne({ email: updateemail }, { $set: { password: newpassword } })
         req.session.passwordupdated = {
             message: 'Password Updatd',
@@ -359,20 +361,84 @@ const updatepassword = async (req, res) => {
 }
 
 
+// ------------------------coupen-------------------
+
+const verifycoupen = async (req, res) => {
+
+    try {
+        const email = req.session.user
+        const coupen = req.body.coupen;
+        const coupendb = await coupencollection.findOne({ code: coupen });
+        const discount = coupendb.discount;
+        const coupenid = coupendb._id
+        const grandtotal = req.body.grandtotal
+
+
+        const data = {
+            isused: 'false',
+            code: coupendb.code,
+            discount: coupendb.discount,
+            minvalue: coupendb.minvalue,
+            coupenid: coupendb._id,
+            expirydate: coupendb.expirydate,
+            discription: coupendb.discription
+        }
+
+
+        const coupenExists = await registercollection.findOne({
+            email: email,
+            'usedcoupens.coupenid': coupenid
+          });
+
+
+          if (coupenExists) {
+            res.status(400).json({ message: 'invalid coupon', discount });
+          }
+          else if(grandtotal < 2000){
+            res.status(400).json({ message: 'minimum 2000', discount });
+          }
+           else {
+            await registercollection.findOneAndUpdate(
+              { email: email },
+              { $push: { coupens: data } },
+              { new: true }
+            );
+            res.status(200).json({ message: 'coupon matching', discount, coupenid });
+        }
+          
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+
+// -------------------clear coupen---------------------
+
+const clearcoupen = async (req, res) => {
+    const coupenid = req.body.coupenid
+    const email = req.session.user
+    await registercollection.updateOne(
+        { email: email },
+        { $pull: { coupens: { coupenid: coupenid } } }
+    );
+        res.status(200).json({message :'removed'})
+}      
 
 
 // ---------logout user------------
 
 const logout = (req, res) => {
-    try{
-        req.session.user=null
+    try {
+        req.session.user = null
         res.redirect('/')
     }
     catch (err) {
         console.error('Error :', err);
         res.status(500).json({ error: 'Internal server error' });
     }
-    
+
     // req.session.destroy((err) => {
     //     if (err) {
     //         res.send(err.message)
@@ -384,8 +450,10 @@ const logout = (req, res) => {
 
 
 
+
 module.exports = {
     login, register, userlogin, logout, userforget, verifyForgetUser,
     getforgetotp, getnewpassword, resetPassword, otpgenerator, updatepassword,
-    postregisteration, registerotpgenerator, getregiserotp, postregisterotp
+    postregisteration, registerotpgenerator, getregiserotp, postregisterotp,
+    verifycoupen, clearcoupen
 }

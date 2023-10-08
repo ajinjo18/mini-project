@@ -1,201 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/home/profileedit.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/home/profileedit.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class="container-xl px-4 mt-4">
-        <!-- Account page navigation-->
-        <nav class="nav nav-borders">
-            <a class="nav-link ms-0" href="/home/profile" >Profile</a>
-            <a class="nav-link active" href="/home/address" >Billing</a>
-            <a class="nav-link" href="/home/orders" >Orders</a>
-            <!-- <a class="nav-link" href="/home/editpassword" target="__blank">Security</a> -->
-            <a class="nav-link" href="/"  >Home</a>
-        </nav>
-        <hr class="mt-0 mb-4">
-        <h3>Address</h3>
-        <!-- <a style="margin-bottom: 20px;" href="#" class="btn btn-primary">Add New Address</a> -->
-        <!-- Button trigger modal -->
-<button style="margin-bottom: 20px;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Add New Address
-  </button>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
+  <div class="container-xl px-4 mt-4">
+    <!-- Account page navigation-->
+    <nav class="nav nav-borders">
+      <a class="nav-link ms-0" href="/home/profile">Profile</a>
+      <a class="nav-link active" href="/home/address">Billing</a>
+      <a class="nav-link" href="/home/wallet">Wallet</a>
+      <a class="nav-link" href="/home/orders">Orders</a>
+      <!-- <a class="nav-link" href="/home/editpassword" target="__blank">Security</a> -->
+      <a class="nav-link" href="/">Home</a>
+    </nav>
+    <hr class="mt-0 mb-4">
+    <h3>Address</h3>
+    
+    <button style="margin-bottom: 20px;" type="button" class="btn btn-primary" data-bs-toggle="modal"
+      data-bs-target="#exampleModal">
+      Add New Address
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
             <form>
-                <div class="form-group">
-                    <label for="message-text" class="col-form-label">Address:</label>
-                    <textarea name="address" class="form-control" id="message-text"></textarea>
+              <div class="form-group">
+                <div style="margin-bottom: 30px;" class="col-12">
+                  <label for="inputAddress" class="form-label">Address</label>
+                  <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" required>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="button" onclick="done" type="submit" class="btn btn-primary">Save</button>
+
+                <div class="col-md-6">
+                  <label for="inputCity" class="form-label">City</label>
+                  <input type="text" class="form-control" id="inputCity" required>
                 </div>
-                </form>
+                <div class="col-md-3">
+                  <label for="inputCity" class="form-label">State</label>
+                  <input type="text" class="form-control" id="inputState" required>
+                </div>
+
+                <div class="col-md-3">
+                  <label for="inputZip" class="form-label">Zip</label>
+                  <input type="text" class="form-control" id="inputZip" required>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="button" onclick="done" type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+         
         </div>
-        <!-- <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div> -->
       </div>
     </div>
-  </div>
-  <% let index = 1; %>
-        <% address.forEach(item => { %>
+    <% let index=1; %>
+      <% address.forEach(item=> { %>
         <div style="margin-bottom: 20px;" class="card">
-            <div class="card-body">
-              <!-- <h5 class="card-title">Special title treatment</h5> -->
-              <p class="card-text"><%= item %></p>
-              <button style="margin-bottom: 20px;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal<%= index %>">
-                Edit
-              </button>
-              
-              <!-- Modal -->
-              <div class="modal fade" id="exampleModal<%= index %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">edit Address</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="message-text" class="col-form-label">Address:</label>
-                                <textarea hidden name="address1" class="form-control" id="message-text1<%= index %>"><%= item %></textarea>
-                                <textarea name="address" class="form-control" id="message-text<%= index %>"><%= item %></textarea>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button id="button1" onclick="sendDataToBackend(<%= index %>)" type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                            </form>
-                    </div>
-                    <!-- <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary">Save changes</button>
-                    </div> -->
+          <div class="card-body">
+            <form class="row g-3">
+              <div class="col-12">
+                <label for="inputAddress" class="form-label">Address</label>
+                <input value="<%= item.address1 %>" type="text" class="form-control" id="inputAddress" readonly>
+              </div>
+
+              <div class="col-md-6">
+                <label for="inputCity" class="form-label">City</label>
+                <input value="<%= item.city %>" type="text" class="form-control" id="inputCity" readonly>
+              </div>
+              <div class="col-md-3">
+                <label for="inputCity" class="form-label">State</label>
+                <input value="<%= item.state %>" type="text" class="form-control" id="inputState" readonly>
+              </div>
+
+              <div class="col-md-3">
+                <label for="inputZip" class="form-label">Zip</label>
+                <input value="<%= item.zip %>" type="text" class="form-control" id="inputZip" readonly>
+              </div>
+            </form>
+            
+            <button style="margin-bottom: 20px; margin-top: 20px;" type="button" class="btn btn-primary"
+              data-bs-toggle="modal" data-bs-target="#exampleModal<%= index %>">
+              Edit
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal<%= index %>" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">edit Address</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="form-group">
+
+                        <textarea hidden name="address1" class="form-control"
+                          id="message-text1<%= index %>"><%= item._id %></textarea>
+
+                        <div class="col-12">
+                          <label for="inputAddress" class="form-label">Address</label>
+                          <input value="<%= item.address1 %>" type="text" class="form-control"
+                            id="inputAddress<%= index %>">
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="inputCity" class="form-label">City</label>
+                          <input value="<%= item.city %>" type="text" class="form-control" id="inputCity<%= index %>">
+                        </div>
+                        <div class="col-md-3">
+                          <label for="inputCity" class="form-label">State</label>
+                          <input value="<%= item.state %>" type="text" class="form-control" id="inputState<%= index %>">
+                        </div>
+
+                        <div class="col-md-3">
+                          <label for="inputZip" class="form-label">Zip</label>
+                          <input value="<%= item.zip %>" type="text" class="form-control" id="inputZip<%= index %>">
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="button1" onclick="sendDataToBackend(<%= index %>)" type="submit"
+                          class="btn btn-primary">Save</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
-              <!-- <a href="#" class="btn btn-primary">Delete</a> -->
-              <!-- <textarea hidden name="address2" class="form-control" id="message-text2<%= index %>"><%= item %></textarea> -->
-              <button  onclick="checker(<%= index %>)" style="margin-bottom: 20px;" type="button" class="btn btn-primary">
-                Delete
-              </button>
             </div>
+            <textarea hidden name="address2" class="form-control"
+              id="message-text2<%= index %>"><%= item._id %></textarea>
+            <button onclick="checker(<%= index %>)" style="margin-bottom: 20px; margin-top: 20px;" type="button"
+              class="btn btn-primary">
+              Delete
+            </button>
           </div>
-          <% index++; %>
+        </div>
+        <% index++; %>
           <% }); %>
-    </div>
+  </div>
 
-    <script>
-        function checker() {
-          const result=confirm('Are You Sure You Want to Delete?');
-          if(result==false){
-            event.preventDefault();
-          }
-        }
-    </script>
+  <script>
+    function checker() {
+      const result = confirm('Are You Sure You Want to Delete?');
+      if (result == false) {
+        event.preventDefault();
+      }
+    }
+  </script>
 
-    <script>
-        document.getElementById('button').addEventListener('click', () => {
-                const address = document.getElementById('message-text').value;
-                const url = 'http://localhost:3000/home/addnewaddress';
-                done(url, address);
-            });
 
-            done(url,address)
+  <!-- -------------------------------add new addresss------------------------------ -->
 
-            function done(url,address) {
-                fetch(url,{
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ address: address })
-                })    
-            }
-    </script>
+  <script>
+    document.getElementById('button').addEventListener('click', () => {
 
-<script>
-    function sendDataToBackend(index) {
-  const addressTextarea = document.getElementById(`message-text${index}`);
-  const address1Textarea = document.getElementById(`message-text1${index}`);
+      const inputAddress = document.getElementById('inputAddress').value;
+      const inputCity = document.getElementById('inputCity').value;
+      const inputState = document.getElementById('inputState').value;
+      const inputZip = document.getElementById('inputZip').value;
 
-  const address = addressTextarea.value;
-  const address1 = address1Textarea.value;
+      const url = 'http://localhost:3000/home/addnewaddress';
+      done(url, inputAddress, inputCity, inputState, inputZip);
+    });
 
-  const data = {
-    address,
-    address1
-  };
-  const url = 'http://localhost:3000/home/updateaddrress';
+    done(url, inputAddress, inputCity, inputState, inputZip)
 
-    fetch(url,{
+    function done(url, inputAddress, inputCity, inputState, inputZip) {
+      fetch(url, {
         method: 'POST',
         headers: {
-        'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({data})
-    })  
-}
-</script>
-
-<script>
-    function checker(index) {
-    const result = confirm('Are You Sure You Want to Delete?');
-    if (result) {
-        delete1(index)
+        body: JSON.stringify({ inputAddress, inputCity, inputState, inputZip })
+      })
     }
-}
+  </script>
+
+
+  <!-- ----------------------------update address------------------------- -->
+
+  <script>
+    function sendDataToBackend(index) {
+
+      const addressid = document.getElementById(`message-text1${index}`).value.trim();
+
+      const inputAddress = document.getElementById(`inputAddress${index}`).value;
+      const inputCity = document.getElementById(`inputCity${index}`).value;
+      const inputState = document.getElementById(`inputState${index}`).value;
+      const inputZip = document.getElementById(`inputZip${index}`).value;
+
+
+
+
+      const data = {
+        inputAddress, inputCity, inputState, inputZip, addressid
+      };
+      const url = 'http://localhost:3000/home/updateaddrress';
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ data })
+      })
+    }
+  </script>
+
+
+
+  <!-- ---------------------delete address------------------------- -->
+
+  <script>
+    function checker(index) {
+      const result = confirm('Are You Sure You Want to Delete?');
+      if (result) {
+        delete1(index)
+      }
+    }
 
 
     function delete1(index) {
-        const addressTextarea = document.getElementById(`message-text${index}`);
+      const deleteid = document.getElementById(`message-text2${index}`).value.trim();
 
-  const address = addressTextarea.value;
-  console.log(address);
-//   const address1 = address1Textarea.value;
+      const url = 'http://localhost:3000/home/deleteaddrress';
 
-  const url = 'http://localhost:3000/home/deleteaddrress';
-
-    fetch(url,{
+      fetch(url, {
         method: 'POST',
         headers: {
-        'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({address})
-    })
-    .then(response => response.json())  // Parse the JSON from the response
-    .then(data => {
-        if (data.status===200) {
+        body: JSON.stringify({ deleteid })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 200) {
             console.log('200');
-            window.location.href='/home/address';
-        }
-        console.log('500');
-        window.location.href='/home/address';
-    // Handle the response data here
-    console.log('Response from server:', data);
-    })
-    .catch(error => console.error('Error:', error));  
+            window.location.href = '/home/address';
+          }
+          console.log('500');
+          window.location.href = '/home/address';
+        })
+        .catch(error => console.error('Error:', error));
     }
-</script>
+  </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>

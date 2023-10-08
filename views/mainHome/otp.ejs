@@ -26,6 +26,13 @@
       </header>
       <h3>Enter OTP Code</h3>
 
+      <% if(invalidotp) { %>
+        <div style="margin-top: 10px;" id="alert" class="alert alert-dismissible fade show alert-<%= invalidotp.type %>" role="alert">
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="close"></button>
+            <strong><%= invalidotp.message %></strong>
+        </div>
+      <% } %>
+
       <form action="/home/otp" method="post">
         <input name="otp" class="input1" type="number">
         <button type="submit" class="button1">Verify OTP</button>

@@ -15,12 +15,20 @@ router.get('/',user.isUserBlocked,mainHome.home)
 router.get('/shop',mainHome.shop)
 router.get('/cart',user.isUserLogged,user.isUserBlocked,cart.getcart)
 router.get('/addcart/:id',user.isUserLogged,user.isUserBlocked,addtocart.addtocart)
-router.get('/profile',profile.getprofile)
-router.get('/editprofile',profile.geteditprofile)
+
+router.get('/profile',user.isUserLogged,user.isUserBlocked,profile.getprofile)
+// router.get('/editprofile',user.isUserLogged,user.isUserBlocked,profile.geteditprofile)
+router.post('/editprofilepassword',mainHome.editprofilepassword)
+
+
 router.post('/editprofile',profile.posteditprofile)
-// router.get('/otp',profile.getotp)
-// router.post('/otp',profile.postotp)
-// router.get('/resendotp',profile.otpgenerator)
+router.get('/2otp',profile.getotp)
+router.post('/2otp',profile.postotp)
+router.get('/resend2otp',profile.otpgenerator)
+
+router.get('/otp',mainHome.getotp)
+router.post('/otp',mainHome.postotp)
+router.get('/resendotp',mainHome.otpgenerator)
 
 router.post('/cart/:id',cart.postcart)
 // router.post('/cart',cart.postcart)
@@ -33,15 +41,24 @@ router.get('/productview/:id',mainHome.getproductview)
 router.get('/category/:id',mainHome.category)
 router.post('/addaddress',cart.addaddress)
 router.post('/placeorder',cart.placeorder)
-router.get('/thankyou',cart.thankyou)
+router.get('/thankyou',user.isUserLogged,user.isUserBlocked,cart.thankyou)
 
-router.get('/orders',myorders.myorders)
-router.get('/address',mainHome.address)
+router.get('/orders',user.isUserLogged,user.isUserBlocked,myorders.myorders)
+router.get('/orderspage',user.isUserLogged,user.isUserBlocked,myorders.pagenationorders)
+router.post('/search',myorders.search)
+router.get('/ordersearch/:id',user.isUserLogged,user.isUserBlocked,myorders.ordersearchdetails)
+
+router.get('/address',user.isUserLogged,user.isUserBlocked,mainHome.address)
 router.post('/addnewaddress',mainHome.postaddress)
 router.post('/updateaddrress',mainHome.updateaddress)
 
 router.post('/deleteaddrress',mainHome.deleteaddrress)
 
-router.get('/cancelorder/:id',mainHome.cancelorder)
+router.get('/cancelorder/:id',user.isUserLogged,user.isUserBlocked,mainHome.cancelorder)
+
+router.post('/payorder',cart.razorpayorder)
+router.post('/paymentdone',cart.paymentdone)
+
+router.get('/wallet',profile.getwallet)
 
 module.exports=router

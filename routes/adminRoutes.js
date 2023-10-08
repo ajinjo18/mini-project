@@ -43,6 +43,12 @@ router.get('/deleteproductimg/:element/:productId',isadminlogged,product.product
 router.get('/orders',admin.getorders)
 router.post('/orderstatus',admin.orderstatus)
 
+router.get('/listcoupen',admin.listcoupen)
+router.get('/addcoupen',admin.addcoupens)
+router.post('/addcoupen',admin.postcoupens)
+router.post('/updatecoupen',admin.updatecoupen)
+router.get('/deletecoupen/:id',admin.deletecoupen)
+
 router.get('/logout',admin.logout)
 
 

@@ -1,17 +1,60 @@
 <%- include('./include/header') %>
 
-    <style>
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
 
-        /* Firefox */
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-    </style>
+
+<!-- -----------------------css begin---------------------- -->
+
+<style>
+
+.coupon-card {
+  border: 2px solid #3498db;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #fff;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.coupon-heading {
+  text-align: center;
+}
+
+.discount-amount {
+  color: #e74c3c; /* Red color */
+  font-weight: bold;
+}
+
+.coupon-code {
+  background-color: #e74c3c;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.expiry-date {
+  font-style: italic;
+  color: #7f8c8d; /* Gray color */
+}
+
+</style>
+
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+<!-- -----------------------css end---------------------- -->
+
+
+
     <!-- Breadcrumb Begin -->
     <!-- <div class="breadcrumb-option">
         <div class="container">
@@ -30,7 +73,7 @@
     <!-- Shop Cart Section Begin -->
     <section class="shop-cart spad">
         <div class="container">
-            <div class="row">
+            <div class="row" style="max-height: 600px; overflow-y: auto;">
                 <div class="col-lg-12">
                     <div class="shop__cart__table">
                         <table>
@@ -49,7 +92,7 @@
                                         <td class="cart__product__item">
                                             <img id="image_<%= index %>" style="width: 100px;"
                                                 src="/img/<%=row.product.images[0] %>" alt="">
-                                            
+
                                             <div class="cart__product__item__title">
                                                 <h6>
                                                     <%= row.product.productname %>
@@ -62,25 +105,41 @@
                                                 <i class="fa fa-star"></i> -->
                                             </div>
                                         </td>
-                                        <td class="cart__price">&#x20B9; <%= row.product.price %></td>
+                                        <td class="cart__price">&#x20B9; <%= row.product.price %>
+                                        </td>
                                         <td class="cart__quantity">
                                             <div style="margin-left: 20px;" class="container mt-5 pb-5">
                                                 <div class="row">
                                                     <div class="col-md-4 mb-3">
                                                         <div class="qty-container">
-                                                            <button class="qty-btn-minus btn-primary btn-rounded mr-1" type="button" data-index="<%= index %>" data-product-id="<%= row.product._id %>"><i class="fa fa-chevron-left"></i></button>
-                                                            <input min="1" type="number" id="quantity_<%= index %>" name="qty" value="<%= row.quantity %>" class="input-qty input-rounded" />
-                                                            <button class="qty-btn-plus btn-primary btn-rounded ml-1" type="button" data-index="<%= index %>" data-product-id="<%= row.product._id %>"><i class="fa fa-chevron-right"></i></button>
+                                                            <button class="qty-btn-minus btn-primary btn-rounded mr-1"
+                                                                type="button" data-index="<%= index %>"
+                                                                data-product-id="<%= row.product._id %>"><i
+                                                                    class="fa fa-chevron-left"></i></button>
+                                                            <input min="1" type="number" id="quantity_<%= index %>"
+                                                                name="qty" value="<%= row.quantity %>"
+                                                                class="input-qty input-rounded" />
+                                                            <button class="qty-btn-plus btn-primary btn-rounded ml-1"
+                                                                type="button" data-index="<%= index %>"
+                                                                data-product-id="<%= row.product._id %>"><i
+                                                                    class="fa fa-chevron-right"></i></button>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <section id="outofstock<%= index %>"></section>
                                             </div>
+
                                         </td>
-                                        <td id="carttotal_<%= index %>" class="cart__total">&#x20B9; <%= row.quantity * row.product.price %></td>
-                                        <td class="cart__close"><a href="/home/deletecart/<%= row.id %>"><span class="fas fa-close"></span></a></td>
-                                        <td id="productid_<%= index %>" hidden class="cart__close"><%= row.id %></td>
+                                        <td class="cart__total">&#x20B9; <i id="carttotal_<%= index %>"><%= row.quantity *
+                                            row.product.price %></i>
+                                        </td>
+                                        <td class="cart__close"><a href="/home/deletecart/<%= row.id %>"><span
+                                                    class="fas fa-close"></span></a></td>
+                                        <td id="productid_<%= index %>" hidden class="cart__close">
+                                            <%= row.id %>
+                                        </td>
                                     </tr>
-                                <% }) %>
+                                    <% }) %>
                             </tbody>
                         </table>
                     </div>
@@ -94,114 +153,113 @@
                 </div>
             </div>
             <% if(totalValue) { %>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="discount__content">
-                        <h6>Discount codes</h6>
-                        <form action="#">
-                            <input type="text" placeholder="Enter your coupon code">
-                            <button type="submit" class="site-btn">Apply</button>
-                        </form>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="discount__content">
+         
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 offset-lg-2">
+                        <div class="cart__total__procced">
+                            <h6>Cart total</h6>
+                            <ul>
+                                <li>Subtotal <span>&#x20B9; <i id="grandtotal"><%= totalValue %></i></span></li>
+                                <li id="coupenadded"><span> <i></i></span></li>
+                                <div id="clear" ></div>
+                                <section hidden id="coupenid"></section>
+                                <li>Total <span>&#x20B9; <i id="grandtotal1"><%= totalValue %></i></span></li>
+                            </ul>
+                            <a id="Proceedchkout" href="/home/checkout" class="primary-btn">Proceed to checkout</a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-4 offset-lg-2">
-                    <div class="cart__total__procced">
-                        <h6>Cart total</h6>
-                        <ul>
-                            <li>Subtotal <span>&#x20B9; <%= totalValue %></span></li>
-                            <li>Total <span>&#x20B9; <%= totalValue %></span></li>
-                        </ul>
-                        <a href="/home/checkout" class="primary-btn">Proceed to checkout</a>
-                    </div>
-                </div>
-            </div>
             <% } %>
         </div>
     </section>
     <!-- Shop Cart Section End -->
 
 
-    <script>
-        // Get all buttons
-        const buttons = document.querySelectorAll('.qty-btn-minus, .qty-btn-plus');
-
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                const index = button.getAttribute('data-index');
-                // const productId = document.getElementById(`quantity_${index}`);  // Get the product ID
-                const quantityInput = document.getElementById(`quantity_${index}`);
-                const image = document.getElementById(`image_${index}`);
-                const imageUrl = image.getAttribute('src');
-                const productid = document.getElementById(`productid_${index}`).innerText;  // Get the product ID
-                let currentValue = parseInt(quantityInput.value);
 
 
-                if (button.classList.contains('qty-btn-minus')) {
-                    // Decrease button clicked
-                    currentValue = Math.max(currentValue - 1, 1);
-                } else {
-                    // Increase button clicked
-                    currentValue += 1;
-                }
+ <!-- ----------------------------------script------------------------------    -->
 
-                quantityInput.value = currentValue;
-                sendQuantityToServer(currentValue, index, imageUrl, productid);  // Pass the product ID
-            });
+
+<script>
+
+// ---------------------------cart quantity-------------------
+
+    const buttons = document.querySelectorAll('.qty-btn-minus, .qty-btn-plus');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const index = button.getAttribute('data-index');
+            const quantityInput = document.getElementById(`quantity_${index}`);
+            let currentValue = parseInt(quantityInput.value);
+            const outofstock = document.getElementById(`outofstock${index}`)
+            const image = document.getElementById(`image_${index}`);
+            const imageUrl = image.getAttribute('src');
+            const productid = document.getElementById(`productid_${index}`).innerHTML.trim()
+
+            if (button.classList.contains('qty-btn-minus')) {
+                currentValue = Math.max(currentValue - 1, 1);
+            } else {
+                currentValue += 1;
+            }
+
+            quantityInput.value = currentValue;
+            sendQuantityToServer(currentValue, index, imageUrl, productid);
         });
+    });
 
-        function sendQuantityToServer(quantity, index, imageUrl, productid) {
-        // Modify the URL based on your server endpoint
-        console.log(productid)
+    function updateQuantityAndHandleOutOfStock(index, data) {
+        const outofstock = document.getElementById(`outofstock${index}`);
+        const total = document.getElementById(`carttotal_${index}`)
+        const grandtotal = document.getElementById('grandtotal')
+        const grandtotal1 = document.getElementById('grandtotal1')
+
+        if (data.success) {
+            grandtotal1.innerHTML = data.data2.cart.grandtotal
+            grandtotal.innerHTML = data.data2.cart.grandtotal
+            total.innerHTML = data.matchedItem.totalprice
+            console.log('Quantity updated successfully.');
+        }
+        else if (data.success === false) {
+            outofstock.innerHTML = '<p style="color:red;">Out Of Stock</p>';
+            setTimeout(() => {
+                outofstock.innerHTML = '';
+            }, 2000);
+        }
+        else {
+            console.error('Error updating quantity:', data.message);
+        }
+    }
+
+
+    //------- send to server----------
+
+    function sendQuantityToServer(quantity, index, imageUrl, productid) {
+
         const url = `http://localhost:3000/home/cart/${productid}`;
-            console.log(url)
+        console.log(url)
         fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ quantity ,imageUrl})
+            body: JSON.stringify({ quantity, imageUrl })
         })
         .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Handle success
-                console.log('Quantity updated successfully.');
-                // Redirect to cart page
-                window.location.href = '/home/cart';
-            } else {
-                // Handle error
-                console.error('Error updating quantity:', data.message);
-            }
-        })
+        .then(data => updateQuantityAndHandleOutOfStock(index, data))
         .catch(error => {
             console.error('Fetch error:', error);
         });
     }
 
-        // function sendQuantityToServer(quantity, index, imageUrl, productid) {
+</script>
 
 
-        //     fetch('http://localhost:3000/home/cart', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({ quantity: quantity, imageUrl: imageUrl, productid: productid })
-        //     })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         if (data.success) {
-        //             console.log(data.data.cart.items[index].totalprice)
-        //             // fetchData()
-        //             location.href = '/home/cart'
-        //         }
-        //         else {
-        //             // messageContainer.innerHTML = `<div class="error-message">${data.message}</div>`;
-        //             console.log('err');
-        //         }
-        //     })
-        // }
-    </script>
 
 
     <%- include('./include/footer') %>

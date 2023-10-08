@@ -26,6 +26,9 @@ router.get('/newpassword',user.getnewpassword)
 router.get('/otpgenerator',user.otpgenerator)
 router.post('/updatepassword',user.updatepassword)
 
+router.post('/verifycoupen',user.verifycoupen)
+router.post('/clearcoupen',user.clearcoupen)
+
 router.get('/logout',user.logout)
 
 

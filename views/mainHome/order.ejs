@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="/css/home/profileedit.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css" rel="stylesheet">
   </head>
 
 <body>
@@ -118,11 +117,77 @@ z-index: 0
         background: linear-gradient(to top left, rgba(205, 156, 242, 1), rgba(246, 243, 255, 1))
         }
     </style>
+
+    <style>
+
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  color: #fff;
+}
+
+/* You just need to get this field - start */
+
+.search-box {
+  width: 350px;
+  position: relative;
+  display: flex;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+.search-input {
+  width: 100%;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  padding: 15px 45px 15px 15px;
+  background-color: #afafc2;
+  color: #6c6c6c;
+  border-radius: 6px;
+  border:none;
+  transition: all .4s;
+}
+
+.search-input:focus {
+  border:none;
+  outline:none;
+  box-shadow: 0 1px 12px #b8c6db;
+  -moz-box-shadow: 0 1px 12px #b8c6db;
+  -webkit-box-shadow: 0 1px 12px #b8c6db;
+}
+
+.search-btn {
+  background-color: transparent;
+  font-size: 18px;
+  padding: 6px 9px;
+  margin-left:-45px;
+  border:none;
+  color: #6c6c6c;
+  transition: all .4s;
+  z-index: 10;
+}
+
+.search-btn:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+  color: black;
+}
+
+.search-btn:focus {
+  outline:none;
+  color:black;
+}
+
+    </style>
+    
     <div class="container-xl px-4 mt-4">
         <!-- Account page navigation-->
         <nav class="nav nav-borders">
             <a class="nav-link ms-0" href="/home/profile" >Profile</a>
             <a class="nav-link" href="/home/address" >Billing</a>
+            <a class="nav-link" href="/home/wallet">Wallet</a>
             <a class="nav-link active" href="/home/orders" >Orders</a>
             <!-- <a class="nav-link" href="/home/editpassword" target="__blank">Security</a> -->
             <a class="nav-link" href="/" >Home</a>
@@ -130,38 +195,50 @@ z-index: 0
         <hr class="mt-0 mb-4">
         <div class="row">
             <section class="h-100 gradient-custom">
+              <!-- You just need to get this field. Start -->
+<script src="https://kit.fontawesome.com/d97b87339f.js" crossorigin="anonymous"></script>
+
+<div style="margin-top: 50px;" class="search-box">
+  <input onkeyup="sendData(this)" name="name" class="search-input" type="text" placeholder="Search something..">
+  <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+</div>
+
+<section id="searchresult"></section>
+
+  
+
+<!-- You just need to get this field. End -->
                 <div class="container py-5 h-100">
                   <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-lg-10 col-xl-8">
                       <div class="card" style="border-radius: 10px;">
                         <% let index = 0; %>
                         <% orders.forEach(function(order) { %>
-                        <% order.products.forEach(function(product) { %>
                             <div class="card-body p-4">
                           <div class="card shadow-0 border mb-4">
                             <div class="card-body">
                               <div class="row">
                                 <div class="col-md-2">
-                                  <img width="60px" src="<%= product.images %>"
+                                  <img width="60px" src="<%= order.images %>"
                                     class="img-fluid">
                                 </div>
                                   <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                    <a style="text-decoration: none; color: black;" href="/home/productview/<%= product.productid %>"><%= product.productName %></a>
+                                    <a style="text-decoration: none; color: black;" href="/home/productview/<%= order.productid %>"><%= order.productName %></a>
                                   </div>
                                   <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                    <p class="text mb-0 small">Qty: <%= product.quantity %></p>
+                                    <p class="text mb-0 small">Qty: <%= order.quantity %></p>
                                   </div>
                                   <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                    <p class=" mb-0 small">total: <i style="color: red;"><%= product.totalprice %></i></p>
-                                    <p hidden><%= product.productid %></p>
+                                    <p class=" mb-0 small">total: <i style="color: red;"><%= order.totalprice %></i></p>
+                                    <p hidden><%= order.productid %></p>
                                   </div>
-                                  <% if (product.status === 'Cancelled') { %>
+                                  <% if (order.status === 'Cancelled') { %>
                                     <div class="d-flex justify-content-end align-items-end">
-                                      <p class="text mb-0 small">status: <i style="color: red;"><%= product.status %></i></p>
+                                      <p class="text mb-0 small">status: <i style="color: red;"><%= order.status %></i></p>
                                     </div>
                                   <% } else { %>
                                     <div class="d-flex justify-content-end align-items-end">
-                                      <p class="text mb-0 small">status: <i style="color: rgb(36, 150, 36);"><%= product.status %></i></p>
+                                      <p class="text mb-0 small">status: <i style="color: rgb(36, 150, 36);"><%= order.status %></i></p>
                                     </div>
                                   <% } %>
                               </div>
@@ -186,41 +263,41 @@ z-index: 0
                                                   <div class="d-flex justify-content-between align-items-center">
                                                     <div>
                                                       <p class="text-muted mb-2"> Order ID <span class="fw-bold text-body"><%= order.id %></span></p>
-                                                      <p class="text-muted mb-0"> Place On <span class="fw-bold text-body"><%= product.date %></span> </p>
+                                                      <p class="text-muted mb-0"> Place On <span class="fw-bold text-body"><%= order.date %></span> </p>
                                                     </div>
                                                   </div>
                                                 </div>
                                                 <div class="card-body p-4">
                                                   <div class="d-flex flex-row mb-4 pb-2">
                                                     <div class="flex-fill">
-                                                      <h5 class="bold"><%= product.productName %></h5>
-                                                      <p class="text-muted"> Qt: <%= product.quantity %></p>
-                                                      <h4 class="mb-3"><%= product.totalprice %><span class="small text-muted"> via (<%= order.payment %>) </span></h4>
+                                                      <h5 class="bold"><%= order.productName %></h5>
+                                                      <p class="text-muted"> Qt: <%= order.quantity %></p>
+                                                      <h4 class="mb-3"><%= order.totalprice %><span class="small text-muted"> via (<%= order.payment %>) </span></h4>
                                                       <!-- <p class="text-muted">Tracking Status on: <span class="text-body">11:30pm, Today</span></p> -->
                                                     </div>
                                                     <div>
                                                       <img class="align-self-center img-fluid"
-                                                        src="<%= product.images %>" width="70">
+                                                        src="<%= order.images %>" width="70">
                                                     </div>
                                                   </div>
 
                                                   <div class="track">
-                                                    <% if (product.status == 'Pending') { %>
+                                                    <% if (order.status == 'Pending') { %>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-spinner"></i> </span> <span class="text">Pending</span> </div>
                                                       <div class="step "> <span class="icon"> <i class="fas fa-check"></i> </span> <span class="text">Shipped</span> </div>
                                                       <div class="step "> <span class="icon"> <i class="fas fa-truck"></i> </span> <span class="text">Out for delivery</span> </div>
                                                       <div class="step"> <span class="icon"> <i class="fas fa-box"></i> </span> <span class="text">Delivered</span> </div>
-                                                    <% } else if (product.status == 'Shipped') { %>
+                                                    <% } else if (order.status == 'Shipped') { %>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-spinner"></i> </span> <span class="text">Pending</span> </div>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-check"></i> </span> <span class="text">Shipped</span> </div>
                                                       <div class="step "> <span class="icon"> <i class="fas fa-truck"></i> </span> <span class="text">Out for delivery</span> </div>
                                                       <div class="step"> <span class="icon"> <i class="fas fa-box"></i> </span> <span class="text">Delivered</span> </div>
-                                                    <% } else if(product.status == 'Out for delivery') { %>
+                                                    <% } else if(order.status == 'Out for delivery') { %>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-spinner"></i> </span> <span class="text">Pending</span> </div>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-check"></i> </span> <span class="text">Shipped</span> </div>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-truck"></i> </span> <span class="text">Out for delivery</span> </div>
                                                       <div class="step"> <span class="icon"> <i class="fas fa-box"></i> </span> <span class="text">Delivered</span> </div>
-                                                    <% } else if(product.status == 'Delivered') { %>
+                                                    <% } else if(order.status == 'Delivered') { %>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-spinner"></i> </span> <span class="text">Pending</span> </div>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-check"></i> </span> <span class="text">Shipped</span> </div>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-truck"></i> </span> <span class="text">Out for delivery</span> </div>
@@ -232,8 +309,8 @@ z-index: 0
                                                 </div>
                                                 <div class="card-footer p-4">
                                                   <div class="d-flex justify-content-between">
-                                                    <% if (product.status != 'Cancelled') { %>
-                                                    <h5 class="fw-normal mb-0"><a style="text-decoration: none;" onclick="checker()" href="/home/cancelorder/<%= product._id %>">Cancel Order</a></h5>
+                                                    <% if (order.status != 'Cancelled' && order.status != 'Delivered') { %>
+                                                    <h5 class="fw-normal mb-0"><a style="text-decoration: none; cursor: pointer;" onclick="checker('/home/cancelorder/<%= order._id %>?productname=<%= order.productName %>&payment=<%= order.payment %>&amount=<%= order.totalprice %>&orderid=<%= order.id %>')">Cancel Order</a></h5>
                                                     <% } %>
                                                     <div class="border-start h-100"></div>
                                                     <!-- <h5 class="fw-normal mb-0"><a href="#!">Cancel</a></h5> -->
@@ -259,35 +336,122 @@ z-index: 0
                         </div>
                         <% index++; %>
                         <% }); %>
-                        <% }); %>
                       </div>
                     </div>
                   </div>
-                  
                 </div>
+                <nav aria-label="...">
+                  <ul class="pagination pagination-lg">
+                    <ul class="pagination">
+                      <% if(pages) { %>
+                        <% const totalPages = Math.ceil(pages); %>
+                        <% const maxPagesToShow = 5; %>
+                        <% const startPage = Math.max(0, pagenum - Math.floor(maxPagesToShow / 2)); %>
+                        <% const endPage = Math.min(totalPages - 1, startPage + maxPagesToShow - 1); %>
+                    
+                        <% if (startPage > 0) { %>
+                          <li class="page-item">
+                            <a class="page-link" href="/home/orderspage?page=<%= startPage - 1 %>" tabindex="-1">Previous</a>
+                          </li>
+                        <% } %>
+                    
+                        <% for(let i = startPage; i <= endPage; i++) { %>
+                          <% if (pagenum === i) { %> 
+                            <li class="page-item active">
+                              <a class="page-link" href="/home/orderspage?page=<%= i %>" tabindex="-1"><%= i + 1 %></a>
+                            </li>
+                          <% } else { %> 
+                            <li class="page-item">
+                              <a class="page-link" href="/home/orderspage?page=<%= i %>" tabindex="-1"><%= i + 1 %></a>
+                            </li>
+                          <% } %>
+                        <% } %>
+                    
+                        <% if (endPage < totalPages - 1) { %>
+                          <li class="page-item">
+                            <a class="page-link" href="/home/orderspage?page=<%= endPage + 1 %>" tabindex="-1">Next</a>
+                          </li>
+                        <% } %>
+                    
+                      <% } %>
+                    </ul>
+                    
+                  </ul>
+                </nav>
               </section>           
         </div>
     </div>
 
     <script>
+      
+      const url='http://localhost:3000/home/search'
+      function sendData(e){
+        const searchresult =document.getElementById('searchresult')
+      let match=e.value.match(/^[a-zA-Z ]*/);
+      let match2=e.value.match(/\s*/);
+      if(match2[0]===e.value){
+        searchresult.innerHTML='';
+        return;
+      }
+      if(match[0]===e.value){
+        fetch(url,{
+          method:'post',
+          headers: {'Content-Type': 'application/json'},
+          body:JSON.stringify({payload:e.value})
+
+        }).then(res=> res.json())
+        .then(data=>{
+          let payload = data.payload
+          console.log(payload);
+          searchresult.innerHTML='';
+          if(payload.length < 1){
+            searchresult.innerHTML='<p>Sorry. Nothing Found.</p>'
+            return;
+          }
+          payload.forEach((item,index)=>{
+            if(index>0) searchresult.innerHTML += '<hr>';
+            searchresult.innerHTML += `<a style="text-decoration: none;" href="/home/ordersearch/:${item._id}"><img src="${item.images}" width="40px" alt="Product Image">${item.productName}(${item.date})</a>`;
+            
+          })
+        })
+        return;
+      }
+      searchresult.innerHTML='';
+        
+     }
+    </script>
+
+    <!-- <script>
       function checker() {
       const result=confirm('Are You Sure You Want To Cancel Order?');
       if(result==false){
         event.preventDefault();
       }
     }
-    </script>
+    </script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js"></script>
-    <script>
-      $(document).ready(function(){
-        $("table").DataTable({
-          order:[0,'desc']
-        })
-      })
-    </script>
+    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-</body>
+  <script>
+
+    function checker(url) {
+      // swal("Hello world!");
+      swal({
+        title: "Cancel Order",
+        text: "Are You Sure You Want To Cancel Order?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          window.location.href=url
+        }
+      });
+    }
+    
+  </script>
+  </body>
 
 
 
