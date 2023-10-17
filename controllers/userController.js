@@ -373,6 +373,7 @@ const verifycoupen = async (req, res) => {
         const coupenid = coupendb._id
         const grandtotal = req.body.grandtotal
 
+        const minvalue = coupendb.minvalue
 
         const data = {
             isused: 'false',
@@ -394,8 +395,8 @@ const verifycoupen = async (req, res) => {
           if (coupenExists) {
             res.status(400).json({ message: 'invalid coupon', discount });
           }
-          else if(grandtotal < 2000){
-            res.status(400).json({ message: 'minimum 2000', discount });
+          else if(grandtotal < minvalue){
+            res.status(400).json({ message: 'minimum 2000', discount ,minvalue });
           }
            else {
             await registercollection.findOneAndUpdate(
@@ -403,6 +404,12 @@ const verifycoupen = async (req, res) => {
               { $push: { coupens: data } },
               { new: true }
             );
+            
+
+            // if(req.session.coupen==coupen){
+            //     return
+            // }
+
             res.status(200).json({ message: 'coupon matching', discount, coupenid });
         }
           

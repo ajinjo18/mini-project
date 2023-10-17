@@ -158,7 +158,7 @@
                             </div>
                             <section style="color: red;" id="cpn"></section>
 
-                            <label style="margin-top: 20px;" for=""><i type="button" id="viewcoupens" data-toggle="modal" data-target="#exampleModal1" >View all coupen ></i></label>
+                            <label style="margin-top: 20px;" for=""><i type="button" id="viewcoupens" data-toggle="modal" data-target="#exampleModal1" >View all coupon ></i></label>
 
 
 
@@ -176,7 +176,7 @@
                                                         <div class="card" style="margin-bottom: 30px;">
                                                             <div class="card-body">
                                                                 <h5 class="card-title"><%= coupon.name %></h5>
-                                                                <p class="card-text">Get <span class="discount-amount"><%= coupon.discount %> OFF</span> on your purchase!</p>
+                                                                <p class="card-text">Get <span class="discount-amount"><%= coupon.discount %> % OFF</span> on your purchase!</p>
                                                                 <p class="card-text">Use code: <span class="coupon-code"><%= coupon.code %></span></p>
                                                                 <p class="card-text">Valid until: <span class="expiry-date"><%= coupon.expirydate %></span></p>
                                                             </div>
@@ -198,11 +198,18 @@
                             <label  class="form-check-label" for="flexRadioDefault4">
                                 Cash on delivery
                             </label>
-                            </div>
-                            <div class="form-check">
+                        </div>
+                        <div class="form-check">
                             <input class="form-check-input" type="radio" name="flexRadioDefault1" id="check-payment1">
                             <label class="form-check-label" for="flexRadioDefault5">
                                 Online payment
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault1" id="check-payment2">
+                            <label class="form-check-label" for="flexRadioDefault6">
+                                Wallet payment
+                                <section style="color: red;" id="walletnobalance"></section>
                             </label>
                         </div>
                     </div>
@@ -252,6 +259,8 @@
 
 <script>
 
+    
+
     let couponProcessing = false;
 
     function applyCoupon() {
@@ -285,10 +294,11 @@
         .then(data =>{
             console.log(data);
             if(data.message =="coupon matching"){
-                const newtotal = total-data.discount
+                const newtotal1 = (data.discount/100)*total
+                const newtotal =  total - newtotal1
                 cpn.innerHTML='';
-                coupenadded.innerHTML=`<li id="coupenadded">Coupen Applied<span>- &#x20B9; ${data.discount}<i></i></span></li>`
-                clear.innerHTML='<button id="clear" type="button" class="btn btn-danger">Clear Coupen</button>'
+                coupenadded.innerHTML=`<li id="coupenadded">Coupon Applied<span>- &#x20B9; ${newtotal1}<i></i></span></li>`
+                clear.innerHTML='<button id="clear" type="button" class="btn btn-danger">Clear Coupon</button>'
                 coupenid.innerHTML=data.coupenid
                 discount1.innerHTML = data.discount    
                 total1.innerHTML= newtotal;
@@ -297,13 +307,13 @@
 
             }
             else if(data.message=='minimum 2000'){
-                cpn.innerHTML='Minimum Purchase Of 2000'
+                cpn.innerHTML=`Minimum Purchase Of ${data.minvalue}`
             }
             else if(data.message =='invalid coupon'){
-                cpn.innerHTML='Invalid Coupen'
+                cpn.innerHTML='Invalid Coupon'
             }
             else{
-                cpn.innerHTML='Invalid Coupen'
+                cpn.innerHTML='Invalid Coupon'
             }
         })
     }
@@ -465,6 +475,8 @@
         
         const cashOnDeliveryRadioButton = document.getElementById('check-payment');
         const onlinePaymentRadioButton = document.getElementById('check-payment1');
+        const walletPaymentRadioButton = document.getElementById('check-payment2');
+
 
         const data1 = collectProductData()
         const data = collectFormData();
@@ -569,6 +581,57 @@
             const rzp1 = new Razorpay(options);
             rzp1.open();
             })
+        }
+        // function (wallet)
+        else if (walletPaymentRadioButton.checked && address1) {
+            console.log('wallet payment selected');
+            const walletnobalance = document.getElementById('walletnobalance')
+            const url = 'http://localhost:3000/home/walletpayment';
+
+
+            const payment = 'WALLET'
+
+
+            let totalamount;
+            if(coupenid != null) {
+                totalamount = newtotal
+            }
+            else{
+                totalamount=grandtotal
+            }
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: data, data1: data1, grandtotal: grandtotal ,coupenid:coupenid , discount:discount ,payment})
+            })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                if(data.message=='insufficient balance'){
+                    walletnobalance.innerHTML='Insufficient Balance'
+                }
+                else if(data.type == 'success') {
+                    console.log('Response:', data.message);
+                    location.href = '/home/thankyou'
+                }
+                else if(data.message=='out of stock'){
+                    outofstock.innerHTML='out of stock'
+                }
+                else if (data.type == 'danger') {
+                    errorhappend()
+                }
+                else {
+                    location.href = '/home/checkout'
+                }
+            })
+            .catch(error => {
+                console.error('There was an error:', error);
+            });
         }
         else {
             errorhappend()

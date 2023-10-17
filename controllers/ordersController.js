@@ -1,6 +1,6 @@
 const registercollection = require('../model/registerSchema')
 const productCollection = require('../model/productSchema')
-
+const easyinvoice = require('easyinvoice')
 
 
 // ------------------get my orders-------------------
@@ -126,7 +126,85 @@ const ordersearchdetails = async (req, res) => {
 
 
 
+// ---------------------invoice--------------------------
+
+
+const myinvoice = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const email = req.session.user;
+
+    const userdata = await registercollection.findOne({ email: email, });
+
+    const username = userdata.name
+    console.log(username);
+
+
+    if (!userdata) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+
+    const order = await registercollection.findOne(
+      {
+        email: email,
+        'orders._id': orderId
+      },
+      {
+        'orders.$': 1 // This projection selects the first matching subdocument in the orders array
+      }
+    );  
+    if (order) {
+      // const address = order.orders[0].address; // Assuming there's only one address per order
+      
+      // console.log('Address:', address);
+    } else {
+      console.log('Order not found.');
+    }
+
+
+    // const order = userdata.orders.find((order) => order._id.equals(orderId));
+    // if (!order) {
+    //   return res.status(404).json({ message: 'Order not found' });
+    // }
+
+    // const address2 = userdata.Address.find((address2) => address2._id.equals(new ObjectId(address1)));
+
+    // console.log('address',address2);
+    // console.log('order',order)
+    // const username = username;
+    const address = order.orders[0].address.address1
+    const pincode = order.orders[0].address.zip
+    const city = order.orders[0].address.city
+    const district = order.orders[0].address.city
+    const productName = order.orders[0].productName;
+    const quantity = order.orders[0].quantity;
+    const total = order.orders[0].total
+    const price1 = order.orders[0].totalprice
+    const price = parseInt(price1.replace('₹', ''), 10)
+    const grandtotal=  price*quantity
+
+    console.log(grandtotal);
+    
+    
+    console.log(price);
+    const data={
+      address,pincode,city,productName,quantity,price,username,grandtotal
+    }
+
+    res.json(data)
+
+  }
+  catch (err) {
+    console.log('lllll');
+    console.error('Error :', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
 
 module.exports = {
-  myorders, pagenationorders, search, ordersearchdetails
+  myorders, pagenationorders, search, ordersearchdetails,myinvoice
 }

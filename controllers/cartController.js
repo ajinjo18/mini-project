@@ -466,6 +466,157 @@ const razorpayorder = async(req,res)=>{
 }
 
 
+// -------------------place order(wallet)------------------
+
+
+const walletpayment = async (req, res) => {
+  try {
+    console.log('hiii');
+    const user = req.session.user
+    const payment = 'WALLET'
+    const data1 = req.body.data1;
+    const grandtotal = req.body.grandtotal.replace(/\s+/g, '');
+    const coupenid = req.body.coupenid
+    const coupendiscount = req.body.discount
+    const { data } = req.body;
+
+    console.log(coupenid,coupendiscount);
+
+    const { address1, city, state, zip } = data;
+
+      const productOrders = data1.map(product => ({
+        productName: product.productName,
+        quantity: product.quantity,
+        productid: product.productid,
+        totalprice: product.totalPrice,
+        images: product.images, 
+        total: grandtotal,
+        address: {
+          address1, city, state, zip
+        },
+        payment,
+        coupendiscount
+      }));
+
+
+      const status = 'paid'
+      let wallethistory
+
+      if(coupenid != null && coupendiscount != null){
+
+        wallethistory = data1.map(product => ({
+          productname: product.productName,
+          amount: grandtotal - coupendiscount,
+          status : status
+        }));
+      }
+      else{
+        wallethistory = data1.map(product => ({
+          productname: product.productName,
+          amount: grandtotal,
+          status : status
+        }));
+      }
+
+
+      console.log(wallethistory);
+
+      await registercollection.findOneAndUpdate(
+        { email: user },
+        { $push: { 'wallet.refund': wallethistory } },
+        { new: true }
+      );
+
+      const walletbalance1 = await registercollection.findOne({email:user},{wallet:1})
+
+      const walletbalance = walletbalance1.wallet.total
+
+
+      if(grandtotal > walletbalance ){
+        console.log('no balance');
+        res.status(400).json({message:"insufficient balance", type: 'danger' });
+        return
+      }
+
+      console.log('have balance');
+      
+
+      for (const product of productOrders) {
+        const { quantity, productid } = product;
+      
+        // Retrieve the current stock for the product
+        const existingProduct = await productCollection.findOne({ _id: productid });
+        if (!existingProduct) {
+          console.log(`Product with ID ${productid} not found.`);
+          continue;
+        }
+
+        const currentStock = existingProduct.stock;
+      
+        // Calculate the new stock after subtracting the quantity
+        const newStock = currentStock - quantity;
+
+        // Update the stock in the database
+        if(existingProduct.stock!=0 && quantity <= existingProduct.stock){
+          await productCollection.updateOne(
+            { _id: productid },
+            { $set: { stock: newStock } }
+          );
+        }
+        else{
+          res.status(400).json({ message: "out of stock", type: 'danger' });
+          return
+        }
+
+        console.log(`Stock for product with ID ${productid} updated to ${newStock}.`);
+      }
+      
+
+      await registercollection.updateOne(
+        { email: user },
+        { $push: { 'orders': productOrders } }
+      )
+      const updatedUser = await registercollection.findOneAndUpdate(
+        { email: user },
+        { $set: { "cart.items": [] } },
+        { new: true }
+      );
+
+      const updatedUser1 = await registercollection.findOneAndUpdate(
+        { email: user },
+        { $unset: { "cart.grandtotal": 0 } },
+        { new: true }
+      );
+
+      const newwallettotal = walletbalance-grandtotal
+
+      await registercollection.updateOne({email:user},{$set:{'wallet.total':newwallettotal}})
+      
+
+      if(coupenid != null) {
+        await registercollection.updateOne(
+          { email:user },
+          { $push: { usedcoupens: { coupenid: coupenid } } }
+        );
+      }
+      
+      if(coupenid != null) {
+        await registercollection.updateOne(
+          { email:user },
+          { $unset: { coupens: 1 } }
+        );
+      }
+
+      res.status(200).json({ message: "logined", type: 'success' })
+  }
+  catch (err) {
+    console.error('Error :', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+
+};
+
+
 // -------------------------payment done--------------------------
 
 
@@ -593,5 +744,5 @@ const paymentdone = async (req,res)=>{
 
 module.exports = {
   getcart, postcart, getcheckout, getdeletecart, addaddress, placeorder, 
-  thankyou,razorpayorder,paymentdone
+  thankyou,razorpayorder,paymentdone,walletpayment
 }

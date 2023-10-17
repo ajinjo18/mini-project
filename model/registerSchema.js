@@ -169,9 +169,10 @@ const registerschema = new mongoose.Schema({
                 type: Date,
                 default: Date.now
             },
-            refundstatus:{
-                tpye: String
+            status: {
+                type: String,
             }
+            
         }]
     }
 })

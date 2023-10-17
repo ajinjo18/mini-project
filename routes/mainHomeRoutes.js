@@ -12,7 +12,10 @@ const myorders=require('../controllers/ordersController')
 
 
 router.get('/',user.isUserBlocked,mainHome.home)
+
 router.get('/shop',mainHome.shop)
+router.get('/paginationshop',mainHome.paginationshop)
+
 router.get('/cart',user.isUserLogged,user.isUserBlocked,cart.getcart)
 router.get('/addcart/:id',user.isUserLogged,user.isUserBlocked,addtocart.addtocart)
 
@@ -41,6 +44,7 @@ router.get('/productview/:id',mainHome.getproductview)
 router.get('/category/:id',mainHome.category)
 router.post('/addaddress',cart.addaddress)
 router.post('/placeorder',cart.placeorder)
+router.post('/walletpayment',cart.walletpayment)
 router.get('/thankyou',user.isUserLogged,user.isUserBlocked,cart.thankyou)
 
 router.get('/orders',user.isUserLogged,user.isUserBlocked,myorders.myorders)
@@ -60,5 +64,20 @@ router.post('/payorder',cart.razorpayorder)
 router.post('/paymentdone',cart.paymentdone)
 
 router.get('/wallet',profile.getwallet)
+
+router.get('/viewfilerproduct/:min/:max/:sort',mainHome.viewfilerproduct)
+router.post('/filterprice',mainHome.filterprice)
+
+router.get('/sortedprice/:sort',mainHome.sortedprice)
+
+router.get('/filteredcategory/:min/:max/:sort',mainHome.filteredcategory)
+router.get('/categorysortedprice/:sort',mainHome.categorysortedprice)
+
+router.post('/searchproduct',mainHome.searchproduct)
+
+router.get('/return/:id',user.isUserLogged,user.isUserBlocked,mainHome.returnproduct)
+
+router.get('/myinvoice/:id',myorders.myinvoice)
+
 
 module.exports=router

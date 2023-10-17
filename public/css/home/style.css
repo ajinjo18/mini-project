@@ -1402,7 +1402,7 @@ ol {
 	border: 2px solid #ff0000;
 	position: absolute;
 	right: 0;
-	bottom: -5px;
+	bottom: -50px;
 	border-radius: 2px;
 }
 
@@ -1425,13 +1425,13 @@ ol {
 	height: 1px;
 	width: 5px;
 	background: #0d0d0d;
-	content: "";
+	/* content: ""; */
 }
 
 .filter-range-wrap .range-slider .price-input input {
 	font-size: 16px;
 	color: #0d0d0d;
-	max-width: 16%;
+	max-width: 23%;
 	border: none;
 }
 

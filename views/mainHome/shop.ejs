@@ -6,10 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!-- <meta name="description" content="Ashion Template">
-    <meta name="keywords" content="Ashion, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <link rel="shorcket icon" type="x-icon" href="/img/logo2.png">
     <title>GO shop</title>
 
     <!-- Google Font -->
@@ -42,9 +39,9 @@
         <div class="offcanvas__close">+</div>
         <ul style="margin-top: 30px; margin-left: -10px;" class="offcanvas__widget">
             <li><span class="fas fa-search-plus"></span></li>
-            <li><a href="#"><span class="fas fa-heart"></span>
+            <!-- <li><a href="#"><span class="fas fa-heart"></span>
                     <div class="tip">2</div>
-                </a></li>
+                </a></li> -->
             <li><a href="#"><span class="fas fa-shopping-cart"></span>
                     <div class="tip"><%= numberOfItems %></div>
                 </a></li>
@@ -83,9 +80,9 @@
        <div class="container-fluid">
            <div class="row">
                <div class="col-xl-3 col-lg-2">
-                   <div class="">
-                       <a href="/"><img style="height: 110px;" src="img/logo2.png" alt="">
-                   </div>
+                <div class="">
+                    <a href="/"><img style="height: 110px;" src="/img/logo2.png" alt="">
+                </div>
                </div>
                <div class="col-xl-6 col-lg-7">
                    <nav style="text-align: center;" class="header__menu">
@@ -101,7 +98,7 @@
                                    <li><a href="">Checkout</a></li>
                                </ul>
                            </li> -->
-                           <li><a href="">Contact</a></li>
+                           <!-- <li><a href="">Contact</a></li> -->
                        </ul>
                    </nav>
                </div>
@@ -134,9 +131,9 @@
                        <% if (user || googleuser) { %>
                        <ul class="header__right__widget">
                            <li><span class="fas fa-search"></span></li>
-                           <li><a href="#"><span class="fas fa-heart"></span>
+                           <!-- <li><a href="#"><span class="fas fa-heart"></span>
                                <div class="tip">0</div>
-                           </a></li>
+                           </a></li> -->
                            <li><a href="/home/cart"><span class="fas fa-shopping-cart"></span>
                                <div class="tip"><%= numberOfItems %></div>
                            </a></li>
@@ -144,9 +141,9 @@
                        <% } else { %>
                            <ul class="header__right__widget">
                                <li><span class="fas fa-search"></span></li>
-                               <li><a href="/user/login"><span class="fas fa-heart"></span>
+                               <!-- <li><a href="/user/login"><span class="fas fa-heart"></span>
                                    <div class="tip">0</div>
-                               </a></li>
+                               </a></li> -->
                                <li><a href="/user/login"><span class="fas fa-shopping-cart"></span>
                                    <div class="tip">0</div>
                                </a></li>
@@ -177,18 +174,110 @@
     </div> -->
     <!-- Breadcrumb End -->
 
+    <style>
+        body {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 31.25rem;
+  margin: 6rem auto;
+}
+
+.label {
+  font-size: .625rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: +1.3px;
+  margin-bottom: 1rem;
+}
+
+.searchBar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#searchQueryInput {
+  width: 100%;
+  height: 2.8rem;
+  background: #f5f5f5;
+  outline: none;
+  border: none;
+  border-radius: 1.625rem;
+  padding: 0 3.5rem 0 1.5rem;
+  font-size: 1rem;
+}
+
+#searchQuerySubmit {
+  width: 3.5rem;
+  height: 2.8rem;
+  margin-left: -3.5rem;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+#searchQuerySubmit:hover {
+  cursor: pointer;
+}
+    </style>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+    <form action="/home/searchproduct" method="post">
+        <div style="margin-top: 15px;" class="wrapper">
+            <div class="searchBar">
+              <input id="searchQueryInput" type="text" name="search" placeholder="Search" />
+              <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit">
+                <svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#666666" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+    </form>
+
     <!-- Shop Section Begin -->
-    <section class="shop spad">
+    <section style="margin-top: -130px;" class="shop spad">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="shop__sidebar">
                         <div class="sidebar__categories">
+                            <div class="sidebar__filter">
+                                <div class="section-title">
+                                    <h4>Shop by price</h4>
+                                </div>
+                                <div class="filter-range-wrap">
+                                    <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
+                                    data-min="200" data-max="2000"></div>
+                                    <div class="range-slider">
+                                        <div style="margin-left: -10px;" class="price-input">
+                                            <p>Price:</p>
+                                            <input type="text" id="minamount">
+                                            <input type="text" id="maxamount">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <form method="post" action="/home/filterprice"> -->
+                                    <input hidden id="minamountValue" name="minamountValue" type="number" value="">
+                                    <input hidden id="maxamount" name="maxamount" type="number" value="">
+                                    <a id="fbutton" type="submit">Filter</a>
+                                <!-- </form> -->
+                            </div>
                             <div class="section-title">
                                 <h4>Categories</h4>
                             </div>
                             <div class="categories__accordion">
                                 <div class="accordion" id="accordionExample">
+                                    <div class="card">
+                                        <div class="">
+                                            <a style="color: black;" href="/home/shop">All</a>
+                                            <!-- <a data-toggle="collapse" data-target="#collapseOne">Women</a> -->
+                                        </div>
+                                    </div>
                                     <% category.forEach((row,index)=>{ %>
                                     <div class="card">
                                         <div class="">
@@ -313,41 +402,87 @@
                         </div> -->
                     </div>
                 </div>
-                <div class="col-lg-9 col-md-9">
-                    <div class="row">
-                        <% product.forEach((row,index)=>{ %>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="/img/<%= row.images[0] %>">
-                                    <!-- <div class="label new">New</div> -->
-                                    <ul class="product__hover">
-                                        <li><a href="/img/<%= row.images[0] %>" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
-                                        <li><a href="#"><span class="fas fa-heart"></span></a></li>
-                                        <li><a href="/home/addcart/<%= row._id %>"><span class="fas fa-shopping-cart"></span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="/home/productview/<%= row._id %>"><%= row.productname %></a></h6>
-                                    <!-- <div class="rating">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div> -->
-                                    <div class="product__price">&#x20B9;<%= row.price %></div>
-                                </div>
-                            </div>
+                <div style="text-align: end;" class="col-lg-9 col-md-9">
+                    <div style="margin-top: -50px; margin-bottom: 50px;" class="container">
+                        <div class="btn-group sort-btn">
+                            <button class="btn btn-primary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort</button>
+                            <button class="btn btn-primary dropdown-toggle" data-sort="none"><i class="fa fa-sort"></i></button><!-- .dropdown-toggle adds rounded borders and reduces padding. It does not trigger dropdowns. -->
+                            <ul style="text-align: center;" class="dropdown-menu">
+                                <li tabindex="-1">Price,</li>
+                                <li><a type="button" id="highbtn" tabindex="-1">High</a></li>
+                                <li><a type="button" id="mibtn" tabindex="-1">Low</a></li>
+                            </ul>
                         </div>
-                        <% }) %>
+                    </div>
+                    <div id="product-container" class="row">
+                            <% product.forEach((row,index)=>{ %>
+                                <div  class="col-lg-4 col-md-6 ">
+                                    <div class="product__item">
+                                        <div class="product__item__pic set-bg" data-setbg="/img/<%= row.images[0] %>">
+                                            <!-- <div class="label new">New</div> -->
+                                            <ul class="product__hover">
+                                                <li><a href="/img/<%= row.images[0] %>" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
+                                                <li><a href="#"><span class="fas fa-heart"></span></a></li>
+                                                <li><a href="/home/addcart/<%= row._id %>"><span class="fas fa-shopping-cart"></span></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="product__item__text">
+                                            <h6><a href="/home/productview/<%= row._id %>"><%= row.productname %></a></h6>
+                                            <div class="product__price">&#x20B9;<%= row.price %></div>
+                                        </div>
+                                    </div>
+                                </div>
+                             <% }) %>
+
+                      
                         <div class="col-lg-12 text-center">
-                            <div class="pagination__option">
-                                <a href="#">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#"><i class="fa fa-angle-right"></i></a>
-                            </div>
+                            <nav aria-label="...">
+                                <ul class="pagination pagination-lg">
+                                  <ul class="pagination">
+                                    <% if(shop=='shop') { %>
+                                    <% if(pages) { %>
+                                      <% const totalPages = Math.ceil(pages); %>
+                                      <% const maxPagesToShow = 5; %>
+                                      <% const startPage = Math.max(0, pagenum - Math.floor(maxPagesToShow / 2)); %>
+                                      <% const endPage = Math.min(totalPages - 1, startPage + maxPagesToShow - 1); %>
+                                  
+                                        <% if (startPage > 0) { %>
+                                            <li class="page-item">
+                                              <a class="page-link" href="/home/paginationshop?page=<%= startPage - 1 %>" tabindex="-1">Previous</a>
+                                            </li>
+                                          <% } %>
+                                      
+                                          <% for(let i = startPage; i <= endPage; i++) { %>
+                                            <% if (pagenum === i) { %> 
+                                              <li class="page-item active">
+                                                <a class="page-link" href="/home/paginationshop?page=<%= i %>" tabindex="-1"><%= i + 1 %></a>
+                                              </li>
+                                            <% } else { %> 
+                                              <li class="page-item">
+                                                <a class="page-link" href="/home/paginationshop?page=<%= i %>" tabindex="-1"><%= i + 1 %></a>
+                                              </li>
+                                            <% } %>
+                                          <% } %>
+                                      
+                                          <% if (endPage < totalPages - 1) { %>
+                                            <li class="page-item">
+                                              <a class="page-link" href="/home/paginationshop?page=<%= endPage + 1 %>" tabindex="-1">Next</a>
+                                            </li>
+                                          <% } %>
+                                        <% } %>
+                                    <% } %>
+                                  </ul>
+                                  
+                                </ul>
+                              </nav>
+                            <!-- <div class="pagination__option">
+                                <a href="#" id="prevPage"><i class="fa fa-angle-left"></i></a>
+                                <a href="#" class="pageLink">1</a>
+                                <a href="#" class="pageLink">2</a>
+                                <a href="#" id="nextPage"><i class="fa fa-angle-right"></i></a>
+                            </div> -->
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -355,5 +490,163 @@
     </section>
     <!-- Shop Section End -->
 
+
+    <script>
+        // const productcontainer = document.getElementById('productcontainer')
+        // const productContainer = document.getElementById('product-container');
+
+        document.getElementById('highbtn').addEventListener('click', () => {
+            console.log('running');
+
+            const minamountValue = $("#minamount").val();
+            const maxamountValue = $("#maxamount").val();
+
+            console.log('minamount value:', minamountValue);
+            console.log('maxamount value:', maxamountValue);
+
+            const sort = '1'
+
+            window.location.href=`/home/sortedprice/${sort}`
+
+        })
+
+        document.getElementById('mibtn').addEventListener('click', () => {
+            console.log('running');
+
+            const minamountValue = $("#minamount").val();
+            const maxamountValue = $("#maxamount").val();
+
+            console.log('minamount value:', minamountValue);
+            console.log('maxamount value:', maxamountValue);
+
+            const sort = '-1'
+
+            window.location.href=`/home/sortedprice/${sort}`
+
+        })
+
+        document.getElementById('fbutton').addEventListener('click', () => {
+            console.log('running');
+
+            const minamountValue = $("#minamount").val();
+            const maxamountValue = $("#maxamount").val();
+
+            console.log('minamount value:', minamountValue);
+            console.log('maxamount value:', maxamountValue);
+
+            const sort = '3'
+
+            window.location.href=`/home/viewfilerproduct/${minamountValue}/${maxamountValue}/${sort}`
+        //     const url = 'http://localhost:3000/home/filterprice'
+
+        //     fetch(url,{
+        //         method:'POST',
+        //         headers:{
+        //             'Content-Type' : 'application/json'
+        //         },
+        //         body:JSON.stringify({minamountValue,maxamountValue})
+        //     })
+        //     .then(response => response.json())
+        //     .then(data =>{
+        //             const minamountValue = data.minamountValue
+        //         const maxamountValue = data.maxamountValue
+        //     //     const productContainers = document.querySelector('#product-container');
+
+        //     //     // productContainers.forEach(container => {
+        //     //         productContainers.innerHTML = '';  // Clear old data
+        //     //     // });
+
+
+        //     //     function loadStylesheet(href) {
+        //     //         return new Promise((resolve, reject) => {
+        //     //             const link = document.createElement('link');
+        //     //             link.rel = 'stylesheet';
+        //     //             link.href = href;
+        //     //             link.onload = resolve;
+        //     //             link.onerror = reject;
+        //     //             document.head.appendChild(link);
+        //     //         });
+        //     //     }
+
+
+        //     //     function loadAndAppendScript(src, callback) {
+        //     //         const script = document.createElement('script');
+        //     //         script.src = src;
+        //     //         script.onload = callback;
+        //     //         document.body.appendChild(script);
+        //     //     }
+
+
+        //     //     function loadAndAppendScript(src, callback) {
+        //     //         const script = document.createElement('script');
+        //     //         script.src = src;
+
+        //     //         // Set a callback function to execute when the script is loaded
+        //     //         script.onload = callback;
+
+        //     //         // Append the script to the document's body
+        //     //         document.body.appendChild(script);
+        //     //     }
+                
+
+
+        //     //     function card(item){
+        //     //         const productToAdd = document.createElement('div');
+        //     //         productToAdd.classList.add('col-lg-4', 'col-md-6', 'product-container');
+        //     //         productToAdd.innerHTML =  `
+                   
+                  
+        //     //         <div class="product__item__pic set-bg" data-setbg="/img/${item.images[0]} ">
+        //     //                         <!-- <div class="label new">New</div> -->
+        //     //                         <ul class="product__hover">
+        //     //                             <li><a href="/img/${item.images[0]}" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
+        //     //                             <li><a href="#"><span class="fas fa-heart"></span></a></li>
+        //     //                             <li><a href="/home/addcart/${item._id}"><span class="fas fa-shopping-cart"></span></a></li>
+        //     //                         </ul>
+        //     //                     </div>
+        //     //                     <div class="product__item__text">
+        //     //                         <h6><a href="/home/productview/${item._id}">${item.productname}</a></h6>
+        //     //                         <div class="product__price">&#x20B9;${item.price}</div>
+        //     //                     </div>
+        //     //         `
+
+        //     //         const jqueryScriptUrl = "/js/home/jquery-3.3.1.min.js";
+
+        //     //         loadAndAppendScript(jqueryScriptUrl, () => {
+        //     //             console.log("jQuery script has been loaded successfully.");
+        //     //         });
+
+        //     //         loadAndAppendScript('/js/home/main.js', () => {
+        //     //             // Code to run after the script is loaded
+        //     //             console.log('Script has been loaded and executed.');
+        //     //         });
+
+        //     //         const styleUrl = "/css/home/style.css";
+
+        //     //         loadStylesheet(styleUrl)
+        //     //         .then(() => {
+        //     //             console.log("style.css has been loaded successfully.");
+        //     //         })
+        //     //         .catch((error) => {
+        //     //             console.error("An error occurred while loading style.css:", error);
+        //     //         });
+                    
+
+        //     //         console.log(productToAdd)
+        //     //         productContainers.appendChild(productToAdd);                    
+
+        //     //     }
+
+        //     //     data.filteredproduct.forEach(row => {
+        //     //         card(row)
+
+        //     //     });
+
+                    
+            
+        //     // });
+        //  });
+        })
+    </script>
 
     <%- include('./include/footer') %>

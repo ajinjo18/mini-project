@@ -6,10 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!-- <meta name="description" content="Ashion Template">
-    <meta name="keywords" content="Ashion, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <link rel="shorcket icon" type="x-icon" href="/img/logo2.png">
     <title>GO shop</title>
 
     <!-- Google Font -->
@@ -44,9 +41,9 @@
         <div class="offcanvas__close">+</div>
         <ul style="margin-top: 30px; margin-left: -10px;" class="offcanvas__widget">
             <li><span class="fas fa-search-plus"></span></li>
-            <li><a href="#"><span class="fas fa-heart"></span>
+            <!-- <li><a href="#"><span class="fas fa-heart"></span>
                     <div class="tip">2</div>
-                </a></li>
+                </a></li> -->
             <li><a href="#"><span class="fas fa-shopping-cart"></span>
                     <div class="tip"><%= numberOfItems %></div>
                 </a></li>
@@ -103,7 +100,7 @@
                                    <li><a href="">Checkout</a></li>
                                </ul>
                            </li> -->
-                           <li><a href="">Contact</a></li>
+                           <!-- <li><a href="">Contact</a></li> -->
                        </ul>
                    </nav>
                </div>
@@ -136,9 +133,9 @@
                        <% if (user || googleuser) { %>
                        <ul class="header__right__widget">
                            <li><span class="fas fa-search"></span></li>
-                           <li><a href="#"><span class="fas fa-heart"></span>
+                           <!-- <li><a href="#"><span class="fas fa-heart"></span>
                                <div class="tip">0</div>
-                           </a></li>
+                           </a></li> -->
                            <li><a href="/home/cart"><span class="fas fa-shopping-cart"></span>
                                <div class="tip"><%= numberOfItems %></div>
                            </a></li>
@@ -146,9 +143,9 @@
                        <% } else { %>
                            <ul class="header__right__widget">
                                <li><span class="fas fa-search"></span></li>
-                               <li><a href="/user/login"><span class="fas fa-heart"></span>
+                               <!-- <li><a href="/user/login"><span class="fas fa-heart"></span>
                                    <div class="tip">0</div>
-                               </a></li>
+                               </a></li> -->
                                <li><a href="/user/login"><span class="fas fa-shopping-cart"></span>
                                    <div class="tip">0</div>
                                </a></li>
@@ -166,55 +163,59 @@
     <!-- Header Section End -->
 
     <!-- Categories Section Begin -->
+    
     <section class="categories">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-6 p-0">
                     <div class="categories__item categories__large__item set-bg"
-                    data-setbg="img/categories/category-1.jpg">
+                    data-setbg="/img/<%= bannerc[0].image %>">
                     <div class="categories__text">
-                        <h1>Women’s fashion</h1>
-                        <p>Sitamet, consectetur adipiscing elit, sed do eiusmod tempor incidid-unt labore
-                        edolore magna aliquapendisse ultrices gravida.</p>
-                        <!-- <a href="#">Shop now</a> -->
+                        <h1><%= bannerc[0].category %>’s</h1>
+                        <p><%= bannerc[0].description %></p>
+                        <a href="/home/category/<%= bannerc[0].category %>">Shop now</a>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6 p-0">
-                        <div class="categories__item set-bg" data-setbg="img/categories/category-2.jpg">
+                        <div class="categories__item set-bg" data-setbg="/img/<%= bannerc[1].image %>">
                             <div class="categories__text">
-                                <h4>Men’s fashion</h4>
-                                <!-- <p>358 items</p>
-                                <a href="#">Shop now</a> -->
+                                <h4><%= bannerc[1].category %>’s</h4>
+                                <p><%= bannerc[1].description %></p>
+                                <!-- <p>358 items</p> -->
+                                <a href="/home/category/<%= bannerc[1].category %>">Shop now</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 p-0">
-                        <div class="categories__item set-bg" data-setbg="img/categories/category-3.jpg">
+                        <div class="categories__item set-bg" data-setbg="/img/<%= bannerc[2].image %>">
                             <div class="categories__text">
-                                <h4>Kid’s fashion</h4>
-                                <!-- <p>273 items</p>
-                                <a href="#">Shop now</a> -->
+                                <h4><%= bannerc[2].category %>’s</h4>
+                                <p><%= bannerc[2].description %></p>
+                                <!-- <p>273 items</p> -->
+                                <a href="/home/category/<%= bannerc[2].category %>">Shop now</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 p-0">
-                        <div class="categories__item set-bg" data-setbg="img/categories/category-4.jpg">
+                        <div class="categories__item set-bg" data-setbg="/img/<%= bannerc[3].image %>">
                             <div class="categories__text">
-                                <h4>Cosmetics</h4>
-                                <!-- <p>159 items</p>
-                                <a href="#">Shop now</a> -->
+                                <h4><%= bannerc[3].category %>’s</h4>
+                                <p><%= bannerc[3].description %></p>
+                                <!-- <p>159 items</p> -->
+                                <a href="/home/category/<%= bannerc[3].category %>">Shop now</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 p-0">
-                        <div class="categories__item set-bg" data-setbg="img/categories/category-5.jpg">
+                        <div class="categories__item set-bg" data-setbg="/img/<%= bannerc[4].image %>">
                             <div class="categories__text">
-                                <h4>Accessories</h4>
-                                <!-- <p>792 items</p>
-                                <a href="#">Shop now</a> -->
+                                <h4><%= bannerc[4].category %>’s</h4>
+                                <p><%= bannerc[4].description %></p>                                
+                                <!-- <p>792 items</p> -->
+                                <a href="/home/category/<%= bannerc[4].category %>">Shop now</a>
                             </div>
                         </div>
                     </div>
@@ -237,11 +238,11 @@
             <div class="col-lg-8 col-md-8">
                 <ul class="filter__controls">
                     <li class="active" data-filter="*">All</li>
-                    <li data-filter=".women">Women’s</li>
-                    <li data-filter=".men">Men’s</li>
-                    <li data-filter=".kid">Kid’s</li>
-                    <li data-filter=".accessories">Accessories</li>
-                    <li data-filter=".cosmetic">Cosmetics</li>
+                    <li data-filter=".<%= bannerc[0].category %>"><%= bannerc[0].category %>’s</li>
+                    <li data-filter=".<%= bannerc[1].category %>"><%= bannerc[1].category %>’s</li>
+                    <li data-filter=".<%= bannerc[2].category %>"><%= bannerc[2].category %>’s</li>
+                    <li data-filter=".<%= bannerc[3].category %>"><%= bannerc[3].category %>’s</li>
+                    <li data-filter=".<%= bannerc[4].category %>"><%= bannerc[4].category %>’s</li>
                 </ul>
             </div>
         </div>
@@ -274,162 +275,26 @@
             </div>
             <% }) %>
 
-            <!-- <div class="col-lg-3 col-md-4 col-sm-6 mix men">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-2.jpg">
-                        <ul class="product__hover">
-                            <li><a href="img/product/product-2.jpg" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
-                            <li><a href="#"><span class="fas fa-heart"></span></a></li>
-                            <li><a href="#"><span class="fas fa-shopping-cart"></span></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Flowy striped skirt</a></h6>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product__price">$ 49.0</div>
-                    </div>
-                </div>
+        <!-- <div class="col-lg-3 col-md-4 col-sm-6 mix men">
+                
             </div> -->
             <!-- <div class="col-lg-3 col-md-4 col-sm-6 mix accessories">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-3.jpg">
-                        <div class="label stockout">out of stock</div>
-                        <ul class="product__hover">
-                            <li><a href="img/product/product-3.jpg" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
-                            <li><a href="#"><span class="fas fa-heart"></span></a></li>
-                            <li><a href="#"><span class="fas fa-shopping-cart"></span></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Cotton T-Shirt</a></h6>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product__price">$ 59.0</div>
-                    </div>
-                </div>
+                
             </div> -->
             <!-- <div class="col-lg-3 col-md-4 col-sm-6 mix cosmetic">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-4.jpg">
-                        <ul class="product__hover">
-                            <li><a href="img/product/product-4.jpg" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
-                            <li><a href="#"><span class="fas fa-heart"></span></a></li>
-                            <li><a href="#"><span class="fas fa-shopping-cart"></span></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Slim striped pocket shirt</a></h6>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product__price">$ 59.0</div>
-                    </div>
-                </div>
+               
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mix kid">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-5.jpg">
-                        <ul class="product__hover">
-                            <li><a href="img/product/product-5.jpg" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
-                            <li><a href="#"><span class="fas fa-heart"></span></a></li>
-                            <li><a href="#"><span class="fas fa-shopping-cart"></span></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Fit micro corduroy shirt</a></h6>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product__price">$ 59.0</div>
-                    </div>
-                </div>
+                
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mix women men kid accessories cosmetic">
-                <div class="product__item sale">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-6.jpg">
-                        <div class="label sale">Sale</div>
-                        <ul class="product__hover">
-                            <li><a href="img/product/product-6.jpg" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
-                            <li><a href="#"><span class="fas fa-heart"></span></a></li>
-                            <li><a href="#"><span class="fas fa-shopping-cart"></span></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Tropical Kimono</a></h6>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product__price">$ 49.0 <span>$ 59.0</span></div>
-                    </div>
-                </div>
+               
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mix women men kid accessories cosmetic">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-7.jpg">
-                        <ul class="product__hover">
-                            <li><a href="img/product/product-7.jpg" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
-                            <li><a href="#"><span class="fas fa-heart"></span></a></li>
-                            <li><a href="#"><span class="fas fa-shopping-cart"></span></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Contrasting sunglasses</a></h6>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product__price">$ 59.0</div>
-                    </div>
-                </div>
+                
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mix women men kid accessories cosmetic">
-                <div class="product__item sale">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-8.jpg">
-                        <div class="label">Sale</div>
-                        <ul class="product__hover">
-                            <li><a href="img/product/product-8.jpg" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
-                            <li><a href="#"><span class="fas fa-heart"></span></a></li>
-                            <li><a href="#"><span class="fas fa-shopping-cart"></span></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Water resistant backpack</a></h6>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                        </div>
-                        <div class="product__price">$ 49.0 <span>$ 59.0</span></div>
-                    </div>
-                </div>
+                
             </div> -->
         </div>
     </div>
@@ -444,23 +309,23 @@
                 <div class="banner__slider owl-carousel">
                     <div class="banner__item">
                         <div class="banner__text">
-                            <span>The Chloe Collection</span>
-                            <h1>The Project Jacket</h1>
-                            <!-- <a href="#">Shop now</a> -->
+                            <span><%= bannerc[0].category %>’s</span>
+                            <h5><%= bannerc[0].description %>’s</h5>
+                            <a href="/home/shop">Shop now</a>
                         </div>
                     </div>
                     <div class="banner__item">
                         <div class="banner__text">
-                            <span>The Chloe Collection</span>
-                            <h1>The Project Jacket</h1>
-                            <!-- <a href="#">Shop now</a> -->
+                            <span><%= bannerc[1].category %>’s</span>
+                            <h5><%= bannerc[1].description %>’s</h5>
+                            <a href="/home/shop">Shop now</a>
                         </div>
                     </div>
                     <div class="banner__item">
                         <div class="banner__text">
-                            <span>The Chloe Collection</span>
-                            <h1>The Project Jacket</h1>
-                            <!-- <a href="#">Shop now</a> -->
+                            <span><%= bannerc[2].category %>’s</span>
+                            <h5><%= bannerc[2].description %>’s</h5>
+                            <a href="/home/shop">Shop now</a>
                         </div>
                     </div>
                 </div>
@@ -656,25 +521,24 @@
             <div class="col-lg-6 p-0">
                 <div class="discount__text">
                     <div class="discount__text__title">
-                        <span>Discount</span>
-                        <h2>Winter 2023</h2>
-                        <h5><span>Sale</span> 50%</h5>
+                        <h2><%= offerbaner[0].sale %></h2>
+                        <h5><span>Sale</span> <%= offerbaner[0].discount %></h5>
                     </div>
                     <div class="discount__countdown" id="countdown-time">
                         <div class="countdown__item">
-                            <span>22</span>
+                            <span><%= offerbaner[0].day %></span>
                             <p>Days</p>
                         </div>
                         <div class="countdown__item">
-                            <span>18</span>
+                            <span><%= offerbaner[0].hour %></span>
                             <p>Hour</p>
                         </div>
                         <div class="countdown__item">
-                            <span>46</span>
+                            <span><%= offerbaner[0].min %></span>
                             <p>Min</p>
                         </div>
                         <div class="countdown__item">
-                            <span>05</span>
+                            <span><%= offerbaner[0].sec %></span>
                             <p>Sec</p>
                         </div>
                     </div>
@@ -722,7 +586,50 @@
     </div>
 </section>
 <!-- Services Section End -->
+<!-- <div id="countdown">
+    <div class="countdown__item">
+        <span id="days">0</span>
+        <p>Days</p>
+    </div>
+    <div class="countdown__item">
+        <span id="hours">0</span>
+        <p>Hours</p>
+    </div>
+    <div class="countdown__item">
+        <span id="minutes">0</span>
+        <p>Minutes</p>
+    </div>
+    <div class="countdown__item">
+        <span id="seconds">0</span>
+        <p>Seconds</p>
+    </div>
+</div> -->
 
 
+<!-- <script>
+    function updateCountdown() {
+    const now = new Date();
+    const targetDate = new Date("2023-10-31T23:59:59");  // Set your target date and time here
+
+    const timeDifference = targetDate - now;
+
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+    document.getElementById('days').innerText = days;
+    document.getElementById('hours').innerText = hours;
+    document.getElementById('minutes').innerText = minutes;
+    document.getElementById('seconds').innerText = seconds;
+}
+
+// Update the countdown every second
+setInterval(updateCountdown, 1000);
+
+// Initial call to set the initial countdown
+updateCountdown();
+
+</script> -->
 
 <%- include('./include/footer') %>

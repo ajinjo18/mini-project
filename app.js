@@ -22,7 +22,8 @@ app.use((req, res, next)=>{
 
 
 app.use(session({
-    secret:['gfhf','djhdhd','djdjdjj','jdhdh','dhdhd','jdjd','djdhfh','jdjdj','ghg','wnbjb','gggd','dhdh'],
+    secret:['gfhf','djhdhd','djdjdjj','jdhdh','dhdhd','jdjd','djdhfh',
+    'jdjdj','ghg','wnbjb','gggd','dhdh','hghjk','jhhhh','hhj'],
     saveUninitialized:true,
     resave:false
 }))
@@ -41,7 +42,7 @@ app.use(passport.session());
 
 
 // app.get('/hello',(req,res)=>{
-//   res.render('mainHome/wallet')
+//   res.render('admin/bannercategory')
 // })
 
 

@@ -23,11 +23,36 @@
                 <div class="col-lg-3 col-md-3">
                     <div class="shop__sidebar">
                         <div class="sidebar__categories">
+                            <div class="sidebar__filter">
+                                <div class="section-title">
+                                    <h4>Shop by price</h4>
+                                </div>
+                                <div class="filter-range-wrap">
+                                    <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
+                                    data-min="200" data-max="2000"></div>
+                                    <div class="range-slider">
+                                        <div style="margin-left: -10px;" class="price-input">
+                                            <p>Price:</p>
+                                            <input type="text" id="minamount">
+                                            <input type="text" id="maxamount">
+                                        </div>
+                                    </div>
+                                </div>
+                                    <input hidden id="minamountValue" name="minamountValue" type="number" value="">
+                                    <input hidden id="maxamount" name="maxamount" type="number" value="">
+                                    <a id="fbutton" type="submit">Filter</a>
+                            </div>
                             <div class="section-title">
                                 <h4>Categories</h4>
                             </div>
                             <div class="categories__accordion">
                                 <div class="accordion" id="accordionExample">
+                                    <div class="card">
+                                        <div class="">
+                                            <a style="color: black;" href="/home/shop">All</a>
+                                            <!-- <a data-toggle="collapse" data-target="#collapseOne">Women</a> -->
+                                        </div>
+                                    </div>
                                     <% category1.forEach((row,index)=>{ %>
                                     <div class="card">
                                         <div class="">
@@ -155,6 +180,17 @@
                 <div class="col-lg-9 col-md-9">
                     <h4 style="margin-bottom: 20px; text-decoration: underline rgb(180, 22, 22); font-weight: 600;"><%= id.toUpperCase() %></h4>
                     <div class="row">
+                        <div style="margin-top: -50px; margin-bottom: 50px; text-align: end;" class="container">
+                            <div class="btn-group sort-btn">
+                                <button class="btn btn-primary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort</button>
+                                <button class="btn btn-primary dropdown-toggle" data-sort="none"><i class="fa fa-sort"></i></button><!-- .dropdown-toggle adds rounded borders and reduces padding. It does not trigger dropdowns. -->
+                                <ul style="text-align: center;" class="dropdown-menu">
+                                    <li tabindex="-1">Price,</li>
+                                    <li><a type="button" id="highbtn" tabindex="-1">High</a></li>
+                                    <li><a type="button" id="mibtn" tabindex="-1">Low</a></li>
+                                </ul>
+                            </div>
+                        </div>
                         <% product.forEach((row,index)=>{ %>
                         <div class="col-lg-4 col-md-6">
                             <div class="product__item">
@@ -180,14 +216,14 @@
                             </div>
                         </div>
                         <% }) %>
-                        <div class="col-lg-12 text-center">
+                        <!-- <div class="col-lg-12 text-center">
                             <div class="pagination__option">
                                 <a href="#">1</a>
                                 <a href="#">2</a>
                                 <a href="#">3</a>
                                 <a href="#"><i class="fa fa-angle-right"></i></a>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -195,5 +231,52 @@
     </section>
     <!-- Shop Section End -->
 
+
+
+    <script>
+        document.getElementById('highbtn').addEventListener('click', () => {
+            console.log('running');
+
+            const minamountValue = $("#minamount").val();
+            const maxamountValue = $("#maxamount").val();
+
+            console.log('minamount value:', minamountValue);
+            console.log('maxamount value:', maxamountValue);
+
+            const sort = '1'
+
+            window.location.href=`/home/categorysortedprice/${sort}`
+
+        })
+
+        document.getElementById('mibtn').addEventListener('click', () => {
+            console.log('running');
+
+            const minamountValue = $("#minamount").val();
+            const maxamountValue = $("#maxamount").val();
+
+            console.log('minamount value:', minamountValue);
+            console.log('maxamount value:', maxamountValue);
+
+            const sort = '-1'
+
+            window.location.href=`/home/categorysortedprice/${sort}`
+
+        })
+
+        document.getElementById('fbutton').addEventListener('click', () => {
+            console.log('running');
+
+            const minamountValue = $("#minamount").val();
+            const maxamountValue = $("#maxamount").val();
+
+            console.log('minamount value:', minamountValue);
+            console.log('maxamount value:', maxamountValue);
+
+            const sort = '3'
+
+            window.location.href=`/home/filteredcategory/${minamountValue}/${maxamountValue}/${sort}`
+        })
+    </script>
 
     <%- include('./include/footer') %>

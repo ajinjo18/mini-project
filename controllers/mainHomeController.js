@@ -1,8 +1,13 @@
 const productCollection = require('../model/productSchema')
 const registercollection = require('../model/registerSchema')
 const categorycollection = require('../model/categorySchema')
+const bannercategorycollection = require('../model/bannercategorySchema')
+const offersalecollection = require('../model/offerbannerSchema')
+const returnproductCollection = require('../model/returnproductSchema')
+
 const nodemailer = require('nodemailer');
 const generateOTP = require('generate-otp');
+const { name } = require('ejs')
 
 
 
@@ -42,7 +47,12 @@ const home = async (req, res) => {
     }
     const username = req.session.username
     const googleuser = req.session.googleuser
-    res.render('mainHome/home', { username, user, googleuser, product, numberOfItems, })
+
+    const bannerc = await bannercategorycollection.find()
+    const offerbaner = await offersalecollection.find()
+
+    res.render('mainHome/home', { username, user, googleuser, product, numberOfItems, bannerc, offerbaner})
+
   }
   catch (err) {
     console.error('Error :', err);
@@ -57,10 +67,24 @@ const home = async (req, res) => {
 
 const shop = async (req, res) => {
   try {
+
+    const pagenum = 0;
+    const a = 5 * pagenum;
+    const b = 5 * (pagenum + 1)
+
+    const product1 = await productCollection.find();
+
+    const length = product1.length
+    const pages = Math.ceil(length / 5)
+
+    console.log(length , pages);
+
     let numberOfItems;
 
     const category = await categorycollection.find()
-    const product = await productCollection.find()
+    const product2 = await productCollection.find()
+
+    const product = product2.slice(a, b);
 
     const user = req.session.user
 
@@ -90,7 +114,74 @@ const shop = async (req, res) => {
 
     const username = req.session.username
     const googleuser = req.session.googleuser
-    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems })
+
+    const shop='shop'
+
+    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems ,pagenum, pages,shop })
+  }
+  catch (err) {
+    console.error('Error :', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+// ------------------------pagination shop---------------------
+
+
+const paginationshop = async (req, res) => {
+  try {
+    const pagenum1 = req.query.page;
+    const pagenum = parseInt(pagenum1);
+    const a = 5 * pagenum;
+    const b = 5 * (pagenum + 1)
+
+    const product1 = await productCollection.find();
+
+    const length = product1.length
+    const pages = Math.ceil(length / 5)
+
+    console.log(length , pages);
+
+    let numberOfItems;
+
+    const category = await categorycollection.find()
+    const product2 = await productCollection.find()
+
+    const product = product2.slice(a, b);
+
+    const user = req.session.user
+
+    const total = await registercollection.aggregate([
+      {
+        $match: { email: user } // Match the document based on email
+      },
+      {
+        $project: {
+          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+        }
+      }
+    ]).exec();
+
+    if (total.length > 0) {
+      numberOfItems = total[0].numberOfItemsInCart;
+    }
+
+    if (req.session.user) {
+      const d1 = await registercollection.findOne({ email: user })
+      req.session.username = d1.name
+    }
+
+    if (req.user) {
+      req.session.googleuser = req.user.name
+    }
+
+    const username = req.session.username
+    const googleuser = req.session.googleuser
+
+    const shop='shop'
+
+    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems ,pagenum, pages ,shop})
   }
   catch (err) {
     console.error('Error :', err);
@@ -153,6 +244,8 @@ const category = async (req, res) => {
   try {
     let numberOfItems;
     const id = req.params.id
+    req.session.category=''
+    req.session.category=id
     const product = await productCollection.find({ category: id })
     const category1 = await categorycollection.find()
 
@@ -359,7 +452,7 @@ const cancelorder = async (req, res) => {
           payment : req.query.payment,
           amount : amount2-coupendiscount,
           orderid : req.query.orderid,
-          refundstatus : 'Completed'
+          status : 'credited'
         }
         await registercollection.findOneAndUpdate(
           {email:email},
@@ -372,7 +465,7 @@ const cancelorder = async (req, res) => {
           payment : req.query.payment,
           amount : amount2,
           orderid : req.query.orderid,
-          refundstatus : 'Completed'
+          status : 'credited'
         }
         await registercollection.findOneAndUpdate(
           {email:email},
@@ -514,9 +607,466 @@ const editprofilepassword = async (req, res) => {
 }
 
 
+// -------------------------post filterprice----------------
+
+const filterprice = async (req,res)=>{
+
+  try {
+
+    
+  const minamountValue = req.body.minamountValue.replace('₹', '');
+  const maxamountValue = req.body.maxamountValue.replace('₹', '');
+  
+
+
+
+  const product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } })
+
+    res.send({minamountValue , maxamountValue})
+  }
+  catch (err) {
+    console.error('Error :', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+
+}
+
+
+// -------------------------get filterprice----------------
+
+const viewfilerproduct = async (req,res)=>{
+  try {
+    let product
+
+    const minamountValue = req.params.min.replace('₹', '');
+    const maxamountValue = req.params.max.replace('₹', '');
+
+    if (minamountValue==undefined) {
+      minamountValue ='200'
+      maxamountValue='2000'
+    }
+
+    req.session.minamountValue = minamountValue
+    req.session.maxamountValue = maxamountValue
+    
+    const sort = req.params.sort
+    console.log(sort);
+
+    if (sort =='1') {
+      product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: -1 })
+
+    }
+    else if(sort=='-1') {
+      product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: 1 })
+    }
+    else{
+      if(minamountValue != '' && maxamountValue != ''){
+        product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } })
+  
+      }
+    }
+    
+
+    let numberOfItems;
+    const category = await categorycollection.find()
+    
+    const user = req.session.user
+
+    const total = await registercollection.aggregate([
+      {
+        $match: { email: user } // Match the document based on email
+      },
+      {
+        $project: {
+          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+        }
+      }
+    ]).exec();
+
+    if (total.length > 0) {
+      numberOfItems = total[0].numberOfItemsInCart;
+    }
+
+    if (req.session.user) {
+      const d1 = await registercollection.findOne({ email: user })
+      req.session.username = d1.name
+    }
+
+    if (req.user) {
+      req.session.googleuser = req.user.name
+    }
+
+    const username = req.session.username
+    const googleuser = req.session.googleuser
+
+    const shop='shop1'
+
+    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems,shop })
+  }
+  catch (err) {
+    console.error('Error :', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+const sortedprice = async (req,res)=>{
+  try {
+    let product
+    let minamountValue
+    let maxamountValue
+
+    if(req.session.minamountValue == undefined) {
+      minamountValue = '200'
+      maxamountValue = '2000'
+    }
+    else{
+      minamountValue = req.session.minamountValue
+      maxamountValue = req.session.maxamountValue
+    }
+
+
+    const sort = req.params.sort
+
+    if (sort =='1') {
+      product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: -1 })
+
+    }
+    else if(sort=='-1') {
+      product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: 1 })
+    }
+    else{
+      if(minamountValue != '' && maxamountValue != ''){
+        product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } })
+  
+      }
+    }
+    
+
+    let numberOfItems;
+    const category = await categorycollection.find()
+    
+    const user = req.session.user
+
+    const total = await registercollection.aggregate([
+      {
+        $match: { email: user } // Match the document based on email
+      },
+      {
+        $project: {
+          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+        }
+      }
+    ]).exec();
+
+    if (total.length > 0) {
+      numberOfItems = total[0].numberOfItemsInCart;
+    }
+
+    if (req.session.user) {
+      const d1 = await registercollection.findOne({ email: user })
+      req.session.username = d1.name
+    }
+
+    if (req.user) {
+      req.session.googleuser = req.user.name
+    }
+
+    const username = req.session.username
+    const googleuser = req.session.googleuser
+    const shop='shop1'
+
+    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems,shop })
+  }
+  catch (err) {
+    console.error('Error :', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
+const filteredcategory = async (req, res) => {
+  try {
+
+    const id = req.session.category
+
+    console.log(id);
+
+    let product
+
+    const minamountValue = req.params.min.replace('₹', '');
+    const maxamountValue = req.params.max.replace('₹', '');
+
+    if (minamountValue==undefined) {
+      minamountValue ='200'
+      maxamountValue='2000'
+    }
+
+    req.session.minamountValue2 = minamountValue
+    req.session.maxamountValue2 = maxamountValue
+    
+    const sort = req.params.sort
+    console.log(sort);
+
+    if (sort =='1') {
+      product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: -1 })
+
+    }
+    else if(sort=='-1') {
+      product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: 1 })
+    }
+    else{
+      // if(minamountValue != '' && maxamountValue != ''){
+        product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } })
+      // }
+    }
+
+    let numberOfItems;
+   
+    // const product = await productCollection.find({ category: id })
+    const category1 = await categorycollection.find()
+
+    const user = req.session.user
+
+    const total = await registercollection.aggregate([
+      {
+        $match: { email: user } // Match the document based on email
+      },
+      {
+        $project: {
+          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+        }
+      }
+    ]).exec();
+
+    if (total.length > 0) {
+      numberOfItems = total[0].numberOfItemsInCart;
+    }
+
+    if (req.session.user) {
+      const d1 = await registercollection.findOne({ email: user })
+      req.session.username = d1.name
+    }
+
+    if (req.user) {
+      req.session.googleuser = req.user.name
+    }
+
+    const username = req.session.username
+    const googleuser = req.session.googleuser
+    res.render('mainHome/category', { username, user, googleuser, product, category1, id, numberOfItems })
+  }
+  catch (err) {
+    console.error('Error :', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+
+const categorysortedprice = async (req, res) => {
+  try {
+
+    const id = req.session.category
+
+    console.log(id);
+
+    let product
+
+    // const minamountValue = req.params.min.replace('₹', '');
+    // const maxamountValue = req.params.max.replace('₹', '');
+
+    let minamountValue
+    let maxamountValue
+
+    if(req.session.minamountValue2 ==undefined){
+      minamountValue='200'
+      maxamountValue='2000'
+    }
+    else{
+      minamountValue = req.session.minamountValue2
+      maxamountValue = req.session.maxamountValue2
+    }
+    
+    
+    const sort = req.params.sort
+
+    console.log(sort,minamountValue,maxamountValue);
+
+    if (sort =='1') {
+      product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: -1 })
+
+    }
+    else if(sort=='-1') {
+      product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: 1 })
+    }
+    else{
+      // if(minamountValue != '' && maxamountValue != ''){
+        product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } })  
+      // }
+    }
+
+    let numberOfItems;
+   
+    // const product = await productCollection.find({ category: id })
+    const category1 = await categorycollection.find()
+
+    const user = req.session.user
+
+    const total = await registercollection.aggregate([
+      {
+        $match: { email: user } // Match the document based on email
+      },
+      {
+        $project: {
+          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+        }
+      }
+    ]).exec();
+
+    if (total.length > 0) {
+      numberOfItems = total[0].numberOfItemsInCart;
+    }
+
+    if (req.session.user) {
+      const d1 = await registercollection.findOne({ email: user })
+      req.session.username = d1.name
+    }
+
+    if (req.user) {
+      req.session.googleuser = req.user.name
+    }
+
+    const username = req.session.username
+    const googleuser = req.session.googleuser
+    res.render('mainHome/category', { username, user, googleuser, product, category1, id, numberOfItems })
+  }
+  catch (err) {
+    console.error('Error :', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+// -----------------------search---------------------------
+
+const searchproduct = async(req,res)=>{
+  try {
+    
+    const productname = req.body.search
+
+    const pagenum = 0;
+    const a = 5 * pagenum;
+    const b = 5 * (pagenum + 1)
+
+    const product1 = await productCollection.find({productname:productname});
+    console.log(product1);
+
+    const length = product1.length
+    const pages = Math.ceil(length / 5)
+
+    console.log(length , pages);
+
+    let numberOfItems;
+
+    const category = await categorycollection.find()
+    const product2 = await productCollection.find({productname:productname})
+    console.log(product2);
+    const product = product2.slice(a, b);
+
+    const user = req.session.user
+
+    const total = await registercollection.aggregate([
+      {
+        $match: { email: user } // Match the document based on email
+      },
+      {
+        $project: {
+          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+        }
+      }
+    ]).exec();
+
+    if (total.length > 0) {
+      numberOfItems = total[0].numberOfItemsInCart;
+    }
+
+    if (req.session.user) {
+      const d1 = await registercollection.findOne({ email: user })
+      req.session.username = d1.name
+    }
+
+    if (req.user) {
+      req.session.googleuser = req.user.name
+    }
+
+    const username = req.session.username
+    const googleuser = req.session.googleuser
+
+    const shop='shop'
+
+    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems ,pagenum, pages,shop })
+  }
+  catch (err) {
+    console.error('Error :', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+
+// ---------------cancel order----------------
+
+
+const returnproduct = async (req, res) => {
+  const id = req.params.id
+  const email = req.session.user
+
+  const amount1 = req.query.amount
+  const amount2 = parseFloat(amount1.replace(/[^\d.]/g, ''));
+
+  const data = {
+    productname : req.query.productname,
+    payment : req.query.payment,
+    amount : amount2,
+    orderid : req.query.orderid,
+    user: email
+  }
+  const orderidToCheck = req.query.orderid;  // ID you want to check
+
+  // Check if a document with the specified orderid already exists
+  const existingDocument = await returnproductCollection.findOne({ orderid: req.query.orderid });
+  
+  if (existingDocument) {
+    console.log(`A document with orderid '${orderidToCheck}' already exists.`);
+    // Handle accordingly (e.g., update the existing document, show an error message, etc.)
+  } else {
+    // If the document doesn't exist, create a new one
+    try {
+      const newDocument = await returnproductCollection.create(data);
+      console.log('Document inserted successfully');
+      const status = 'Return Pending'
+
+      const updatedUser = await registercollection.findOneAndUpdate(
+        { email: email, 'orders._id': id },
+        { $set: { 'orders.$.status': status } },
+        {
+          new: true,
+        }
+      );
+      res.redirect('/home/orders')
+    } catch (error) {
+      console.error('Error inserting document:', error);
+    }
+  }
+  }
+
+
+
 
 
 module.exports = {
   shop, home, getproductview, category, address, postaddress, updateaddress, deleteaddrress, cancelorder,
-  editprofilepassword, getotp ,postotp,otpgenerator
+  editprofilepassword, getotp ,postotp,otpgenerator,filterprice,viewfilerproduct,sortedprice,
+  filteredcategory,categorysortedprice,paginationshop,searchproduct,returnproduct
 }

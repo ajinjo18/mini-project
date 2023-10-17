@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/home/profileedit.css">
+    <link rel="shorcket icon" type="x-icon" href="/img/logo2.png">
+    <title>GO shop</title>    <link rel="stylesheet" href="/css/home/profileedit.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   </head>
@@ -214,10 +214,15 @@ h1 {
                       <div class="card" style="border-radius: 10px;">
                         <% let index = 0; %>
                         <% orders.forEach(function(order) { %>
+                          
                             <div class="card-body p-4">
                           <div class="card shadow-0 border mb-4">
                             <div class="card-body">
                               <div class="row">
+                                <div style="text-align: end;">
+                                  <i onclick="invoice('<%= order._id %>')" type="button" class="fas fa-file-pdf"></i>
+                                  <!-- <button style="width:150px; height: 50px; margin-top: 25px; " onclick="invoice('<%= order._id %>')">INVOICE</button> -->
+                                </div>
                                 <div class="col-md-2">
                                   <img width="60px" src="<%= order.images %>"
                                     class="img-fluid">
@@ -248,6 +253,8 @@ h1 {
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal<%= index %>">
                                     Order Details
                                 </button>
+
+                                
                                 
                                 <!-- Modal -->
                                 <div class="modal fade" id="exampleModal<%= index %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -302,16 +309,25 @@ h1 {
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-check"></i> </span> <span class="text">Shipped</span> </div>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-truck"></i> </span> <span class="text">Out for delivery</span> </div>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-box"></i> </span> <span class="text">Delivered</span> </div>
-                                                    <% } else { %>
+                                                      <% } else if(order.status =='Return rejected') { %>
+                                                        <div class="step active"> <span class="icon"> <i class="fas fa-spinner"></i> </span> <span class="text">Pending</span> </div>
+                                                        <div class="step active"> <span class="icon"> <i class="fas fa-check"></i> </span> <span class="text">Shipped</span> </div>
+                                                        <div class="step active"> <span class="icon"> <i class="fas fa-truck"></i> </span> <span class="text">Out for delivery</span> </div>
+                                                        <div class="step active"> <span class="icon"> <i class="fas fa-box"></i> </span> <span class="text">Delivered</span> </div>                                                     <% } else { %>
                                                       <div class="step active"> <span class="icon"> <i class="fas fa-times"></i> </span> <span class="text">Cancelled</span> </div>
                                                     <% } %>
                                                 </div>
+                                                
                                                 </div>
                                                 <div class="card-footer p-4">
                                                   <div class="d-flex justify-content-between">
-                                                    <% if (order.status != 'Cancelled' && order.status != 'Delivered') { %>
+                                                    <% if (order.status != 'Cancelled' && order.status != 'Delivered' && order.status != 'Return Pending' && order.status !='Return rejected' && order.status != 'Return successfully' ) { %>
                                                     <h5 class="fw-normal mb-0"><a style="text-decoration: none; cursor: pointer;" onclick="checker('/home/cancelorder/<%= order._id %>?productname=<%= order.productName %>&payment=<%= order.payment %>&amount=<%= order.totalprice %>&orderid=<%= order.id %>')">Cancel Order</a></h5>
                                                     <% } %>
+                                                    <% if (order.status == 'Delivered') { %>
+                                                      <h5 class="fw-normal mb-0"><a style="text-decoration: none; cursor: pointer;" href="/home/return/<%= order._id %>?productname=<%= order.productName %>&payment=<%= order.payment %>&amount=<%= order.totalprice %>&orderid=<%= order.id %>">Return Order</a></h5>
+                                                    <% } %>
+                                                  
                                                     <div class="border-start h-100"></div>
                                                     <!-- <h5 class="fw-normal mb-0"><a href="#!">Cancel</a></h5> -->
                                                     <div class="border-start h-100"></div>
@@ -382,6 +398,164 @@ h1 {
         </div>
     </div>
 
+
+
+
+    <script>
+async function invoice(id) {
+  try {
+    const response = await fetch(`/home/myinvoice/${id}`, { method: 'get' });
+
+    if (!response.ok) {
+      throw new Error(`Fetch request failed with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // console.log('Received data:', data);
+
+    // Check if 'refference' matches the expected data structure
+    // Ensure that it contains the necessary invoice details
+
+    // Generate and download the invoice
+    // easyinvoice.createInvoice(data, function (result) {
+    //   console.log('Generated invoice:', result);
+    //   easyinvoice.download('myInvoice.pdf', result.pdf);
+    // });
+
+//     var data1 = {
+//     //"documentTitle": "RECEIPT", //Defaults to INVOICE
+//     //"locale": "de-DE", //Defaults to en-US, used for number formatting (see docs)
+//     "currency": "USD", //See documentation 'Locales and Currency' for more info
+//     "taxNotation": "vat", //or gst
+//     "marginTop": 25,
+//     "marginRight": 25,
+//     "marginLeft": 25,
+//     "marginBottom": 25,
+//     "logo": "https://public.easyinvoice.cloud/img/logo_en_original.png", //or base64
+//     "background": "https://public.easyinvoice.cloud/img/watermark-draft.jpg", //or base64 //img or pdf
+//     "sender": {
+//         "company": "Sample Corp",
+//         "address": "Sample Street 123",
+//         "zip": "1234 AB",
+//         "city": "Sampletown",
+//         "country": "Samplecountry"
+//         //"custom1": "custom value 1",
+//         //"custom2": "custom value 2",
+//         //"custom3": "custom value 3"
+//     },
+//     "client": {
+//        	"company": "Client Corp",
+//        	"address": "Clientstreet 456",
+//        	"zip": "4567 CD",
+//        	"city": "Clientcity",
+//        	"country": "Clientcountry"
+//         //"custom1": "custom value 1",
+//         //"custom2": "custom value 2",
+//         //"custom3": "custom value 3"
+//     },
+//     "invoiceNumber": "2021.0001",
+//     "invoiceDate": "1.1.2021",
+//     "products": [
+//         {
+//             "quantity": "2",
+//             "description": "Test1",
+//             "tax": 6,
+//             "price": 33.87
+//         },
+//         {
+//             "quantity": "4",
+//             "description": "Test2",
+//             "tax": 21,
+//             "price": 10.45
+//         }
+//     ],
+//     "bottomNotice": "Kindly pay your invoice within 15 days.",
+//     //Used for translating the headers to your preferred language
+//     //Defaults to English. Below example is translated to Dutch
+//     // "translate": { 
+//     //     "invoiceNumber": "Factuurnummer",
+//     //     "invoiceDate": "Factuurdatum",
+//     //     "products": "Producten", 
+//     //     "quantity": "Aantal", 
+//     //     "price": "Prijs",
+//     //     "subtotal": "Subtotaal",
+//     //     "total": "Totaal" 
+//     // }
+// };
+
+
+
+
+    let data1 = {
+
+      "currency": "INR",
+      "taxNotation": "",
+      "marginTop": 25,
+      "marginRight": 25,
+      "marginLeft": 25,
+      "marginBottom": 25,
+      "logo": "https://public.easyinvoice.cloud/img/logo_en_original.png",
+      "background": "https://public.easyinvoice.cloud/img/watermark-draft.jpg",
+      "sender": {
+        "company": "GOshop",
+        "address": "GOshop",
+        "zip": "695502",
+        "city": "Trivandrum",
+        "country": "India"
+
+      },
+      "client": {
+        "company": data.username,
+        "address": data.address,
+        "zip": data.pincode,
+        "city": data.city,
+        "country": "India"
+
+      },
+      "invoiceNumber": "2021.0001",
+      "invoiceDate": "1.1.2021",
+      "products": [
+        {
+          "product Name": data.productName,
+          "quantity": data.quantity,
+          "description": data.productName,
+          "tax-rate": 0,
+          "price": data.price,
+          "Shipping": 40
+        },
+
+      ],
+      "bottomNotice": "Your invoice for the product",
+
+    };
+
+
+
+
+
+
+  console.log(data1)
+easyinvoice.createInvoice(data1, function (result) {
+      easyinvoice.download('myInvoice.pdf', result.pdf);
+    //	you can download like this as well:
+    //	easyinvoice.download();
+    //	easyinvoice.download('myInvoice.pdf');   
+    });
+  } catch (error) {
+    console.log('hrrr');
+    console.error(error);
+    // Handle any errors, e.g., show an error message to the user
+  }
+}
+
+// ...
+
+    </script>
+
+
+
+
+
     <script>
       
       const url='http://localhost:3000/home/search'
@@ -430,7 +604,7 @@ h1 {
     }
     </script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    
+    <script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
   <script>

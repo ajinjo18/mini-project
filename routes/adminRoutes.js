@@ -6,6 +6,8 @@ const upload=require('../model/multerConfigure')
 const admin=require('../controllers/adminController')
 const product=require('../controllers/productController')
 const category=require('../controllers/categoryController')
+const banner=require('../controllers/bannerController')
+const chart= require('../controllers/chart')
 
 const isadminlogged=require('../middleware/admin')
 
@@ -48,6 +50,41 @@ router.get('/addcoupen',admin.addcoupens)
 router.post('/addcoupen',admin.postcoupens)
 router.post('/updatecoupen',admin.updatecoupen)
 router.get('/deletecoupen/:id',admin.deletecoupen)
+
+router.get('/bannerc',banner.getbannerC)
+router.post('/editbannerc/:id',upload.single('productimage'),banner.editbannerc)
+
+router.get('/offerbaner',banner.offerbaner)
+router.post('/offersale/:id',banner.offersalepost)
+
+router.get('/return',admin.returnorder)
+
+router.get('/sales-data',chart.sales)
+router.get('/revenue',chart.revenue)
+router.get('/saleyearly',chart.saleyearly)
+
+router.get('/report',admin.reports)
+
+// --------------------sale pdf report----------------
+router.post('/generate-excel',admin.excelreport)
+router.post('/generate-pdf-report',admin.salepdfreport)
+router.post('/month-pdf-report',admin.monthsalepdfreport)
+router.post('/yearsalepdfreport',admin.yearalepdfreport)
+
+// ----------------------sale excel report---------------
+router.post('/daysaleexcellreport',admin.generateExcelReportDay)
+router.post('/generate-excel-report-month',admin.generateExcelReportMonth)
+router.post('/generate-excel-report-year',admin.yearaleexcellreport)
+
+
+router.post('/stock-report-excel',admin.stockreportexcel)
+router.post('/stock-report-pdf',admin.stockreportpdf)
+
+router.post('/cancelledexcelreport',admin.cancelledexcelreport)
+router.post('/salepdfreport',admin.cancelledpdfreport)
+
+router.get('/approverefund/:id',admin.approverefund);
+router.get('/rejectreturn/:id',admin.rejectreturn)
 
 router.get('/logout',admin.logout)
 
