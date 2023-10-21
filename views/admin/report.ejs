@@ -1,0 +1,955 @@
+<%- include('./include/header') %>
+
+
+<style>
+    /* Add CSS styles for the calendar */
+    .calendar-container {
+      max-width: 300px;
+      margin: 20px auto;
+    }
+
+    .calendar {
+      display: inline-block;
+      width: 100%;
+      max-width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .calendar-header {
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .calendar-days {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 10px;
+    }
+
+    .calendar-day {
+      width: 14.28%;
+      box-sizing: border-box;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .calendar-day:hover {
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+  </style>
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+          <nav class="navbar bg-light navbar-light">
+              <a class="navbar-brand mx-4 mb-3">
+                  <h3 class="text-primary"><i class=""></i>GO shop</h3>
+              </a>
+              <div class="d-flex align-items-center ms-4 mb-4">
+                  <!-- <div class="position-relative">
+                      <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                      <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                  </div> -->
+                  <div class="ms-3">
+                      <h4 class="mb-0">Admin</h4>
+                      <!-- <span>Admin</span> -->
+                  </div>
+              </div>
+              <div class="navbar-nav w-100">
+                  <a href="/admin/home" class="nav-item nav-link"><i
+                          class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                          <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                                    class="fas fa-flag me-2"></i>Banner</a>
+                            <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
+                                <a href="/admin/bannerc" class="dropdown-item">Categories Banner</a>
+                                <a href="/admin/offerbaner" class="dropdown-item">Offer Sale</a>
+                            </div>
+                        </div>
+                  <div class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                              class="fa fa-laptop me-2"></i>Products</a>
+                      <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
+                          <a href="/admin/addproduct" class="dropdown-item">Add Product</a>
+                          <a href="/admin/allproducts" class="dropdown-item">Product List</a>
+                      </div>
+                  </div>
+                  <div class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Categories</a>
+                      <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
+                          <a href="/admin/listcatagories" class="dropdown-item">List Categories</a>
+                          <a href="/admin/addcategory" class="dropdown-item">Add Categories</a>
+                      </div>
+                  </div>
+                  <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                            class="fas fa-ticket-alt me-2"></i>Coupons</a>
+                    <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
+                        <a href="/admin/listcoupen" class="dropdown-item">List Coupons</a>
+                        <a class="active" href="/admin/addcoupen" class="dropdown-item">Add Coupons</a>
+                    </div>
+                </div>
+                  <!-- <a href="form.html" class="nav-item nav-link active"><i class="fa fa-keyboard me-2"></i>Forms</a> -->
+                  <a href="/admin/users" class="nav-item nav-link"><i class="fa fa-user me-2"></i>Users</a>
+                  <a href="/admin/orders" class="nav-item nav-link"><i class="fas fa-shopping-cart me-2"></i>Orders</a>
+                  <a href="/admin/return" class="nav-item nav-link"><i class="fas fa-times me-2"></i>Return Orders</a>
+                  <a href="/admin/report" class="nav-item nav-link active"><i class="fas fa-file-alt me-2"></i>Report</a>                  
+                  <!-- <a href="#" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
+                  <a href="#" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
+                  <a href="#" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a> -->
+              </div>
+          </nav>
+      </div>
+      <!-- Sidebar End -->
+
+
+      <!-- Content Start -->
+      <div class="content">
+          <!-- Navbar Start -->
+          <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+              <a href="" class="navbar-brand d-flex d-lg-none me-4">
+                  <h2 class="text-primary mb-0"><i class=""></i></h2>
+              </a>
+              <a href="#" class="sidebar-toggler flex-shrink-0">
+                  <i class="fa fa-bars"></i>
+              </a>
+              <form class="d-none d-md-flex ms-4">
+                  <input class="form-control border-0" type="search" placeholder="Search">
+              </form>
+              <div class="navbar-nav align-items-center ms-auto">
+                  <div class="nav-item dropdown">
+                      <!-- <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                          <i class="fa fa-envelope me-lg-2"></i>
+                          <span class="d-none d-lg-inline-flex">Message</span>
+                      </a> -->
+                      <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                          <!-- <a href="#" class="dropdown-item">
+                              <div class="d-flex align-items-center">
+                                  <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                  <div class="ms-2">
+                                      <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                      <small>15 minutes ago</small>
+                                  </div>
+                              </div> -->
+                          <!-- </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                              <div class="d-flex align-items-center">
+                                  <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                  <div class="ms-2">
+                                      <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                      <small>15 minutes ago</small>
+                                  </div>
+                              </div>
+                          </a> -->
+                          <!-- <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                              <div class="d-flex align-items-center">
+                                  <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                  <div class="ms-2">
+                                      <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                      <small>15 minutes ago</small>
+                                  </div>
+                              </div>
+                          </a> -->
+                          <!-- <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item text-center">See all message</a> -->
+                      </div>
+                  </div>
+                  <!-- <div class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                          <i class="fa fa-bell me-lg-2"></i>
+                          <span class="d-none d-lg-inline-flex">Notificatin</span>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                          <a href="#" class="dropdown-item">
+                              <h6 class="fw-normal mb-0">Profile updated</h6>
+                              <small>15 minutes ago</small>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                              <h6 class="fw-normal mb-0">New user added</h6>
+                              <small>15 minutes ago</small>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                              <h6 class="fw-normal mb-0">Password changed</h6>
+                              <small>15 minutes ago</small>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item text-center">See all notifications</a>
+                      </div>
+                  </div> -->
+                  <div class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                          <img class="rounded-circle me-lg-2" src="/img/icons8-male-user-96.png" alt=""
+                              style="width: 40px; height: 40px;">
+                          <span class="d-none d-lg-inline-flex">Admin</span>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                          <a href="#" class="dropdown-item">My Profile</a>
+                          <a href="#" class="dropdown-item">Settings</a>
+                          <a href="/admin/logout" class="dropdown-item">Log Out</a>
+                      </div>
+                  </div>
+              </div>
+          </nav>
+          <!-- Navbar End -->
+
+          <div class="col-12" style="padding: 20px;">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Sales report</h6>
+                <div class="d-flex align-items-center">
+                    <!-- Toggle buttons for date, month, and year -->
+                    <button class="btn btn-secondary me-2" onclick="showDateField()">Select Date</button>
+                    <button class="btn btn-secondary me-2" onclick="showMonthField()">Select Month</button>
+                    <button class="btn btn-secondary" onclick="showYearField()">Select Year</button>
+                </div>
+        
+                <!-- Calendar field for selecting a date -->
+                <input type="date" id="dateInput" class="form-control mt-4" style="display: none">
+        
+                <!-- Month dropdown -->
+                <select id="monthSelect" class="form-select mt-4" style="display: none">
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                    <!-- Add options for all months -->
+                </select>
+        
+                <!-- Year dropdown -->
+                <select id="yearSelect" class="form-select mt-4" style="display: none">
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                    <option value="2030">2030</option>                  
+                    <!-- Add options for relevant years -->
+                </select>
+        
+                <!-- Buttons to download report as PDF or Excel -->
+                <button type="button" class="btn btn-primary mt-4" id="pdf">Download as PDF</button>
+                <button class="btn btn-success mt-4" id="excell">Download as Excel</button>
+        
+                <!-- Add a container to display the selected date, month, or year -->
+                <div id="selectedFieldDisplay"></div>
+            </div>
+        </div>
+        
+        
+
+
+
+
+          <!-- <div class="col-12" style="padding: 20px;">
+            <div class="bg-light rounded h-100 p-4">
+              <h6 class="mb-4">Sales report</h6>
+              <div class="d-flex align-items-center">
+                <input type="date" id="dateInput" class="form-control me-2">
+                <button class="btn btn-primary me-2" onclick="sendDateToBackend()">Download Excel</button>
+                <button class="btn btn-primary" onclick="generatePDFReport()">Download PDF</button>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="col-12" style="padding: 20px;">
+            <div class="bg-light rounded h-100 p-4">
+              <h6 class="mb-4">Stock report</h6>
+              <div class="d-flex align-items-center">
+                <!-- <input type="date" id="dateInput" class="form-control me-2"> -->
+                <button class="btn btn-primary me-2" onclick="generateStockReport()" >Download Excel</button>
+                <button class="btn btn-primary" onclick="generateStockPDFReport()">Download PDF</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12" style="padding: 20px;">
+            <div class="bg-light rounded h-100 p-4">
+              <h6 class="mb-4">Cancel Order report</h6>
+              <div class="d-flex align-items-center">
+                <input type="date" id="dateInput1" class="form-control me-2">
+                <button class="btn btn-primary me-2" onclick="downloadCancelledExcelReport()" >Download Excel</button>
+                <button class="btn btn-primary" onclick="downloadPDFReport()">Download PDF</button>
+              </div>
+            </div>
+          </div>
+ 
+
+
+
+<script>
+    function showDateField() {
+    document.getElementById('dateInput').style.display = 'block';
+    document.getElementById('monthSelect').style.display = 'none';
+    document.getElementById('yearSelect').style.display = 'none';
+    document.getElementById('yearSelect').value = '';
+    document.getElementById('monthSelect').value = '';
+}
+
+function showMonthField() {
+    document.getElementById('dateInput').style.display = 'none';
+    document.getElementById('monthSelect').style.display = 'block';
+    document.getElementById('yearSelect').style.display = 'none';
+    document.getElementById('yearSelect').value = '';
+    document.getElementById('dateInput').value = '';
+}
+
+function showYearField() {
+    document.getElementById('dateInput').style.display = 'none';
+    document.getElementById('monthSelect').style.display = 'none';
+    document.getElementById('yearSelect').style.display = 'block';
+    document.getElementById('dateInput').value = '';
+    document.getElementById('monthSelect').value = '';
+}
+
+function downloadAsPDF() {
+    // Depending on which field is visible, you can retrieve the selected value accordingly
+    const selectedDate = document.getElementById('dateInput').value;
+    const selectedMonth = document.getElementById('monthSelect').value;
+    const selectedYear = document.getElementById('yearSelect').value;
+
+    // Depending on which field is visible, you can handle the download accordingly
+    // Replace the URL and parameter names accordingly based on your backend API
+    const pdfDownloadUrl = `http://your-backend-api-url/downloadpdfreport?selectedDate=${selectedDate}&selectedMonth=${selectedMonth}&selectedYear=${selectedYear}`;
+
+    // Trigger the PDF download
+    window.open(pdfDownloadUrl);
+}
+
+function downloadAsExcel() {
+    // Depending on which field is visible, you can retrieve the selected value accordingly
+    const selectedDate = document.getElementById('dateInput').value;
+    const selectedMonth = document.getElementById('monthSelect').value;
+    const selectedYear = document.getElementById('yearSelect').value;
+
+    // Depending on which field is visible, you can handle the download accordingly
+    // Replace the URL and parameter names accordingly based on your backend API
+    const excelDownloadUrl = `http://your-backend-api-url/downloadexcelreport?selectedDate=${selectedDate}&selectedMonth=${selectedMonth}&selectedYear=${selectedYear}`;
+
+    // Trigger the Excel download
+    window.open(excelDownloadUrl);
+}
+
+
+
+// -------------------------sale by date pdf-------------------------
+
+
+async function generatePDFReport(selectedDate) {
+  const data = {
+    selectedDate: selectedDate
+  };
+
+  console.log('Data:', data);
+
+  try {
+    const response = await fetch('http://localhost:3000/admin/generate-pdf-report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sales_report.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+
+
+
+// ---------------------------sale by month pdf-------------------------
+
+
+const generatePDFReportForMonth = async () => {
+    const selectedDate = document.getElementById('monthSelect').value;
+
+    const data = {
+        selectedDate: selectedDate
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/admin/month-pdf-report', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const blob = await response.blob();
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `sales_report_${selectedDate}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+
+
+
+
+// ------------------------------sale by year pdf--------------------------
+
+
+async function generateYearlyPDF() {
+            const yearInput = document.getElementById('yearSelect');
+            const selectedYear = yearInput.value;
+
+            if (!selectedYear || selectedYear < 2000 || selectedYear > 2030) {
+                alert('Please enter a valid year between 2000 and 2030.');
+                return;
+            }
+
+            const data = {
+                selectedDate: `${selectedYear}-01-01` // Set the selected date to January 1st of the selected year
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/admin/yearsalepdfreport', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `sales_report_${selectedYear}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+
+
+
+
+// --------------------------------sales by day excel------------------------
+
+
+async function downloadExcelReport() {
+            const dateInput = document.getElementById('dateInput');
+            const selectedDate = dateInput.value;
+        
+            const data = {
+                selectedDate: selectedDate
+            };
+            // const selectedDate = '2023-10-17';  // Replace with the selected date
+
+            try {
+                const response = await fetch('http://localhost:3000/admin/daysaleexcellreport', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ selectedDate })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const blob = await response.blob();
+
+                // Create a link to download the Excel file
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `sales_report_${selectedDate}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+
+
+// ------------------------------sales by month excell-----------------------
+
+
+async function downloadMonthlyExcel() {
+            const selectedDate = document.getElementById('monthSelect').value;
+            
+            const data = {
+                selectedDate
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/admin/generate-excel-report-month', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const blob = await response.blob();
+
+                // Create a link to download the Excel file
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `sales_report_${selectedDate}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+
+
+
+// ------------------------------sales by month excell-----------------------
+
+async function downloadyearExcel() {
+            const selectedDate = document.getElementById('yearSelect').value;
+            
+            const data = {
+                selectedDate
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/admin/generate-excel-report-year', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const blob = await response.blob();
+
+                // Create a link to download the Excel file
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `sales_report_${selectedDate}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+
+
+
+
+
+// Event listener for PDF download button
+
+document.getElementById('pdf').addEventListener('click', () => {
+
+
+  const dateInput = document.getElementById('dateInput');
+  const selectedDate = dateInput.value;
+  const monthInput = document.getElementById('monthSelect')
+  const selectedMonth = monthInput.value;
+  const yearInput = document.getElementById('yearSelect')
+  const selectedYear = yearInput.value;
+
+  
+
+  if (selectedDate) {
+    generatePDFReport(selectedDate);
+      dateInput.value = '';  // Clear input value
+  }
+  else if(selectedMonth){
+    console.log(selectedMonth);
+    generatePDFReportForMonth(selectedMonth);
+  }
+  else if(selectedYear) {
+    generateYearlyPDF(selectedYear)
+  }
+});
+
+
+
+
+// Event listener for excell download button
+
+document.getElementById('excell').addEventListener('click', () => {
+
+
+const dateInput = document.getElementById('dateInput');
+const selectedDate = dateInput.value;
+const monthInput = document.getElementById('monthSelect')
+const selectedMonth = monthInput.value;
+const yearInput = document.getElementById('yearSelect')
+const selectedYear = yearInput.value;
+
+
+
+if (selectedDate) {
+    downloadExcelReport(selectedDate)
+    dateInput.value = '';  // Clear input value
+}
+else if(selectedMonth){
+    downloadMonthlyExcel(selectedMonth)
+}
+else if(selectedYear) {
+    downloadyearExcel(selectedYear)
+}
+});
+
+
+
+</script>
+
+          
+
+
+
+<!-- -------------------------sales report(excel)---------------------------  -->
+  <script>
+    async function sendDateToBackend() {
+      const dateInput = document.getElementById('dateInput');
+      const selectedDate = dateInput.value;
+  
+      const data = {
+        selectedDate: selectedDate
+      };
+  
+      try {
+        const response = await fetch('http://localhost:3000/admin/generate-excel', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+        });
+
+        console.log(response);
+
+        if (!response.ok) {
+        throw new Error('Network response was not ok');
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'sales_report.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  </script>
+
+
+<!-- -------------------------sales report(pdf)---------------------------  -->
+
+<!-- <script>
+    const generatePDFReport = async () => {
+  const dateInput = document.getElementById('dateInput');
+  const selectedDate = dateInput.value;
+
+  const data = {
+    selectedDate: selectedDate
+  };
+
+  try {
+    const response = await fetch('http://localhost:3000/admin/generate-pdf-report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    // Create a blob from the response
+    const blob = await response.blob();
+
+    // Create a URL for the blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link for download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sales_report.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+</script> -->
+
+
+<!-- -------------------stock report(excel)--------------------- -->
+
+
+<script>
+    const generateStockReport = async () => {
+  const dateInput = document.getElementById('dateInput');
+  const selectedDate = dateInput.value;
+
+  const data = {
+    selectedDate: selectedDate
+  };
+
+  try {
+    const response = await fetch('http://localhost:3000/admin/stock-report-excel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    // Create a blob from the response
+    const blob = await response.blob();
+
+    // Create a URL for the blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link for download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'stock_report.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+// Call the generateStockReport function when needed
+// For example, when the user clicks a button
+// const generateStockReportButton = document.getElementById('generateStockReportButton');
+// generateStockReportButton.addEventListener('click', generateStockReport);
+
+</script>
+
+
+
+
+<!-- --------------------------stock report(pdf)--------------------------- -->
+
+
+<script>
+    const generateStockPDFReport = async () => {
+  const dateInput = document.getElementById('dateInput');
+  const selectedDate = dateInput.value;
+
+  const data = {
+    selectedDate: selectedDate
+  };
+
+  try {
+    const response = await fetch('http://localhost:3000/admin/stock-report-pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    // Create a blob from the response
+    const blob = await response.blob();
+
+    // Create a URL for the blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link for download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'stock_report.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+</script>
+
+
+
+<!-- ------------------------------cancelled orders(excell)------------------------ -->
+
+
+<script>
+    const downloadCancelledExcelReport = async () => {
+    // const selectedDate = '2023-10-17'; // Replace with the selected date
+    const dateInput = document.getElementById('dateInput1');
+    const selectedDate = dateInput.value;
+
+    const data = {
+        selectedDate: selectedDate
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/admin/cancelledexcelreport', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const blob = await response.blob();
+
+        // Create a link to download the Excel report
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `cancelled_sales_report_${selectedDate}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+
+// Trigger the download
+
+</script>
+
+
+<!-- --------------------------------cancelled orders(pdf)------------------------------ -->
+
+
+<script>
+    const downloadPDFReport = async () => {
+        const dateInput = document.getElementById('dateInput1');
+      const selectedDate = dateInput.value;
+  
+      const data = {
+        selectedDate: selectedDate
+      };
+    // const selectedDate = '2023-10-17'; // Replace with the selected date
+
+    try {
+        const response = await fetch('http://localhost:3000/admin/salepdfreport', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                selectedDate
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const blob = await response.blob();
+
+        // Create a link to download the PDF
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `cancelled_sales_report_${selectedDate}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+
+// Trigger the download
+
+</script>
+
+
+
+
+
+  <%- include('./include/footer') %>

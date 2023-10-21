@@ -1,0 +1,258 @@
+<%- include('./include/header') %>
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+          <nav class="navbar bg-light navbar-light">
+              <a class="navbar-brand mx-4 mb-3">
+                  <h3 class="text-primary"><i class=""></i>GO shop</h3>
+              </a>
+              <div class="d-flex align-items-center ms-4 mb-4">
+                  <!-- <div class="position-relative">
+                      <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                      <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                  </div> -->
+                  <div class="ms-3">
+                      <h4 class="mb-0">Admin</h4>
+                      <!-- <span>Admin</span> -->
+                  </div>
+              </div>
+              <div class="navbar-nav w-100">
+                  <a href="/admin/home" class="nav-item nav-link"><i
+                          class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+                          <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i
+                                    class="fas fa-flag me-2"></i>Banner</a>
+                            <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
+                                <a class="active" href="/admin/bannerc" class="dropdown-item">Categories Banner</a>
+                                <a href="/admin/offerbaner" class="dropdown-item">Offer Sale</a>
+                            </div>
+                        </div>
+                  <div class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                              class="fa fa-laptop me-2"></i>Products</a>
+                      <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
+                          <a href="/admin/addproduct" class="dropdown-item">Add Product</a>
+                          <a href="/admin/allproducts" class="dropdown-item">Product List</a>
+                      </div>
+                  </div>
+                  <div class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Categories</a>
+                      <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
+                          <a href="/admin/listcatagories" class="dropdown-item">List Categories</a>
+                          <a href="/admin/addcategory" class="dropdown-item">Add Categories</a>
+                      </div>
+                  </div>
+                  <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                            class="fas fa-ticket-alt me-2"></i>Coupons</a>
+                    <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
+                        <a href="/admin/listcoupen" class="dropdown-item">List Coupons</a>
+                        <a class="active" href="/admin/addcoupen" class="dropdown-item">Add Coupons</a>
+                    </div>
+                </div>
+                  <a href="/admin/users" class="nav-item nav-link"><i class="fa fa-user me-2"></i>Users</a>
+                  <a href="/admin/orders" class="nav-item nav-link"><i class="fas fa-shopping-cart me-2"></i>Orders</a>
+                  <a href="/admin/return" class="nav-item nav-link"><i class="fas fa-times me-2"></i>Return Orders</a>
+                  <a href="/admin/report" class="nav-item nav-link"><i class="fas fa-file-alt me-2"></i>Report</a>
+                  <!-- <a href="#" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
+                  <a href="#" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
+                  <a href="#" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a> -->
+              </div>
+          </nav>
+      </div>
+      <!-- Sidebar End -->
+
+
+      <!-- Content Start -->
+      <div class="content">
+          <!-- Navbar Start -->
+          <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+              <a href="" class="navbar-brand d-flex d-lg-none me-4">
+                  <h2 class="text-primary mb-0"><i class=""></i></h2>
+              </a>
+              <a href="#" class="sidebar-toggler flex-shrink-0">
+                  <i class="fa fa-bars"></i>
+              </a>
+              <form class="d-none d-md-flex ms-4">
+                  <input class="form-control border-0" type="search" placeholder="Search">
+              </form>
+              <div class="navbar-nav align-items-center ms-auto">
+                  <div class="nav-item dropdown">
+                      <!-- <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                          <i class="fa fa-envelope me-lg-2"></i>
+                          <span class="d-none d-lg-inline-flex">Message</span>
+                      </a> -->
+                      <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                          <!-- <a href="#" class="dropdown-item">
+                              <div class="d-flex align-items-center">
+                                  <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                  <div class="ms-2">
+                                      <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                      <small>15 minutes ago</small>
+                                  </div>
+                              </div> -->
+                          <!-- </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                              <div class="d-flex align-items-center">
+                                  <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                  <div class="ms-2">
+                                      <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                      <small>15 minutes ago</small>
+                                  </div>
+                              </div>
+                          </a> -->
+                          <!-- <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                              <div class="d-flex align-items-center">
+                                  <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                  <div class="ms-2">
+                                      <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                      <small>15 minutes ago</small>
+                                  </div>
+                              </div>
+                          </a> -->
+                          <!-- <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item text-center">See all message</a> -->
+                      </div>
+                  </div>
+                  <!-- <div class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                          <i class="fa fa-bell me-lg-2"></i>
+                          <span class="d-none d-lg-inline-flex">Notificatin</span>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                          <a href="#" class="dropdown-item">
+                              <h6 class="fw-normal mb-0">Profile updated</h6>
+                              <small>15 minutes ago</small>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                              <h6 class="fw-normal mb-0">New user added</h6>
+                              <small>15 minutes ago</small>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                              <h6 class="fw-normal mb-0">Password changed</h6>
+                              <small>15 minutes ago</small>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item text-center">See all notifications</a>
+                      </div>
+                  </div> -->
+                  <div class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                          <img class="rounded-circle me-lg-2" src="/img/icons8-male-user-96.png" alt=""
+                              style="width: 40px; height: 40px;">
+                          <span class="d-none d-lg-inline-flex">Admin</span>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                          <a href="#" class="dropdown-item">My Profile</a>
+                          <a href="#" class="dropdown-item">Settings</a>
+                          <a href="/admin/logout" class="dropdown-item">Log Out</a>
+                      </div>
+                  </div>
+              </div>
+          </nav>
+          <!-- Navbar End -->
+  
+<div style="padding: 20px;" class="col-12">
+        <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Category Banner</h6>
+            <div class="table-responsive">
+                <table style="text-align: center;" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Category Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% bannerC.forEach((row,index)=>{ %>
+                        <tr>
+                            <th scope="row"><%= index+1 %></th>
+                            <td><%= row.category %></td>
+                            <td><%= row.description %></td>
+                            <td><img width="100px" src="/img/<%= row.image %>" alt=""></td>
+                            <td>
+                                <button style="margin-left: 20px;" 
+                                        type="button" 
+                                        class="btn btn-success"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#exampleModal<%= row._id %>">
+                                    <i class="fas fa-edit fa-lg mx-1"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal<%= row._id %>" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Category Banner</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form action="/admin/editbannerc/<%= row._id %>" method="post" enctype="multipart/form-data">
+                                        <div class="modal-body">
+                                            <label for="colFormLabel" class="col-sm-2 col-form-label">Category</label>
+                                            <select name="category" class="custom-select">
+                                                <option value="<%= row.category %>"><%= row.category %></option>
+                                                <% category.forEach((row) => { %>
+                                                    <option value="<%= row.category %>"><%= row.category %></option>
+                                                <% }) %>
+                                              </select>
+                                            <div style="margin-top: 20px;" class="form-group row">
+                                                <label for="colFormLabel" class="col-sm-2 col-form-label">Description</label>
+                                                <div class="col-sm-10">
+                                                  <!-- <textarea  type="text" class="form-control" id="colFormLabel" > -->
+                                                    <textarea name="description" id="" cols="40" rows="5"><%= row.description %></textarea>
+                                            </div>
+                                            <div style="margin-top: 20px; margin-bottom: 20px;" class="form-group row">
+                                                <label for="colFormLabel" class="col-sm-2 col-form-label">Image</label>
+                                                <div class="col-sm-10">
+                                                  <!-- <textarea  type="text" class="form-control" id="colFormLabel" > -->
+                                                    <input name="productimage" type="file" accept="image/*">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <!-- <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button> -->
+                                            <button id="button" type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checker() {
+          const result=confirm('Are You Sure You Want to Delete?');
+          if(result==false){
+            event.preventDefault();
+          }
+        }
+      </script>
+      <script>
+        setTimeout(function() {
+          var alertDiv = document.getElementById('alert');
+          if (alertDiv) {
+            alertDiv.remove();
+          }
+        }, 5000);
+      </script>
+
+<%- include('./include/footer') %>

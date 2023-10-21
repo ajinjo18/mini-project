@@ -104,6 +104,7 @@ const revenue = async(req,res)=>{
                 categories: categories,
                 totalStocks: totalStocks,
             };
+            console.log(data);
             res.json(data);
         })
         .catch((error) => console.error(error));

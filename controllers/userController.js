@@ -115,19 +115,11 @@ const postregisterotp = async (req, res) => {
 
     if (otp == registerotp) {
         const data = req.session.data
-        // req.session.registered = {
-        //     message: 'Successfully Registered',
-        //     type: 'success'
-        // }
         const successMessage = 'Successfully Registered'
         await registercollection.insertMany([data])
         res.redirect(`/user/register?success=${encodeURIComponent(successMessage)}`)
     }
     else {
-        // req.session.invalidregisterotp = {
-        //     message: 'Invalid OTP',
-        //     type: 'danger'
-        // }
         invalidregisterotp = 'Invalid OTP'
         res.redirect(`/user/getotp?message=${encodeURIComponent(invalidregisterotp)}`)
     }
