@@ -46,6 +46,7 @@ const getcart = async (req, res) => {
 
   const check = await registercollection.findOne({ email: user })
 
+  const totalValue = check.cart.grandtotal
 
   const cartTotal = await registercollection.aggregate([
     { $unwind: "$cart.items" },
@@ -57,7 +58,7 @@ const getcart = async (req, res) => {
     }
   ]);
 
-  const totalValue = cartTotal.length > 0 ? cartTotal[0].total : 0;
+  // const totalValue = cartTotal.length > 0 ? cartTotal[0].total : 0;
 
   const cartProductData = await Promise.all(
     check.cart.items.map(async (cartItem) => {
@@ -211,17 +212,34 @@ const getcheckout = async (req, res) => {
 const getdeletecart = async (req, res) => {
   const id = req.params.id
   const user = req.session.user
+
+
+  const total = await registercollection.findOne(
+    { email: user, 'cart.items.productId': id },
+    { 'cart.items.$': 1 }
+  );
+
+  const specificItem = total.cart.items[0];
+  const totalpriceOfSpecificItem = specificItem.totalprice;
+
+  const check = await registercollection.findOne({ email: user })
+  const totalValue = check.cart.grandtotal
+
+  const updatedtotal = totalValue-totalpriceOfSpecificItem
+
+  await registercollection.findOneAndUpdate(
+    { email: user },
+    { $set: { 'cart.grandtotal': updatedtotal } }
+  );
+
+
   await registercollection.updateOne(
     { email: user },
     { $pull: { 'cart.items': { productId: id } } }
   );
-  await registercollection.findOneAndUpdate(
-    { email: user },
-    { $unset: { "cart.grandtotal": 0 } },
-    { new: true }
-  );
   res.redirect('/home/cart')
 }
+
 
 
 
