@@ -91,7 +91,7 @@
                             class="fas fa-ticket-alt me-2"></i>Coupons</a>
                     <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
                         <a href="/admin/listcoupen" class="dropdown-item">List Coupons</a>
-                        <a class="active" href="/admin/addcoupen" class="dropdown-item">Add Coupons</a>
+                        <a href="/admin/addcoupen" class="dropdown-item">Add Coupons</a>
                     </div>
                 </div>
                   <!-- <a href="form.html" class="nav-item nav-link active"><i class="fa fa-keyboard me-2"></i>Forms</a> -->
@@ -358,10 +358,9 @@ async function generatePDFReport(selectedDate) {
     selectedDate: selectedDate
   };
 
-  console.log('Data:', data);
 
   try {
-    const response = await fetch('http://localhost:3000/admin/generate-pdf-report', {
+    const response = await fetch('https://ajinjo.shop/admin/generate-pdf-report', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -401,7 +400,7 @@ const generatePDFReportForMonth = async () => {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/admin/month-pdf-report', {
+        const response = await fetch('https://ajinjo.shop/admin/month-pdf-report', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -448,7 +447,7 @@ async function generateYearlyPDF() {
             };
 
             try {
-                const response = await fetch('http://localhost:3000/admin/yearsalepdfreport', {
+                const response = await fetch('https://ajinjo.shop/admin/yearsalepdfreport', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -491,7 +490,7 @@ async function downloadExcelReport() {
             // const selectedDate = '2023-10-17';  // Replace with the selected date
 
             try {
-                const response = await fetch('http://localhost:3000/admin/daysaleexcellreport', {
+                const response = await fetch('https://ajinjo.shop/admin/daysaleexcellreport', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -531,7 +530,7 @@ async function downloadMonthlyExcel() {
             };
 
             try {
-                const response = await fetch('http://localhost:3000/admin/generate-excel-report-month', {
+                const response = await fetch('https://ajinjo.shop/admin/generate-excel-report-month', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -572,7 +571,7 @@ async function downloadyearExcel() {
             };
 
             try {
-                const response = await fetch('http://localhost:3000/admin/generate-excel-report-year', {
+                const response = await fetch('https://ajinjo.shop/admin/generate-excel-report-year', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -624,7 +623,6 @@ document.getElementById('pdf').addEventListener('click', () => {
       dateInput.value = '';  // Clear input value
   }
   else if(selectedMonth){
-    console.log(selectedMonth);
     generatePDFReportForMonth(selectedMonth);
   }
   else if(selectedYear) {
@@ -680,7 +678,7 @@ else if(selectedYear) {
       };
   
       try {
-        const response = await fetch('http://localhost:3000/admin/generate-excel', {
+        const response = await fetch('https://ajinjo.shop/admin/generate-excel', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -688,7 +686,6 @@ else if(selectedYear) {
         body: JSON.stringify(data)
         });
 
-        console.log(response);
 
         if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -722,7 +719,7 @@ else if(selectedYear) {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/admin/generate-pdf-report', {
+    const response = await fetch('https://ajinjo.shop/admin/generate-pdf-report', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -768,7 +765,7 @@ else if(selectedYear) {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/admin/stock-report-excel', {
+    const response = await fetch('https://ajinjo.shop/admin/stock-report-excel', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -821,7 +818,7 @@ else if(selectedYear) {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/admin/stock-report-pdf', {
+    const response = await fetch('https://ajinjo.shop/admin/stock-report-pdf', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -869,7 +866,7 @@ else if(selectedYear) {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/admin/cancelledexcelreport', {
+        const response = await fetch('https://ajinjo.shop/admin/cancelledexcelreport', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -915,7 +912,7 @@ else if(selectedYear) {
     // const selectedDate = '2023-10-17'; // Replace with the selected date
 
     try {
-        const response = await fetch('http://localhost:3000/admin/salepdfreport', {
+        const response = await fetch('https://ajinjo.shop/admin/salepdfreport', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

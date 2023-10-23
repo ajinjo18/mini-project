@@ -7,6 +7,7 @@
     <title>GO shop</title>    <link rel="stylesheet" href="/css/home/profileedit.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://public.easyinvoice.cloud/js/easyinvoice.min.js"></script>
   </head>
 
 <body>
@@ -325,7 +326,7 @@ h1 {
                                                     <h5 class="fw-normal mb-0"><a style="text-decoration: none; cursor: pointer;" onclick="checker('/home/cancelorder/<%= order._id %>?productname=<%= order.productName %>&payment=<%= order.payment %>&amount=<%= order.totalprice %>&orderid=<%= order.id %>')">Cancel Order</a></h5>
                                                     <% } %>
                                                     <% if (order.status == 'Delivered') { %>
-                                                      <h5 class="fw-normal mb-0"><a style="text-decoration: none; cursor: pointer;" href="/home/return/<%= order._id %>?productname=<%= order.productName %>&payment=<%= order.payment %>&amount=<%= order.totalprice %>&orderid=<%= order.id %>">Return Order</a></h5>
+                                                      <h5 class="fw-normal mb-0"><a style="text-decoration: none; cursor: pointer;" onclick="checker1('/home/return/<%= order._id %>?productname=<%= order.productName %>&payment=<%= order.payment %>&amount=<%= order.totalprice %>&orderid=<%= order.id %>')">Return Order</a></h5>
                                                     <% } %>
                                                   
                                                     <div class="border-start h-100"></div>
@@ -399,9 +400,30 @@ h1 {
     </div>
 
 
-
-
     <script>
+      async function invoice(orderId) {
+          try {
+              const response = await fetch(`/home/myinvoice/${orderId}`);
+              if (response.ok) {
+                  const blob = await response.blob();
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'invoice.pdf';
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+              } else {
+                  console.error('Error generating PDF');
+              }
+          } catch (error) {
+              console.error(error);
+          }
+      }
+  </script>
+  
+
+
+<!-- <script>
 async function invoice(id) {
   try {
     const response = await fetch(`/home/myinvoice/${id}`, { method: 'get' });
@@ -411,80 +433,8 @@ async function invoice(id) {
     }
 
     const data = await response.json();
-    // console.log('Received data:', data);
 
-    // Check if 'refference' matches the expected data structure
-    // Ensure that it contains the necessary invoice details
-
-    // Generate and download the invoice
-    // easyinvoice.createInvoice(data, function (result) {
-    //   console.log('Generated invoice:', result);
-    //   easyinvoice.download('myInvoice.pdf', result.pdf);
-    // });
-
-//     var data1 = {
-//     //"documentTitle": "RECEIPT", //Defaults to INVOICE
-//     //"locale": "de-DE", //Defaults to en-US, used for number formatting (see docs)
-//     "currency": "USD", //See documentation 'Locales and Currency' for more info
-//     "taxNotation": "vat", //or gst
-//     "marginTop": 25,
-//     "marginRight": 25,
-//     "marginLeft": 25,
-//     "marginBottom": 25,
-//     "logo": "https://public.easyinvoice.cloud/img/logo_en_original.png", //or base64
-//     "background": "https://public.easyinvoice.cloud/img/watermark-draft.jpg", //or base64 //img or pdf
-//     "sender": {
-//         "company": "Sample Corp",
-//         "address": "Sample Street 123",
-//         "zip": "1234 AB",
-//         "city": "Sampletown",
-//         "country": "Samplecountry"
-//         //"custom1": "custom value 1",
-//         //"custom2": "custom value 2",
-//         //"custom3": "custom value 3"
-//     },
-//     "client": {
-//        	"company": "Client Corp",
-//        	"address": "Clientstreet 456",
-//        	"zip": "4567 CD",
-//        	"city": "Clientcity",
-//        	"country": "Clientcountry"
-//         //"custom1": "custom value 1",
-//         //"custom2": "custom value 2",
-//         //"custom3": "custom value 3"
-//     },
-//     "invoiceNumber": "2021.0001",
-//     "invoiceDate": "1.1.2021",
-//     "products": [
-//         {
-//             "quantity": "2",
-//             "description": "Test1",
-//             "tax": 6,
-//             "price": 33.87
-//         },
-//         {
-//             "quantity": "4",
-//             "description": "Test2",
-//             "tax": 21,
-//             "price": 10.45
-//         }
-//     ],
-//     "bottomNotice": "Kindly pay your invoice within 15 days.",
-//     //Used for translating the headers to your preferred language
-//     //Defaults to English. Below example is translated to Dutch
-//     // "translate": { 
-//     //     "invoiceNumber": "Factuurnummer",
-//     //     "invoiceDate": "Factuurdatum",
-//     //     "products": "Producten", 
-//     //     "quantity": "Aantal", 
-//     //     "price": "Prijs",
-//     //     "subtotal": "Subtotaal",
-//     //     "total": "Totaal" 
-//     // }
-// };
-
-
-
+ 
 
     let data1 = {
 
@@ -530,11 +480,6 @@ async function invoice(id) {
     };
 
 
-
-
-
-
-  console.log(data1)
 easyinvoice.createInvoice(data1, function (result) {
       easyinvoice.download('myInvoice.pdf', result.pdf);
     //	you can download like this as well:
@@ -542,91 +487,94 @@ easyinvoice.createInvoice(data1, function (result) {
     //	easyinvoice.download('myInvoice.pdf');   
     });
   } catch (error) {
-    console.log('hrrr');
     console.error(error);
-    // Handle any errors, e.g., show an error message to the user
   }
 }
 
-// ...
-
-    </script>
+</script> -->
 
 
 
 
 
-    <script>
-      
-      const url='http://localhost:3000/home/search'
-      function sendData(e){
-        const searchresult =document.getElementById('searchresult')
-      let match=e.value.match(/^[a-zA-Z ]*/);
-      let match2=e.value.match(/\s*/);
-      if(match2[0]===e.value){
-        searchresult.innerHTML='';
-        return;
-      }
-      if(match[0]===e.value){
-        fetch(url,{
-          method:'post',
-          headers: {'Content-Type': 'application/json'},
-          body:JSON.stringify({payload:e.value})
+<script>
+  
+  const url='https://ajinjo.shop/home/search'
+  function sendData(e){
+    const searchresult =document.getElementById('searchresult')
+  let match=e.value.match(/^[a-zA-Z ]*/);
+  let match2=e.value.match(/\s*/);
+  if(match2[0]===e.value){
+    searchresult.innerHTML='';
+    return;
+  }
+  if(match[0]===e.value){
+    fetch(url,{
+      method:'post',
+      headers: {'Content-Type': 'application/json'},
+      body:JSON.stringify({payload:e.value})
 
-        }).then(res=> res.json())
-        .then(data=>{
-          let payload = data.payload
-          console.log(payload);
-          searchresult.innerHTML='';
-          if(payload.length < 1){
-            searchresult.innerHTML='<p>Sorry. Nothing Found.</p>'
-            return;
-          }
-          payload.forEach((item,index)=>{
-            if(index>0) searchresult.innerHTML += '<hr>';
-            searchresult.innerHTML += `<a style="text-decoration: none;" href="/home/ordersearch/:${item._id}"><img src="${item.images}" width="40px" alt="Product Image">${item.productName}(${item.date})</a>`;
-            
-          })
-        })
-        return;
-      }
+    }).then(res=> res.json())
+    .then(data=>{
+      let payload = data.payload
       searchresult.innerHTML='';
-        
-     }
-    </script>
-
-    <!-- <script>
-      function checker() {
-      const result=confirm('Are You Sure You Want To Cancel Order?');
-      if(result==false){
-        event.preventDefault();
+      if(payload.length < 1){
+        searchresult.innerHTML='<p>Sorry. Nothing Found.</p>'
+        return;
       }
-    }
-    </script> -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-  <script>
-
-    function checker(url) {
-      // swal("Hello world!");
-      swal({
-        title: "Cancel Order",
-        text: "Are You Sure You Want To Cancel Order?",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-          window.location.href=url
-        }
-      });
-    }
+      payload.forEach((item,index)=>{
+        if(index>0) searchresult.innerHTML += '<hr>';
+        searchresult.innerHTML += `<a style="text-decoration: none;" href="/home/ordersearch/:${item._id}"><img src="${item.images}" width="40px" alt="Product Image">${item.productName}(${item.date})</a>`;
+        
+      })
+    })
+    return;
+  }
+  searchresult.innerHTML='';
     
-  </script>
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/easyinvoice/dist/easyinvoice.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+
+  function checker(url) {
+    swal({
+      title: "Cancel Order",
+      text: "Are You Sure You Want To Cancel Order?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        window.location.href=url
+      }
+    });
+  }
+  
+</script>
+
+
+<script>
+
+  function checker1(url) {
+    swal({
+      title: "Return Order",
+      text: "Are You Sure You Want To Return Order?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        window.location.href=url
+      }
+    });
+  }
+  
+</script>
+
   </body>
-
-
-
 </html>

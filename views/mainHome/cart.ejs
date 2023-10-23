@@ -228,14 +228,10 @@
             grandtotal1.innerHTML = data.data2.cart.grandtotal
             grandtotal.innerHTML = data.data2.cart.grandtotal
             total.innerHTML = data.matchedItem.totalprice
-            console.log('Quantity updated successfully.');
         }
         else if (data.success === false) {
             outofstock.innerHTML = '<p style="color:red;">Out Of Stock</p>';
             btn.style.display = 'none';
-            // setTimeout(() => {
-            //     outofstock.innerHTML = '';
-            // }, 2000);
         }
         else {
             console.error('Error updating quantity:', data.message);
@@ -247,8 +243,7 @@
 
     function sendQuantityToServer(quantity, index, imageUrl, productid) {
 
-        const url = `http://localhost:3000/home/cart/${productid}`;
-        console.log(url)
+        const url = `https://ajinjo.shop/home/cart/${productid}`;
         fetch(url, {
             method: 'POST',
             headers: {

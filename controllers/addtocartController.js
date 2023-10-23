@@ -30,12 +30,10 @@ const addtocart=async(req,res)=>{
     if (grandtotal.length > 0) {
         const totalSum = grandtotal[0].total;
         req.session.grandtotal1=totalSum
-        console.log('Total sum of totalprice:', totalSum);
       }
      else {
         console.log('User not found or cart is empty.');
     }
-        console.log(req.session.grandtotal);
         const totalSum=req.session.grandtotal1
         await registercollection.findOneAndUpdate(
           { email: userId },

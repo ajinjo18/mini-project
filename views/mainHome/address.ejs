@@ -177,7 +177,7 @@
       const inputState = document.getElementById('inputState').value;
       const inputZip = document.getElementById('inputZip').value;
 
-      const url = 'http://localhost:3000/home/addnewaddress';
+      const url = 'https://ajinjo.shop/home/addnewaddress';
       done(url, inputAddress, inputCity, inputState, inputZip);
     });
 
@@ -213,7 +213,7 @@
       const data = {
         inputAddress, inputCity, inputState, inputZip, addressid
       };
-      const url = 'http://localhost:3000/home/updateaddrress';
+      const url = 'https://ajinjo.shop/home/updateaddrress';
 
       fetch(url, {
         method: 'POST',
@@ -241,7 +241,7 @@
     function delete1(index) {
       const deleteid = document.getElementById(`message-text2${index}`).value.trim();
 
-      const url = 'http://localhost:3000/home/deleteaddrress';
+      const url = 'https://ajinjo.shop/home/deleteaddrress';
 
       fetch(url, {
         method: 'POST',
@@ -253,10 +253,8 @@
         .then(response => response.json())
         .then(data => {
           if (data.status === 200) {
-            console.log('200');
             window.location.href = '/home/address';
           }
-          console.log('500');
           window.location.href = '/home/address';
         })
         .catch(error => console.error('Error:', error));

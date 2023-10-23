@@ -47,7 +47,7 @@
                             class="fas fa-ticket-alt me-2"></i>Coupons</a>
                     <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
                         <a href="/admin/listcoupen" class="dropdown-item">List Coupons</a>
-                        <a class="active" href="/admin/addcoupen" class="dropdown-item">Add Coupons</a>
+                        <a href="/admin/addcoupen" class="dropdown-item">Add Coupons</a>
                     </div>
                 </div>
                 <!-- <a href="form.html" class="nav-item nav-link active"><i class="fa fa-keyboard me-2"></i>Forms</a> -->
@@ -299,7 +299,7 @@
                     const status = document.getElementById(`Kategori${i}`);
                     const orderid = document.getElementById(`orderid${i}`).textContent;
         
-                    const url = 'http://localhost:3000/admin/orderstatus';
+                    const url = 'https://ajinjo.shop/admin/orderstatus';
         
                     button.addEventListener('click', () => {
                         const selectedStatus = status.value;
@@ -318,9 +318,7 @@
                         })
                         .then(response => response.json())
                         .then(responseData => {
-                            console.log('Response from server:', responseData);
                             window.location.href='/admin/orders'
-                            // Handle the response from the server if needed
                         })
                         .catch(error => {
                             console.error('Error sending data to the server:', error);

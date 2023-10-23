@@ -229,7 +229,7 @@
         const coupenid = document.getElementById('coupenid').innerText
         const Proceedchkout = document.getElementById('Proceedchkout')
 
-        const url = 'http://localhost:3000/user/clearcoupen'
+        const url = 'https://ajinjo.shop/user/clearcoupen'
         fetch(url,{
             method: 'POST',
             headers: {
@@ -272,9 +272,8 @@
         const coupenvalue = document.getElementById('coupenvalue').value;
         const grandtotal = document.getElementById('grandtotal').innerText; 
 
-        console.log(coupenvalue,grandtotal);
 
-        const url='http://localhost:3000/user/verifycoupen' 
+        const url='https://ajinjo.shop/user/verifycoupen' 
     
         fetch(url,{
             method:'POST',
@@ -285,13 +284,7 @@
         })
         .then(response => response.json())
         .then(data =>{
-            console.log(data);
             if(data.message =="coupon matching"){
-                // newtotal.value=''
-                // newtotal1.value=''
-                // total1.value =''
-                // newtotal1 = (data.discount/100)*total
-                // newtotal =  total - newtotal1
                 cpn.innerHTML='';
                 coupenadded.innerHTML=`<li id="coupenadded">Coupon Applied<span>-  ${data.discount}%<i></i></span></li>`
                 clear.innerHTML='<button id="clear" type="button" class="btn btn-danger">Clear Coupon</button>'
@@ -308,6 +301,7 @@
             else if(data.message =='invalid coupon'){
                 clear.innerHTML=''
                 coupenadded.innerHTML=''
+                total1.innerHTML= data.grandtotal;
                 cpn.innerHTML='Invalid Coupon'
             }
             else if (data.message=='invalid'){
@@ -332,68 +326,6 @@
 
 </script>
 
-<!-- <script>
-
-    
-
-    let couponProcessing = false;
-
-    function applyCoupon() {
-        if (couponProcessing) {
-            return; 
-        }
-        
-        const coupen = document.getElementById('coupen').value.trim()
-        const clear = document.getElementById('clear')
-        const coupenid = document.getElementById('coupenid')
-        const grandtotal = document.getElementById('grandtotal').innerText
-        const discount1 = document.getElementById('discount1')
-
-        const cpn = document.getElementById('cpn')
-        const coupenadded = document.getElementById('coupenadded')
-        const discount = document.getElementById('discount')
-        const total = document.getElementById('grandtotal1').innerText
-        const total1 = document.getElementById('grandtotal1')
-
-        const url='http://localhost:3000/user/verifycoupen' 
-
-    
-        fetch(url,{
-            method:'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body:JSON.stringify({coupen,grandtotal})
-        })
-        .then(response => response.json())
-        .then(data =>{
-            console.log(data);
-            if(data.message =="coupon matching"){
-                const newtotal1 = (data.discount/100)*total
-                const newtotal =  total - newtotal1
-                cpn.innerHTML='';
-                coupenadded.innerHTML=`<li id="coupenadded">Coupon Applied<span>- &#x20B9; ${newtotal1}<i></i></span></li>`
-                clear.innerHTML='<button id="clear" type="button" class="btn btn-danger">Clear Coupon</button>'
-                coupenid.innerHTML=data.coupenid
-                discount1.innerHTML = data.discount    
-                total1.innerHTML= newtotal;
-                coupen=''
-                couponProcessing = true;
-
-            }
-            else if(data.message=='minimum 2000'){
-                cpn.innerHTML=`Minimum Purchase Of ${data.minvalue}`
-            }
-            else if(data.message =='invalid coupon'){
-                cpn.innerHTML='Invalid Coupon'
-            }
-            else{
-                cpn.innerHTML='Invalid Coupon'
-            }
-        })
-    }
-    
-</script>    -->
 
 <!-- -------------------------apply coupen end---------------------- -->
 
@@ -437,7 +369,7 @@
         const inputState = document.getElementById('inputState').value;
         const inputZip = document.getElementById('inputZip').value;
 
-        const url = 'http://localhost:3000/home/addaddress';
+        const url = 'https://ajinjo.shop/home/addaddress';
         done(url, inputAddress, inputCity, inputState, inputZip);
     });
 
@@ -472,7 +404,6 @@
             };
             products.push(product);
         });
-        console.log(products);
         return products;
     }
 
@@ -556,14 +487,12 @@
         const data1 = collectProductData()
         const data = collectFormData();
         const { grandtotal, coupenid, newtotal ,discount } = total();
-        console.log(data1);
 
         const outofstock = document.getElementById('outofstock')
-        const url = 'http://localhost:3000/home/placeorder';
+        const url = 'https://ajinjo.shop/home/placeorder';
 
         // function (COD)
         if (cashOnDeliveryRadioButton.checked) {
-            console.log('Cash on delivery selected');
 
             let totalamount;
             if(coupenid != null) {
@@ -586,7 +515,6 @@
             })
             .then(data => {
                 if (data.type == 'success') {
-                    console.log('Response:', data.message);
                     location.href = '/home/thankyou'
                 }
                 else if(data.message=='out of stock'){
@@ -607,7 +535,7 @@
         // function (ONLINE)
         else if (onlinePaymentRadioButton.checked && address1) {
 
-            const url = 'http://localhost:3000/home/payorder'
+            const url = 'https://ajinjo.shop/home/payorder'
 
             const payment = 'ONLINE'
             let totalamount;
@@ -640,7 +568,7 @@
                 "description": "Test Transaction",
                 "image": "",
                 "order_id": data.order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-                "callback_url": `http://localhost:3000/home/paymentdone?data=${JSON.stringify(data)}&data1=${JSON.stringify(data1)}&grandtotal=${grandtotal}&coupenid=${coupenid}&discount=${discount}`,
+                "callback_url": `https://ajinjo.shop/home/paymentdone?data=${JSON.stringify(data)}&data1=${JSON.stringify(data1)}&grandtotal=${grandtotal}&coupenid=${coupenid}&discount=${discount}`,
                 "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
                     // "name": "Gaurav Kumar", //your customer's name
                     // "email": "",
@@ -659,9 +587,8 @@
         }
         // function (wallet)
         else if (walletPaymentRadioButton.checked && address1) {
-            console.log('wallet payment selected');
             const walletnobalance = document.getElementById('walletnobalance')
-            const url = 'http://localhost:3000/home/walletpayment';
+            const url = 'https://ajinjo.shop/home/walletpayment';
 
 
             const payment = 'WALLET'
@@ -691,7 +618,6 @@
                     walletnobalance.innerHTML='Insufficient Balance'
                 }
                 else if(data.type == 'success') {
-                    console.log('Response:', data.message);
                     location.href = '/home/thankyou'
                 }
                 else if(data.message=='out of stock'){
@@ -710,7 +636,6 @@
         }
         else {
             errorhappend()
-            console.log('No payment option selected');
         }
     }
 

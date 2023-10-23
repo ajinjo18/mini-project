@@ -1,7 +1,7 @@
 const categorycollection = require('../model/categorySchema')
 
 
-// -----------------------add category--------------------
+// -----------------------add category(get)--------------------
 
 
 const addcatagories = (req, res) => {
@@ -10,6 +10,9 @@ const addcatagories = (req, res) => {
 
     res.render('admin/addcategory',{categoryidmatching})
 }
+
+
+// -----------------------add category(post)--------------------
 
 const postcatagories = async (req, res) => {
     try {
@@ -56,7 +59,7 @@ const listcatagories = async (req, res) => {
 
 
 
-// -----------------edit category----------------------
+// -----------------edit category(get)----------------------
 
 
 const updatecategory = async (req, res) => {
@@ -70,6 +73,9 @@ const updatecategory = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+
+
+// -----------------edit category(post)----------------------
 
 const postupdatecategory = async (req, res) => {
     const id = req.body.id

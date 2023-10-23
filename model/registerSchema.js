@@ -177,6 +177,6 @@ const registerschema = new mongoose.Schema({
     }
 })
 
-const registercollection = new mongoose.model('user register', registerschema)
+const registercollection = new mongoose.model('userregister', registerschema)
 
 module.exports = registercollection

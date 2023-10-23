@@ -20,7 +20,6 @@ router.get('/cart',user.isUserLogged,user.isUserBlocked,cart.getcart)
 router.get('/addcart/:id',user.isUserLogged,user.isUserBlocked,addtocart.addtocart)
 
 router.get('/profile',user.isUserLogged,user.isUserBlocked,profile.getprofile)
-// router.get('/editprofile',user.isUserLogged,user.isUserBlocked,profile.geteditprofile)
 router.post('/editprofilepassword',mainHome.editprofilepassword)
 
 
@@ -34,7 +33,6 @@ router.post('/otp',mainHome.postotp)
 router.get('/resendotp',mainHome.otpgenerator)
 
 router.post('/cart/:id',cart.postcart)
-// router.post('/cart',cart.postcart)
 
 router.get('/checkout',user.isUserLogged,user.isUserBlocked,cart.getcheckout)
 router.get('/deletecart/:id',user.isUserLogged,user.isUserBlocked,cart.getdeletecart)

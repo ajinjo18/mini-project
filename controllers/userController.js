@@ -184,12 +184,10 @@ const registerotpgenerator = (req, res) => {
                 setTimeout(() => {
                     req.session.registerotp = null
                     req.session.trueregister = false
-                    console.log("Variable cleared after 1 minute.");
                 }, 30000);
 
                 setTimeout(() => {
                     req.session.newpasswordotp = null
-                    console.log(req.session.newpasswordotp);
                 }, 30000);
             }
             res.redirect('/user/getotp')
@@ -287,12 +285,10 @@ const otpgenerator = (req, res) => {
                 setTimeout(() => {
                     req.session.newpasswordotp = null
                     req.session.true = false
-                    console.log("Variable cleared after 1 minute.");
                 }, 30000);
 
                 setTimeout(() => {
                     req.session.newpasswordotp = null
-                    console.log(req.session.newpasswordotp);
                 }, 40000);
             }
         });
@@ -356,16 +352,39 @@ const updatepassword = async (req, res) => {
 // ------------------------coupen-------------------
 
 const verifycoupen = async (req, res) => {
-
     try {
-        const email = req.session.user
-        const coupen = req.body.coupen;
-        const coupendb = await coupencollection.findOne({ code: coupen });
-        const discount = coupendb.discount;
-        const coupenid = coupendb._id
-        const grandtotal = req.body.grandtotal
 
-        const minvalue = coupendb.minvalue
+        const coupenvalue = req.body.coupenvalue
+        const grandtotal = req.body.grandtotal
+        const email = req.session.user
+
+        let newtotal1
+        let newtotal
+
+        let discount
+        let coupenid
+        let minvalue
+
+
+        const coupendb = await coupencollection.findOne({ code: coupenvalue });
+
+        if (coupendb != null) {
+            discount = coupendb.discount;
+            coupenid = coupendb._id
+            minvalue = coupendb.minvalue
+            newtotal1 = (discount / 100) * grandtotal
+            newtotal = grandtotal - newtotal1
+        }
+        else if (coupendb == null) {
+            req.session.coupen = ''
+            res.status(400).json({ message: 'invalid coupon', discount, grandtotal });
+            return;
+        }
+        else if (req.session.coupen == coupenvalue) {
+            res.status(400).json({ message: 'alredy in input', discount, newtotal });
+            return;
+        }
+
 
         const data = {
             isused: 'false',
@@ -378,34 +397,37 @@ const verifycoupen = async (req, res) => {
         }
 
 
+
+
         const coupenExists = await registercollection.findOne({
             email: email,
             'usedcoupens.coupenid': coupenid
-          });
+        });
 
 
-          if (coupenExists) {
-            res.status(400).json({ message: 'invalid coupon', discount });
-          }
-          else if(grandtotal < minvalue){
-            res.status(400).json({ message: 'minimum 2000', discount ,minvalue });
-          }
-           else {
-            await registercollection.findOneAndUpdate(
-              { email: email },
-              { $push: { coupens: data } },
-              { new: true }
-            );
-            
-
-            // if(req.session.coupen==coupen){
-            //     return
-            // }
-
-            res.status(200).json({ message: 'coupon matching', discount, coupenid });
+        if (coupenExists) {
+            req.session.coupen = ''
+            res.status(400).json({ message: 'invalid coupon', discount, grandtotal });
+            return
         }
-          
-    } catch (error) {
+        else if (grandtotal < minvalue) {
+            res.status(400).json({ message: 'minimum 2000', discount, minvalue });
+            return
+        }
+        else {
+            await registercollection.findOneAndUpdate(
+                { email: email },
+                { $push: { coupens: data } },
+                { new: true }
+            );
+
+            req.session.coupen == coupenvalue
+
+            res.status(200).json({ message: 'coupon matching', discount, coupenid, newtotal });
+        }
+
+    }
+    catch (error) {
         console.error('Error:', error);
         res.status(500).json({ message: 'Server error' });
     }
@@ -416,14 +438,15 @@ const verifycoupen = async (req, res) => {
 // -------------------clear coupen---------------------
 
 const clearcoupen = async (req, res) => {
+    req.session.coupen = ''
     const coupenid = req.body.coupenid
     const email = req.session.user
     await registercollection.updateOne(
         { email: email },
         { $pull: { coupens: { coupenid: coupenid } } }
     );
-        res.status(200).json({message :'removed'})
-}      
+    res.status(200).json({ message: 'removed' })
+}
 
 
 // ---------logout user------------
@@ -438,13 +461,6 @@ const logout = (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 
-    // req.session.destroy((err) => {
-    //     if (err) {
-    //         res.send(err.message)
-    //     } else {
-    //         res.redirect('/')
-    //     }
-    // })
 }
 
 

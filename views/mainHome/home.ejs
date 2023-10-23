@@ -61,6 +61,7 @@
                     <div class="dropdown-menu dropdown-menu-right">
                         <!-- <button class="dropdown-item" type="button"><a href="/user/login">Login</a></button>
                         <button class="dropdown-item" type="button"><a href="/user/register">Register</a></button> -->
+                        <button class="dropdown-item" type="button"><a href="/home/profile">Profile</a></button>
                         <button class="dropdown-item" type="button"><a href="/user/logout">Logout</a></button>
                     </div>
                 </div>
@@ -606,30 +607,5 @@
 </div> -->
 
 
-<!-- <script>
-    function updateCountdown() {
-    const now = new Date();
-    const targetDate = new Date("2023-10-31T23:59:59");  // Set your target date and time here
-
-    const timeDifference = targetDate - now;
-
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-    document.getElementById('days').innerText = days;
-    document.getElementById('hours').innerText = hours;
-    document.getElementById('minutes').innerText = minutes;
-    document.getElementById('seconds').innerText = seconds;
-}
-
-// Update the countdown every second
-setInterval(updateCountdown, 1000);
-
-// Initial call to set the initial countdown
-updateCountdown();
-
-</script> -->
 
 <%- include('./include/footer') %>

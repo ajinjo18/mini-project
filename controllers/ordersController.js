@@ -1,10 +1,12 @@
 const registercollection = require('../model/registerSchema')
 const productCollection = require('../model/productSchema')
 const easyinvoice = require('easyinvoice')
+const PDFDocument = require('pdfkit');
+const path = require('path')
+const fs = require('fs');
 
 
 // ------------------get my orders-------------------
-
 
 const myorders = async (req, res) => {
   const email = req.session.user;
@@ -12,25 +14,25 @@ const myorders = async (req, res) => {
   try {
     const pagenum = 0;
     const a = 5 * pagenum;
-    const b = 5 * (pagenum + 1)
+    const b = 5 * (pagenum + 1);
 
     const email = req.session.user;
     const user = await registercollection.findOne({ email: email });
 
-    const productsForFirstOrder = user.orders
+    user.orders.sort((a, b) => b.date - a.date);
 
-    const length = productsForFirstOrder.length
-    const pages = Math.ceil(length / 5)
+    const productsForFirstOrder = user.orders;
+
+    const length = productsForFirstOrder.length;
+    const pages = Math.ceil(length / 5);
 
     const limitedOrdersWithProducts = productsForFirstOrder.slice(a, b);
 
     res.render('mainHome/order', { orders: limitedOrdersWithProducts, pagenum, pages });
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error fetching orders:', error);
     res.status(500).send('Internal Server Error');
   }
-
 };
 
 
@@ -46,8 +48,8 @@ const pagenationorders = async (req, res) => {
     const b = 5 * (pagenum + 1)
 
     const email = req.session.user;
-    const user = await registercollection.findOne({ email: email });
-
+    const user = await registercollection.findOne({ email: email })
+    user.orders.sort((a, b) => b.date - a.date);
     const productsForFirstOrder = user.orders
 
     const length = productsForFirstOrder.length
@@ -134,77 +136,128 @@ const myinvoice = async (req, res) => {
     const orderId = req.params.id;
     const email = req.session.user;
 
-    const userdata = await registercollection.findOne({ email: email, });
-
-    const username = userdata.name
-    console.log(username);
-
+    const userdata = await registercollection.findOne({ email: email });
 
     if (!userdata) {
-      return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: 'User not found' });
     }
-
 
     const order = await registercollection.findOne(
-      {
-        email: email,
-        'orders._id': orderId
-      },
-      {
-        'orders.$': 1 // This projection selects the first matching subdocument in the orders array
-      }
-    );  
-    if (order) {
-      // const address = order.orders[0].address; // Assuming there's only one address per order
-      
-      // console.log('Address:', address);
-    } else {
-      console.log('Order not found.');
-    }
+        {
+            email: email,
+            'orders._id': orderId
+        },
+        {
+            'orders.$': 1
+        }
+    );
 
-
-    // const order = userdata.orders.find((order) => order._id.equals(orderId));
-    // if (!order) {
-    //   return res.status(404).json({ message: 'Order not found' });
-    // }
-
-    // const address2 = userdata.Address.find((address2) => address2._id.equals(new ObjectId(address1)));
-
-    // console.log('address',address2);
-    // console.log('order',order)
-    // const username = username;
-    const address = order.orders[0].address.address1
-    const pincode = order.orders[0].address.zip
-    const city = order.orders[0].address.city
-    const district = order.orders[0].address.city
+    const username = userdata.name;
+    const address = order.orders[0].address.address1;
+    const pincode = order.orders[0].address.zip;
+    const city = order.orders[0].address.city;
     const productName = order.orders[0].productName;
     const quantity = order.orders[0].quantity;
-    const total = order.orders[0].total
-    const price1 = order.orders[0].totalprice
-    const price = parseInt(price1.replace('₹', ''), 10)
-    const grandtotal=  price*quantity
+    const price1 = order.orders[0].totalprice;
+    const price = parseInt(price1.replace('₹', ''), 10);
+    const grandtotal = price * quantity;
 
-    console.log(grandtotal);
+    // Create a PDF stream and set response headers
+    const pdfStream = new PDFDocument();
+    res.setHeader('Content-Disposition', 'attachment; filename="invoice.pdf"');
+    res.setHeader('Content-Type', 'application/pdf');
     
-    
-    console.log(price);
-    const data={
-      address,pincode,city,productName,quantity,price,username,grandtotal
-    }
+    // Pipe the PDF stream to the response
+    pdfStream.pipe(res);
 
-    res.json(data)
+    // PDF content generation
+    pdfStream.font('Helvetica-Bold').fontSize(14).text('Invoice', { align: 'center' });
+    pdfStream.moveDown();
 
-  }
-  catch (err) {
-    console.log('lllll');
-    console.error('Error :', err);
+    // Customer Details
+    pdfStream.font('Helvetica').fontSize(12).text(`Customer Name: ${username}`);
+    pdfStream.text(`Address: ${address}`);
+    pdfStream.text(`Pincode: ${pincode}`);
+    pdfStream.text(`City: ${city}`);
+
+    // Order Details
+    pdfStream.moveDown();
+    pdfStream.font('Helvetica-Bold').fontSize(12).text('Order Details');
+    pdfStream.font('Helvetica').fontSize(12).text(`Product Name: ${productName}`);
+    pdfStream.text(`Quantity: ${quantity}`);
+    pdfStream.text(`Price per unit: ₹${price}`);
+    pdfStream.text(`Total: ₹${grandtotal}`);
+
+    pdfStream.moveDown();
+    pdfStream.font('Helvetica-Bold').fontSize(12).text('Payment Details');
+    // Add any payment details you want to display
+
+    // Footer
+    pdfStream.moveDown();
+    pdfStream.font('Helvetica').text('Thank you for your purchase!');
+
+    // End the PDF stream
+    pdfStream.end();
+} catch (err) {
+    console.error('Error:', err);
     res.status(500).json({ error: 'Internal server error' });
-  }
 }
+
+}
+
+
+
+// const myinvoice = async (req, res) => {
+//   try {
+//     const orderId = req.params.id;
+//     const email = req.session.user;
+
+//     const userdata = await registercollection.findOne({ email: email, });
+
+//     const username = userdata.name
+
+//     if (!userdata) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+
+//     const order = await registercollection.findOne(
+//       {
+//         email: email,
+//         'orders._id': orderId
+//       },
+//       {
+//         'orders.$': 1
+//       }
+//     );
+
+//     const address = order.orders[0].address.address1
+//     const pincode = order.orders[0].address.zip
+//     const city = order.orders[0].address.city
+//     const district = order.orders[0].address.city
+//     const productName = order.orders[0].productName;
+//     const quantity = order.orders[0].quantity;
+//     const total = order.orders[0].total
+//     const price1 = order.orders[0].totalprice
+//     const price = parseInt(price1.replace('₹', ''), 10)
+//     const grandtotal = price * quantity
+
+//     const data = {
+//       address, pincode, city, productName, quantity, price, username, grandtotal
+//     }
+
+//     res.json(data)
+
+//   }
+//   catch (err) {
+//     console.error('Error :', err);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// }
 
 
 
 
 module.exports = {
-  myorders, pagenationorders, search, ordersearchdetails,myinvoice
+  myorders, pagenationorders, search, ordersearchdetails, myinvoice
 }

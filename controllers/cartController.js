@@ -27,11 +27,11 @@ const getcart = async (req, res) => {
   let numberOfItems;
   const total = await registercollection.aggregate([
     {
-      $match: { email: user } // Match the document based on email
+      $match: { email: user }
     },
     {
       $project: {
-        numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+        numberOfItemsInCart: { $size: '$cart.items' } 
       }
     }
   ]).exec();
@@ -122,10 +122,9 @@ const postcart = async (req, res) => {
         { 'cart.grandtotal.$': 1 }
       );
 
-      // Assuming data1 contains the matched document
       let matchedItem;
       if (data1 && data1.cart && data1.cart.items && data1.cart.items.length > 0) {
-        matchedItem = data1.cart.items[0]; // Access the matched item
+        matchedItem = data1.cart.items[0]; 
       } else {
         console.log('No matching item found.');
       }
@@ -166,11 +165,11 @@ const getcheckout = async (req, res) => {
     let numberOfItems;
   const total = await registercollection.aggregate([
     {
-      $match: { email: user } // Match the document based on email
+      $match: { email: user } 
     },
     {
       $project: {
-        numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+        numberOfItemsInCart: { $size: '$cart.items' }
       }
     }
   ]).exec();
@@ -183,10 +182,7 @@ const getcheckout = async (req, res) => {
     const data = data1.cart.items;
     const grandtotal = data1.cart.grandtotal
 
-    // let coupentotal;
-    // if(discount && newtotal){
-    //   coupentotal = grandtotal-newtotal
-    // }
+
 
     if (req.session.user) {
       const d1 = await registercollection.findOne({ email: user })
@@ -293,7 +289,6 @@ const placeorder = async (req, res) => {
       for (const product of productOrders) {
         const { quantity, productid } = product;
       
-        // Retrieve the current stock for the product
         const existingProduct = await productCollection.findOne({ _id: productid });
         if (!existingProduct) {
           console.log(`Product with ID ${productid} not found.`);
@@ -302,10 +297,8 @@ const placeorder = async (req, res) => {
 
         const currentStock = existingProduct.stock;
       
-        // Calculate the new stock after subtracting the quantity
         const newStock = currentStock - quantity;
 
-        // Update the stock in the database
         if(existingProduct.stock!=0 && quantity <= existingProduct.stock){
           await productCollection.updateOne(
             { _id: productid },
@@ -354,8 +347,6 @@ const placeorder = async (req, res) => {
       res.status(200).json({ message: "logined", type: 'success' })
     }
     else {
-      console.log('errrr');
-
       res.status(400).json({ message: "choose your option", type: 'danger' })
     }
   }
@@ -378,11 +369,11 @@ const thankyou = async (req, res) => {
     let numberOfItems;
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user } 
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' } 
         }
       }
     ]).exec();
@@ -471,7 +462,6 @@ const razorpayorder = async(req,res)=>{
 
 const walletpayment = async (req, res) => {
   try {
-    console.log('hiii');
     const user = req.session.user
     const payment = 'WALLET'
     const data1 = req.body.data1;
@@ -480,7 +470,6 @@ const walletpayment = async (req, res) => {
     const coupendiscount = req.body.discount
     const { data } = req.body;
 
-    console.log(coupenid,coupendiscount);
 
     const { address1, city, state, zip } = data;
 
@@ -519,7 +508,6 @@ const walletpayment = async (req, res) => {
       }
 
 
-      console.log(wallethistory);
 
       await registercollection.findOneAndUpdate(
         { email: user },
@@ -533,18 +521,15 @@ const walletpayment = async (req, res) => {
 
 
       if(grandtotal > walletbalance ){
-        console.log('no balance');
         res.status(400).json({message:"insufficient balance", type: 'danger' });
         return
       }
 
-      console.log('have balance');
       
 
       for (const product of productOrders) {
         const { quantity, productid } = product;
       
-        // Retrieve the current stock for the product
         const existingProduct = await productCollection.findOne({ _id: productid });
         if (!existingProduct) {
           console.log(`Product with ID ${productid} not found.`);
@@ -553,10 +538,8 @@ const walletpayment = async (req, res) => {
 
         const currentStock = existingProduct.stock;
       
-        // Calculate the new stock after subtracting the quantity
         const newStock = currentStock - quantity;
 
-        // Update the stock in the database
         if(existingProduct.stock!=0 && quantity <= existingProduct.stock){
           await productCollection.updateOne(
             { _id: productid },
@@ -623,7 +606,6 @@ const walletpayment = async (req, res) => {
 const paymentdone = async (req,res)=>{
   const user = req.session.user
   const { razorpay_payment_id } = req.body;
-  console.log(razorpay_payment_id);
   const paymentDocument = await razorpay.payments.fetch(razorpay_payment_id);
   if(paymentDocument.status=='captured'){
       try {
@@ -636,7 +618,6 @@ const paymentdone = async (req,res)=>{
 
         const payment='Online'
 
-        console.log(data,data1,grandtotal);
     
         const { address1, city, state, zip } = data;
 
@@ -664,9 +645,7 @@ const paymentdone = async (req,res)=>{
           for (const product of productOrders) {
             const { quantity, productid } = product;
           
-            // Retrieve the current stock for the product
             const existingProduct = await productCollection.findOne({ _id: productid });
-            // console.log(existingProduct);
             if (!existingProduct) {
               console.log(`Product with ID ${productid} not found.`);
               continue;
@@ -674,21 +653,15 @@ const paymentdone = async (req,res)=>{
           
             const currentStock = existingProduct.stock;
           
-            // Calculate the new stock after subtracting the quantity
             const newStock = currentStock - quantity;
           
-            // Update the stock in the database
             if(existingProduct.stock!=0 && quantity <= existingProduct.stock){
               await productCollection.updateOne(
                 { _id: productid },
                 { $set: { stock: newStock } }
               );
-              // res.redirect('/home/thankyoul')
             }
-            // else{
-            //   res.status(400).json({ message: "out of stock", type: 'danger' });
-            //   return
-            // }
+
           
             console.log(`Stock for product with ID ${productid} updated to ${newStock}.`);
           }
@@ -724,12 +697,7 @@ const paymentdone = async (req,res)=>{
             { new: true }
           );
           res.redirect('/home/thankyou')
-          // res.status(200).json({ message: "logined", type: 'success' })
-        // }
-        // else {
-        //   console.log('failll');
-        //   res.status(400).json({ message: "choose your option", type: 'danger' })
-        // }
+
       }
       catch (err) {
         console.error('Error :', err);

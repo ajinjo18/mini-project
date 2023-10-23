@@ -116,7 +116,6 @@ const postproductupdate = async (req, res) => {
                 category: req.body.productcategory
             }
             await productCollection.updateOne({ _id: id }, { $set: data })
-            console.log(image);
             await productCollection.findByIdAndUpdate(
                 id,
                 { $push: { images: { $each: image } } },
@@ -170,7 +169,6 @@ const productimgdelete=async(req,res)=>{
             { $pull: { images: element } },
             { new: true }
         );
-        console.log('Image removed successfully:', updatedProduct);
         res.redirect(`/admin/updateproduct/${productId}`);
     } catch (error) {
         console.error('Error removing image:', error);

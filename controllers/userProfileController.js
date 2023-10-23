@@ -81,7 +81,6 @@ const transporter = nodemailer.createTransport({
 // --------------------get otp-----------------
 
 const getotp = (req, res) => {
-  console.log('running66');
   const invalidotp = req.session.invalidforgetotp
   req.session.invalidforgetotp=null
 
@@ -93,7 +92,6 @@ const getotp = (req, res) => {
 
 
 const postotp = async(req,res)=>{
-  console.log('5454 running');
   const enteredotp = req.body.otp
   const email = req.session.user
 
@@ -145,7 +143,6 @@ const otpgenerator=(req,res)=>{
 
 
 const posteditprofile =async(req,res)=>{
-  console.log('running');
   try{
     const registeremail = req.session.user
 
@@ -154,7 +151,6 @@ const posteditprofile =async(req,res)=>{
       number:req.body.number
     }
 
-    console.log(profiledata);
 
     otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
 

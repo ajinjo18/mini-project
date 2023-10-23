@@ -33,7 +33,6 @@ const offerbaner = async(req,res)=>{
 
 const offersalepost = async (req, res) => {
     const id = req.params.id
-    console.log(id);
     const data = {
         sale: req.body.sale,
         discount: req.body.discount,

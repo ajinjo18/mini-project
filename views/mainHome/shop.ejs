@@ -59,6 +59,7 @@
                     <div class="dropdown-menu dropdown-menu-right">
                         <!-- <button class="dropdown-item" type="button"><a href="/user/login">Login</a></button>
                         <button class="dropdown-item" type="button"><a href="/user/register">Register</a></button> -->
+                        <button class="dropdown-item" type="button"><a href="/home/profile">Profile</a></button>
                         <button class="dropdown-item" type="button"><a href="/user/logout">Logout</a></button>
                     </div>
                 </div>
@@ -492,17 +493,13 @@
 
 
     <script>
-        // const productcontainer = document.getElementById('productcontainer')
-        // const productContainer = document.getElementById('product-container');
+        
 
         document.getElementById('highbtn').addEventListener('click', () => {
-            console.log('running');
 
             const minamountValue = $("#minamount").val();
             const maxamountValue = $("#maxamount").val();
 
-            console.log('minamount value:', minamountValue);
-            console.log('maxamount value:', maxamountValue);
 
             const sort = '1'
 
@@ -511,13 +508,10 @@
         })
 
         document.getElementById('mibtn').addEventListener('click', () => {
-            console.log('running');
 
             const minamountValue = $("#minamount").val();
             const maxamountValue = $("#maxamount").val();
 
-            console.log('minamount value:', minamountValue);
-            console.log('maxamount value:', maxamountValue);
 
             const sort = '-1'
 
@@ -526,126 +520,14 @@
         })
 
         document.getElementById('fbutton').addEventListener('click', () => {
-            console.log('running');
 
             const minamountValue = $("#minamount").val();
             const maxamountValue = $("#maxamount").val();
 
-            console.log('minamount value:', minamountValue);
-            console.log('maxamount value:', maxamountValue);
 
             const sort = '3'
 
             window.location.href=`/home/viewfilerproduct/${minamountValue}/${maxamountValue}/${sort}`
-        //     const url = 'http://localhost:3000/home/filterprice'
-
-        //     fetch(url,{
-        //         method:'POST',
-        //         headers:{
-        //             'Content-Type' : 'application/json'
-        //         },
-        //         body:JSON.stringify({minamountValue,maxamountValue})
-        //     })
-        //     .then(response => response.json())
-        //     .then(data =>{
-        //             const minamountValue = data.minamountValue
-        //         const maxamountValue = data.maxamountValue
-        //     //     const productContainers = document.querySelector('#product-container');
-
-        //     //     // productContainers.forEach(container => {
-        //     //         productContainers.innerHTML = '';  // Clear old data
-        //     //     // });
-
-
-        //     //     function loadStylesheet(href) {
-        //     //         return new Promise((resolve, reject) => {
-        //     //             const link = document.createElement('link');
-        //     //             link.rel = 'stylesheet';
-        //     //             link.href = href;
-        //     //             link.onload = resolve;
-        //     //             link.onerror = reject;
-        //     //             document.head.appendChild(link);
-        //     //         });
-        //     //     }
-
-
-        //     //     function loadAndAppendScript(src, callback) {
-        //     //         const script = document.createElement('script');
-        //     //         script.src = src;
-        //     //         script.onload = callback;
-        //     //         document.body.appendChild(script);
-        //     //     }
-
-
-        //     //     function loadAndAppendScript(src, callback) {
-        //     //         const script = document.createElement('script');
-        //     //         script.src = src;
-
-        //     //         // Set a callback function to execute when the script is loaded
-        //     //         script.onload = callback;
-
-        //     //         // Append the script to the document's body
-        //     //         document.body.appendChild(script);
-        //     //     }
-                
-
-
-        //     //     function card(item){
-        //     //         const productToAdd = document.createElement('div');
-        //     //         productToAdd.classList.add('col-lg-4', 'col-md-6', 'product-container');
-        //     //         productToAdd.innerHTML =  `
-                   
-                  
-        //     //         <div class="product__item__pic set-bg" data-setbg="/img/${item.images[0]} ">
-        //     //                         <!-- <div class="label new">New</div> -->
-        //     //                         <ul class="product__hover">
-        //     //                             <li><a href="/img/${item.images[0]}" class="image-popup"><span class="fas fa-search-plus"></span></a></li>
-        //     //                             <li><a href="#"><span class="fas fa-heart"></span></a></li>
-        //     //                             <li><a href="/home/addcart/${item._id}"><span class="fas fa-shopping-cart"></span></a></li>
-        //     //                         </ul>
-        //     //                     </div>
-        //     //                     <div class="product__item__text">
-        //     //                         <h6><a href="/home/productview/${item._id}">${item.productname}</a></h6>
-        //     //                         <div class="product__price">&#x20B9;${item.price}</div>
-        //     //                     </div>
-        //     //         `
-
-        //     //         const jqueryScriptUrl = "/js/home/jquery-3.3.1.min.js";
-
-        //     //         loadAndAppendScript(jqueryScriptUrl, () => {
-        //     //             console.log("jQuery script has been loaded successfully.");
-        //     //         });
-
-        //     //         loadAndAppendScript('/js/home/main.js', () => {
-        //     //             // Code to run after the script is loaded
-        //     //             console.log('Script has been loaded and executed.');
-        //     //         });
-
-        //     //         const styleUrl = "/css/home/style.css";
-
-        //     //         loadStylesheet(styleUrl)
-        //     //         .then(() => {
-        //     //             console.log("style.css has been loaded successfully.");
-        //     //         })
-        //     //         .catch((error) => {
-        //     //             console.error("An error occurred while loading style.css:", error);
-        //     //         });
-                    
-
-        //     //         console.log(productToAdd)
-        //     //         productContainers.appendChild(productToAdd);                    
-
-        //     //     }
-
-        //     //     data.filteredproduct.forEach(row => {
-        //     //         card(row)
-
-        //     //     });
-
-                    
-            
-        //     // });
-        //  });
         })
     </script>
 

@@ -42,7 +42,7 @@ const postLogin = (req, res) => {
 
 // ---------------get home-----------
 
-const gethome = async(req, res) => {
+const gethome = async (req, res) => {
 
     let result1
     let totalOrdersCount = 0;
@@ -51,148 +51,69 @@ const gethome = async(req, res) => {
 
     await registercollection.aggregate([
         {
-          $project: {
-            _id: 1,
-            ordersCount: { $size: '$orders' } // Count the number of orders for each user
-          }
+            $project: {
+                _id: 1,
+                ordersCount: { $size: '$orders' }
+            }
         }
-      ])
-      .exec()
-      .then(result => {
-        result1 = result
-      })
-      .catch(error => {
-        console.error('Error:', error);
-    });
+    ])
+        .exec()
+        .then(result => {
+            result1 = result
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 
     for (const item of result1) {
-    totalOrdersCount += item.ordersCount;
+        totalOrdersCount += item.ordersCount;
     }
 
-    console.log(totalOrdersCount);
-      
 
-
-
-    // const desiredMonth = 10; // October
-
-    // const pipeline = [
-    //   {
-    //     $unwind: '$orders' // Flatten the orders array
-    //   },
-    //   {
-    //     $project: {
-    //       address: '$orders.address',
-    //       razorpay_order_Payment_Id: '$orders.razorpay_order_Payment_Id',
-    //       total: '$orders.total',
-    //       payment: '$orders.payment',
-    //       date: '$orders.date',
-    //       productName: '$orders.productName',
-    //       quantity: '$orders.quantity',
-    //       productid: '$orders.productid',
-    //       totalprice: '$orders.totalprice',
-    //       images: '$orders.images',
-    //       status: '$orders.status',
-    //       coupendiscount: '$orders.coupendiscount'
-    //     }
-    //   },
-    //   {
-    //     $addFields: {
-    //       month: { $month: '$date' } // Extract the month from the date
-    //     }
-    //   },
-    //   {
-    //     $match: {
-    //       month: desiredMonth
-    //     }
-    //   }
-    // ];
-    
-    // registercollection.aggregate(pipeline)
-    //   .then(result => {
-    //     console.log('Orders in the desired month:', result);
-    //     ordersbymonth = result.length
-    //   })
-    //   .catch(error => {
-    //     console.error('Error:', error);
-    //   });
-    
 
 
     const pipeline = [
         {
-          $unwind: '$orders' // Flatten the orders array
+            $unwind: '$orders' 
         },
         {
-          $project: {
-            month: { $month: '$orders.date' } // Extract the month from the date
-          }
+            $project: {
+                month: { $month: '$orders.date' } 
+            }
         },
         {
-          $group: {
-            _id: '$month', // Group by month
-            ordersCount: { $sum: 1 } // Count the number of orders for each month
-          }
+            $group: {
+                _id: '$month', 
+                ordersCount: { $sum: 1 } 
+            }
         }
-      ];
-      
-      registercollection.aggregate(pipeline)
+    ];
+
+    registercollection.aggregate(pipeline)
         .then(result => {
             ordersbymonth = result
-        //   console.log('Orders count for each month:', result);
         })
         .catch(error => {
-          console.error('Error:', error);
+            console.error('Error:', error);
         });
 
-        // req.session.ttl=result
-        // resultArray.push(result);
+    setTimeout(() => {
+        orderCountsArray = Array(12).fill(0);
 
-        setTimeout(() => {
-            // console.log('Accessing result after a delay:', ordersbymonth);
-            orderCountsArray = Array(12).fill(0);
-          
-            // Iterate over the result array and update the order counts in the correct positions
-            ordersbymonth.forEach(monthData => {
-              const monthIndex = monthData._id - 1; // Months are 1-indexed, adjust to 0-indexed
-              orderCountsArray[monthIndex] = monthData.ordersCount;
-            });
-            
-            // console.log('Order counts for each month:', orderCountsArray);
+        ordersbymonth.forEach(monthData => {
+            const monthIndex = monthData._id - 1;
+            orderCountsArray[monthIndex] = monthData.ordersCount;
+        });
 
-            if (req.session.admin) {
-                res.render('admin/adminhome',{totalOrdersCount})
-            }
-            else {
-                res.redirect('/admin')
-            }
-          }, 2000);
-
-        // const result = [
-        //     { _id: 10, ordersCount: 3 },
-        //     // ... other months
-        //   ]; // Result from the aggregation
-          
-          // Initialize an array to hold order counts for each month (January to December)
-         
-          
-      
+        if (req.session.admin) {
+            res.render('admin/adminhome', { totalOrdersCount })
+        }
+        else {
+            res.redirect('/admin')
+        }
+    }, 2000);
 
 
-
-
-    // const dateString = "2023-10-16T11:50:32.512+00:00";
-    // const dateObject = new Date(dateString);
-
-    // // Extract the month (0-indexed, so January is 0 and October is 9)
-    // const month = dateObject.getUTCMonth() + 1; // Adding 1 to match human-readable month (1-12)
-
-    // console.log('Month:', month);
-
-
-
-
-    
 }
 
 
@@ -258,16 +179,20 @@ const unblock = async (req, res) => {
 // --------------------get order-----------------
 
 
-const getorders=async(req,res)=>{
+const getorders = async (req, res) => {
     try {
 
         const users = await registercollection.find({}, { orders: 1 })
 
-        res.render('admin/orders', { orders: users});
-      } catch (error) {
+        users.forEach(user => {
+            user.orders.sort((a, b) => b.date - a.date);
+        });
+
+        res.render('admin/orders', { orders: users });
+    } catch (error) {
         console.error('Error fetching orders:', error);
         res.status(500).send('Internal Server Error');
-      }
+    }
 }
 
 
@@ -281,9 +206,9 @@ const orderstatus = async (req, res) => {
         const updatedUser = await registercollection.findOneAndUpdate(
             { 'orders._id': orderid },
             { $set: { 'orders.$.status': status } },
-            { new: true } 
-          );
-        
+            { new: true }
+        );
+
         res.status(200).json({ message: 'Status updated successfully', updatedUser });
     } catch (error) {
         console.error('Error updating status:', error);
@@ -294,23 +219,23 @@ const orderstatus = async (req, res) => {
 
 // ---------------------list coupen-----------------
 
-const listcoupen = async(req,res)=>{
+const listcoupen = async (req, res) => {
     const coupens = await coupencollection.find()
-    res.render('admin/listcoupens',{coupens})
+    res.render('admin/listcoupens', { coupens })
 }
 
 
 // ----------------------add coupens(get)--------------------
 
-const addcoupens = (req,res)=>{
+const addcoupens = (req, res) => {
     res.render('admin/addcoupen')
 }
 
 // ----------------------add coupens(post)--------------------
 
-const postcoupens = async(req,res)=>{
-    try{
-        const data={
+const postcoupens = async (req, res) => {
+    try {
+        const data = {
             code: req.body.code,
             discount: req.body.discount,
             minvalue: req.body.minvalue,
@@ -331,133 +256,137 @@ const postcoupens = async(req,res)=>{
 // ------------------------updatecoupen(post)------------------
 
 
-const updatecoupen = async(req,res)=>{
-    try{
+const updatecoupen = async (req, res) => {
+    try {
         const id = req.body.id
-        const data={
+        const data = {
             code: req.body.code,
             discount: req.body.discount,
             minvalue: req.body.minvalue,
             expirydate: req.body.expirydate,
             discription: req.body.discription
         }
-        await coupencollection.updateOne({_id:id},{$set : data})
+        await coupencollection.updateOne({ _id: id }, { $set: data })
         res.redirect('/admin/listcoupen')
     }
     catch (err) {
         console.error('Error updating user:', err);
         res.status(500).json({ error: 'Internal server error' });
-      } 
+    }
 }
 
 
 // ----------------------deletecoupen---------------------
 
-const deletecoupen = async(req,res)=>{
+const deletecoupen = async (req, res) => {
     const id = req.params.id
     try {
-        await coupencollection.deleteOne( {_id:id});     
-        res.redirect('/admin/listcoupen')        
-      }
-      catch (err) {
+        await coupencollection.deleteOne({ _id: id });
+        res.redirect('/admin/listcoupen')
+    }
+    catch (err) {
         console.error('Error updating user:', err);
         res.status(500).json({ error: 'Internal server error' });
-      } 
+    }
 }
 
 
 // ----------------------return orders---------------------
 
-const returnorder = async (req,res)=>{ 
+const returnorder = async (req, res) => {
     const returnproduct = await returnproductCollection.find()
-    res.render('admin/returnorders',{returnproduct})
+    res.render('admin/returnorders', { returnproduct })
 }
 
 // -----------------approve return request--------------
 
-const approverefund = async (req,res)=>{
+const approverefund = async (req, res) => {
     const id = req.params.id
-    const orderid1 = await returnproductCollection.findOne({_id:id})
+    const orderid1 = await returnproductCollection.findOne({ _id: id })
     const orderid = orderid1.orderid
     const email = orderid1.user
 
     const order1 = await registercollection.findOne(
         { 'orders._id': orderid },
-        { 'orders.$': 1, _id: 0 } 
-      );
+        { 'orders.$': 1, _id: 0 }
+    );
 
-      console.log(order1);
     const amount1 = order1.orders[0].totalprice
     const amount2 = parseFloat(amount1.replace(/[^\d.]/g, ''));
 
-    console.log(amount2);
 
     await returnproductCollection.findByIdAndUpdate(id, { status: 'Return approved' }, { new: true })
-    .then(updatedReturn => {
-        if (updatedReturn) {
-            console.log('Return status updated successfully:', updatedReturn);
-        } else {
-            console.log('No return found with the provided ID.');
-        }
-    })
-    .catch(error => {
-        console.error('Error updating return status:', error);
-    });
+        .then(updatedReturn => {
+            if (updatedReturn) {
+                console.log('Return status updated successfully');
+            } else {
+                console.log('No return found with the provided ID.');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating return status:', error);
+        });
 
     const updatedUser = await registercollection.findOneAndUpdate(
         { 'orders._id': orderid },
         { $set: { 'orders.$.status': 'Return successfully' } },
         {
-          new: true,
+            new: true,
         }
     );
 
     const order = await registercollection.findOne(
         { 'orders._id': orderid },
-        { 'orders.$': 1, _id: 0 } 
-      );
-      
-      const coupendiscount = order && order.orders[0] ? order.orders[0].coupendiscount : null;
-      
-      console.log('Coupon Discount for order:', coupendiscount);
-      
-      let newtotal
-      let data1
-  
-        if(coupendiscount != null){
-          newtotal =+ amount2-coupendiscount
-          data1 = {
-            productname : order1.orders[0].productname,
-            payment : order1.orders[0].payment,
-            amount : amount2-coupendiscount,
-            orderid : order1.orders[0].orderid,
-            status : 'credited'
-          }
-          await registercollection.findOneAndUpdate(
-            {email:email},
-            {$inc:{'wallet.total':newtotal}}
-          )
-        }else{
-          newtotal =+ amount2
-          data1 = {
-            productname : order1.orders[0].productname,
-            payment : order1.orders[0].payment,
-            amount : amount2,
-            orderid : order1.orders[0].orderid,
-            status : 'credited'
-          }
-          await registercollection.findOneAndUpdate(
-            {email:email},
-            {$inc:{'wallet.total':newtotal}}
-          )
+        { 'orders.$': 1, _id: 0 }
+    );
+
+    const coupendiscount = order && order.orders[0] ? order.orders[0].coupendiscount : null;
+
+
+    let newtotal1
+    let newtotal2
+    let newtotal
+    let data1
+
+    if (coupendiscount != null) {
+
+        newtotal1 = (coupendiscount / 100) * amount2
+        newtotal2 = amount2 - newtotal1
+
+        newtotal = + newtotal2
+
+        data1 = {
+            productname: order1.orders[0].productname,
+            payment: order1.orders[0].payment,
+            amount: newtotal,
+            orderid: order1.orders[0].orderid,
+            status: 'credited'
         }
-  
-  
-      await registercollection.findOneAndUpdate(
+        await registercollection.findOneAndUpdate(
+            { email: email },
+            { $inc: { 'wallet.total': newtotal } }
+        )
+    } else {
+        newtotal = + amount2
+        data1 = {
+            productname: order1.orders[0].productname,
+            payment: order1.orders[0].payment,
+            amount: amount2,
+            orderid: order1.orders[0].orderid,
+            status: 'credited'
+        }
+        await registercollection.findOneAndUpdate(
+            { email: email },
+            { $inc: { 'wallet.total': newtotal } }
+        )
+    }
+
+
+    await registercollection.findOneAndUpdate(
         { email: email },
         { $push: { 'wallet.refund': data1 } },
         { new: true }
-      );
+    );
 
     res.redirect('/admin/return')
 
@@ -468,30 +397,30 @@ const approverefund = async (req,res)=>{
 // -----------------reject return request----------------
 
 
-const rejectreturn = async (req,res)=>{
+const rejectreturn = async (req, res) => {
     const id = req.params.id
 
-    const orderid1 = await returnproductCollection.findOne({_id:id})
+    const orderid1 = await returnproductCollection.findOne({ _id: id })
     const orderid = orderid1.orderid
 
 
     await returnproductCollection.findByIdAndUpdate(id, { status: 'Return rejected' }, { new: true })
-    .then(updatedReturn => {
-        if (updatedReturn) {
-            console.log('Return status updated successfully:', updatedReturn);
-        } else {
-            console.log('No return found with the provided ID.');
-        }
-    })
-    .catch(error => {
-        console.error('Error updating return status:', error);
-    });
+        .then(updatedReturn => {
+            if (updatedReturn) {
+                console.log('Return status updated successfully');
+            } else {
+                console.log('No return found with the provided ID.');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating return status:', error);
+        });
 
     const updatedUser = await registercollection.findOneAndUpdate(
         { 'orders._id': orderid },
         { $set: { 'orders.$.status': 'Return rejected' } },
         {
-          new: true,
+            new: true,
         }
     );
 
@@ -503,7 +432,7 @@ const rejectreturn = async (req,res)=>{
 
 // ------------------------reports----------------------
 
-const reports = async(req,res)=>{
+const reports = async (req, res) => {
     res.render('admin/report')
 }
 
@@ -512,19 +441,19 @@ const reports = async(req,res)=>{
 // ------------------------sales excel download----------------------
 
 
-const excelreport = async(req, res) => {
+const excelreport = async (req, res) => {
 
     const date1 = req.body.selectedDate
 
-    if(date1==''){
+    if (date1 == '') {
         return;
     }
 
-    const selectedDate = new Date(date1); // Replace with the desired selected date
+    const selectedDate = new Date(date1); 
 
     const pipeline = [
         {
-            $unwind: '$orders' // Flatten the orders array
+            $unwind: '$orders' 
         },
         {
             $match: {
@@ -544,7 +473,7 @@ const excelreport = async(req, res) => {
 
         worksheet.addRow(['date', 'Product', 'Quantity', 'Price']);
 
-        if(result==''){
+        if (result == '') {
             return;
         }
 
@@ -556,34 +485,29 @@ const excelreport = async(req, res) => {
 
             const dateObject = new Date(date);
             const year = dateObject.getFullYear();
-            const month = ('0' + (dateObject.getMonth() + 1)).slice(-2); // Adding 1 as months are zero-based
+            const month = ('0' + (dateObject.getMonth() + 1)).slice(-2);
             const day = ('0' + dateObject.getDate()).slice(-2);
 
             const extractedDate = `${year}-${month}-${day}`;
-          
-            // Use the extracted information as needed
-            console.log('Date:', extractedDate);
-            console.log('Product Name:', productName);
-            console.log('Quantity:', quantity);
-            console.log('Total Price:', totalprice);
+
 
             worksheet.addRow([extractedDate, productName, quantity, totalprice]);
 
-          });
-
-        
-    
-          res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            res.setHeader('Content-Disposition', 'attachment; filename=sales_report.xlsx');
+        });
 
 
-            workbook.xlsx.write(res)
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=sales_report.xlsx');
+
+
+        workbook.xlsx.write(res)
             .then(() => {
-            res.status(200).end();
+                res.status(200).end();
             })
             .catch(error => {
-            console.error('Error generating Excel:', error);
-            res.status(500).send('Internal Server Error');
+                console.error('Error generating Excel:', error);
+                res.status(500).send('Internal Server Error');
             });
 
     } catch (error) {
@@ -595,125 +519,117 @@ const excelreport = async(req, res) => {
 
 
 
-  
+
 
 
 // ---------------------------stock excel report--------------------------
 
 
-
 const stockreportexcel = async (req, res) => {
     try {
-      const getCategoryProductStocks = async () => {
-        // Aggregate the Product collection to group by category and sum the stock
-        const aggregateResult = await productCollection.aggregate([
-        {
-            $group: {
-            _id: '$category',
-            totalStock: { $sum: '$stock' }
-            }
-        }
-        ]);
-    
-        // Fetch the category details for each aggregated category
-        const productsByCategory = await Promise.all(
-        aggregateResult.map(async (result) => {
-            const category = await categorycollection.findOne({ category: result._id });
-            return { category: category, totalStock: result.totalStock };
-        })
-        );
-  
-        return productsByCategory;
-      };
-  
-      const productsByCategory = await getCategoryProductStocks();
-  
-      const categories = productsByCategory.map(categoryProducts => categoryProducts.category.category);
-      const totalStocks = productsByCategory.map(categoryProducts => categoryProducts.totalStock);
-  
-      const workbook = new excel.Workbook();
-      const worksheet = workbook.addWorksheet('Stock Report');
-  
-      worksheet.addRow(['Category', 'Total Stock']);
-  
-      // Iterate through categories and totalStocks and add to the worksheet
-      for (let i = 0; i < categories.length; i++) {
-        worksheet.addRow([categories[i], totalStocks[i]]);
-      }
-  
-      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      res.setHeader('Content-Disposition', 'attachment; filename=stock_report.xlsx');
-  
-      workbook.xlsx.write(res)
-        .then(() => {
-          res.status(200).end();
-        })
-        .catch((error) => {
-          console.error('Error generating Excel:', error);
-          res.status(500).send('Internal Server Error');
-        });
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  };
-  
+        const getCategoryProductStocks = async () => {
+            const aggregateResult = await productCollection.aggregate([
+                {
+                    $group: {
+                        _id: '$category',
+                        totalStock: { $sum: '$stock' }
+                    }
+                }
+            ]);
 
-        
+            const productsByCategory = await Promise.all(
+                aggregateResult.map(async (result) => {
+                    const category = await categorycollection.findOne({ category: result._id });
+                    return { category: category, totalStock: result.totalStock };
+                })
+            );
+
+            return productsByCategory;
+        };
+
+        const productsByCategory = await getCategoryProductStocks();
+
+        const categories = productsByCategory.map(categoryProducts => categoryProducts.category.category);
+        const totalStocks = productsByCategory.map(categoryProducts => categoryProducts.totalStock);
+
+        const workbook = new excel.Workbook();
+        const worksheet = workbook.addWorksheet('Stock Report');
+
+        worksheet.addRow(['Category', 'Total Stock']);
+
+        for (let i = 0; i < categories.length; i++) {
+            worksheet.addRow([categories[i], totalStocks[i]]);
+        }
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=stock_report.xlsx');
+
+        workbook.xlsx.write(res)
+            .then(() => {
+                res.status(200).end();
+            })
+            .catch((error) => {
+                console.error('Error generating Excel:', error);
+                res.status(500).send('Internal Server Error');
+            });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
+
 // ---------------------------stock pdf report-------------------------------
 
 
 const stockreportpdf = async (req, res) => {
     try {
-      const getCategoryProductStocks = async () => {
-        const aggregateResult = await productCollection.aggregate([
-            {
-                $group: {
-                _id: '$category',
-                totalStock: { $sum: '$stock' }
+        const getCategoryProductStocks = async () => {
+            const aggregateResult = await productCollection.aggregate([
+                {
+                    $group: {
+                        _id: '$category',
+                        totalStock: { $sum: '$stock' }
+                    }
                 }
-            }
             ]);
-        
-            // Fetch the category details for each aggregated category
+
             const productsByCategory = await Promise.all(
-            aggregateResult.map(async (result) => {
-                const category = await categorycollection.findOne({ category: result._id });
-                return { category: category, totalStock: result.totalStock };
-            })
+                aggregateResult.map(async (result) => {
+                    const category = await categorycollection.findOne({ category: result._id });
+                    return { category: category, totalStock: result.totalStock };
+                })
             );
-  
-        return productsByCategory;
-      };
-  
-      const productsByCategory = await getCategoryProductStocks();
-  
-      const categories = productsByCategory.map(categoryProducts => categoryProducts.category.category);
-      const totalStocks = productsByCategory.map(categoryProducts => categoryProducts.totalStock);
-  
-      const doc = new PDFDocument();
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename=stock_report.pdf');
-  
-      // Pipe the PDF content to the response for download
-      doc.pipe(res);
-  
-      // Add content to the PDF
-      doc.font('Helvetica').fontSize(16).text('Stock Report', { align: 'center' });
-      doc.moveDown();
-      for (let i = 0; i < categories.length; i++) {
-        doc.font('Helvetica').fontSize(12).text(`Category: ${categories[i]}, Total Stock: ${totalStocks[i]}`);
+
+            return productsByCategory;
+        };
+
+        const productsByCategory = await getCategoryProductStocks();
+
+        const categories = productsByCategory.map(categoryProducts => categoryProducts.category.category);
+        const totalStocks = productsByCategory.map(categoryProducts => categoryProducts.totalStock);
+
+        const doc = new PDFDocument();
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=stock_report.pdf');
+
+        doc.pipe(res);
+
+        doc.font('Helvetica').fontSize(16).text('Stock Report', { align: 'center' });
         doc.moveDown();
-      }
-  
-      // Finalize the PDF
-      doc.end();
+        for (let i = 0; i < categories.length; i++) {
+            doc.font('Helvetica').fontSize(12).text(`Category: ${categories[i]}, Total Stock: ${totalStocks[i]}`);
+            doc.moveDown();
+        }
+
+        doc.end();
     } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
-  };
-  
+};
+
 
 
 
@@ -722,10 +638,9 @@ const stockreportpdf = async (req, res) => {
 
 
 const cancelledexcelreport = async (req, res) => {
-    
-    const date1 = req.body.selectedDate    
 
-    console.log(date1);
+    const date1 = req.body.selectedDate
+
     if (!date1) {
         return;
     }
@@ -742,7 +657,7 @@ const cancelledexcelreport = async (req, res) => {
                     $gte: new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate()),
                     $lt: new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() + 1)
                 },
-                'orders.status': 'Cancelled' // Include only orders with status "Cancelled"
+                'orders.status': 'Cancelled'
             }
         }
     ];
@@ -757,14 +672,12 @@ const cancelledexcelreport = async (req, res) => {
         const workbook = new excel.Workbook();
         const worksheet = workbook.addWorksheet('Cancelled Sales Report');
 
-        // Define columns
         worksheet.columns = [
             { header: 'Product Name', key: 'productName', width: 30 },
             { header: 'Quantity', key: 'quantity', width: 15 },
             { header: 'Total Price', key: 'totalPrice', width: 20 }
         ];
 
-        // Add rows for each cancelled order
         result.forEach(order => {
             const productName = order.orders.productName;
             const quantity = order.orders.quantity;
@@ -792,6 +705,7 @@ const cancelledexcelreport = async (req, res) => {
 
 
 
+
 // --------------------------cancelled order pdf------------------------
 
 
@@ -814,7 +728,7 @@ const cancelledpdfreport = async (req, res) => {
                     $gte: new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate()),
                     $lt: new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() + 1)
                 },
-                'orders.status': 'Cancelled' // Include only orders with status "Cancelled"
+                'orders.status': 'Cancelled' 
             }
         }
     ];
@@ -822,7 +736,7 @@ const cancelledpdfreport = async (req, res) => {
     try {
         const result = await registercollection.aggregate(pipeline);
 
-        if(result==''){
+        if (result == '') {
             return;
         }
 
@@ -856,23 +770,21 @@ const cancelledpdfreport = async (req, res) => {
 
 
 
-
-
 // ------------------------sales day pdf----------------------
 
 
-const salepdfreport = async(req,res)=>{
+const salepdfreport = async (req, res) => {
     const date1 = req.body.selectedDate
 
-    if(date1==''){
+    if (date1 == '') {
         return;
     }
 
-    const selectedDate = new Date(date1); // Replace with the desired selected date
+    const selectedDate = new Date(date1);
 
     const pipeline = [
         {
-            $unwind: '$orders' // Flatten the orders array
+            $unwind: '$orders' 
         },
         {
             $match: {
@@ -890,25 +802,21 @@ const salepdfreport = async(req,res)=>{
         const doc = new PDFDocument();
         const fileName = `sales_report_${selectedDate}.pdf`;
 
-        // Set response headers for PDF download
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
 
-        // Pipe the PDF content to the response for download
         doc.pipe(res);
 
         doc.fontSize(16).text('Sales Report', { align: 'center' });
 
-        // Add data to the PDF
         result.forEach(order => {
-        const productName = order.orders.productName;
-        const quantity = order.orders.quantity;
-        const totalprice = order.orders.totalprice;
+            const productName = order.orders.productName;
+            const quantity = order.orders.quantity;
+            const totalprice = order.orders.totalprice;
 
-        doc.font('Helvetica').fontSize(12).text(`Product: ${productName}, Quantity: ${quantity}, Total Price: ${totalprice}`);
+            doc.font('Helvetica').fontSize(12).text(`Product: ${productName}, Quantity: ${quantity}, Total Price: ${totalprice}`);
         });
 
-        // Finalize the PDF
         doc.end();
     }
     catch (error) {
@@ -931,12 +839,10 @@ const monthsalepdfreport = async (req, res) => {
         return res.status(400).json({ error: 'Selected date is required.' });
     }
 
-    // Get the month (zero-based) for the selected date
     const selectedMonth = new Date(selectedDate).getMonth();
 
-    // Handle the case when the month is 9 (October)
-    const matchCondition = selectedMonth === 9 ? 
-        { $or: [{ orderMonth: 9 }, { orderMonth: 10 }] } : 
+    const matchCondition = selectedMonth === 9 ?
+        { $or: [{ orderMonth: 9 }, { orderMonth: 10 }] } :
         { orderMonth: selectedMonth };
 
     const pipeline = [
@@ -945,7 +851,7 @@ const monthsalepdfreport = async (req, res) => {
         },
         {
             $addFields: {
-                orderMonth: { $month: '$orders.date' }  // Extract the month from the order date
+                orderMonth: { $month: '$orders.date' }  
             }
         },
         {
@@ -955,7 +861,7 @@ const monthsalepdfreport = async (req, res) => {
 
     try {
         const result = await registercollection.aggregate(pipeline)
-        if(result==''){
+        if (result == '') {
             return;
         }
 
@@ -996,7 +902,7 @@ const yearalepdfreport = async (req, res) => {
         return res.status(400).json({ error: 'Selected date is required.' });
     }
 
-    const selectedYear = new Date(selectedDate).getFullYear(); // Get the year from the selected date
+    const selectedYear = new Date(selectedDate).getFullYear();
 
     const pipeline = [
         {
@@ -1004,11 +910,11 @@ const yearalepdfreport = async (req, res) => {
         },
         {
             $addFields: {
-                orderYear: { $year: '$orders.date' }  // Extract the year from the order date
+                orderYear: { $year: '$orders.date' } 
             }
         },
         {
-            $match: { orderYear: selectedYear }  // Match the extracted year with the selected year
+            $match: { orderYear: selectedYear }  
         }
     ];
 
@@ -1079,7 +985,7 @@ const generateExcelReportDay = async (req, res) => {
     try {
         const result = await registercollection.aggregate(pipeline);
 
-        if(result ==''){
+        if (result == '') {
             return;
         }
 
@@ -1118,19 +1024,17 @@ const generateExcelReportDay = async (req, res) => {
 
 
 const generateExcelReportMonth = async (req, res) => {
-   
+
     const { selectedDate } = req.body;
 
     if (!selectedDate) {
         return res.status(400).json({ error: 'Selected date is required.' });
     }
 
-    // Get the month (zero-based) for the selected date
     const selectedMonth = new Date(selectedDate).getMonth();
 
-    // Handle the case when the month is 9 (October)
-    const matchCondition = selectedMonth === 9 ? 
-        { $or: [{ orderMonth: 9 }, { orderMonth: 10 }] } : 
+    const matchCondition = selectedMonth === 9 ?
+        { $or: [{ orderMonth: 9 }, { orderMonth: 10 }] } :
         { orderMonth: selectedMonth };
 
     const pipeline = [
@@ -1139,7 +1043,7 @@ const generateExcelReportMonth = async (req, res) => {
         },
         {
             $addFields: {
-                orderMonth: { $month: '$orders.date' }  // Extract the month from the order date
+                orderMonth: { $month: '$orders.date' }  
             }
         },
         {
@@ -1149,7 +1053,7 @@ const generateExcelReportMonth = async (req, res) => {
 
     try {
         const result = await registercollection.aggregate(pipeline)
-        if(result==''){
+        if (result == '') {
             return;
         }
 
@@ -1194,7 +1098,7 @@ const yearaleexcellreport = async (req, res) => {
         return res.status(400).json({ error: 'Selected date is required.' });
     }
 
-    const selectedYear = new Date(selectedDate).getFullYear(); // Get the year from the selected date
+    const selectedYear = new Date(selectedDate).getFullYear(); 
 
     const pipeline = [
         {
@@ -1202,17 +1106,17 @@ const yearaleexcellreport = async (req, res) => {
         },
         {
             $addFields: {
-                orderYear: { $year: '$orders.date' }  // Extract the year from the order date
+                orderYear: { $year: '$orders.date' }  
             }
         },
         {
-            $match: { orderYear: selectedYear }  // Match the extracted year with the selected year
+            $match: { orderYear: selectedYear }  
         }
     ];
 
     try {
         const result = await registercollection.aggregate(pipeline);
-        if(result==''){
+        if (result == '') {
             return;
         }
 
@@ -1250,21 +1154,14 @@ const yearaleexcellreport = async (req, res) => {
 // ----------------logout------------------
 
 const logout = (req, res) => {
-    try{
-        if(req.session.admin){
-            req.session.admin=null
+    try {
+        if (req.session.admin) {
+            req.session.admin = null
             res.redirect('/admin')
         }
-        else{
+        else {
             res.redirect('/')
         }
-    // req.session.destroy((err) => {
-    //     if (err) {
-    //         res.send(err.message)
-    //     } else {
-    //         res.redirect('/')
-    //     }
-    // })
     }
     catch (err) {
         console.error('Error :', err);
@@ -1274,9 +1171,9 @@ const logout = (req, res) => {
 
 
 module.exports = {
-    getLogin, postLogin, allUsers, block, unblock, gethome, logout,getorders,
-    orderstatus,listcoupen,addcoupens,postcoupens,updatecoupen,deletecoupen,returnorder,
-    excelreport,reports,salepdfreport,stockreportexcel,stockreportpdf,cancelledexcelreport,
-    cancelledpdfreport,monthsalepdfreport,yearalepdfreport,generateExcelReportDay,
-    generateExcelReportMonth,yearaleexcellreport,approverefund,rejectreturn
+    getLogin, postLogin, allUsers, block, unblock, gethome, logout, getorders,
+    orderstatus, listcoupen, addcoupens, postcoupens, updatecoupen, deletecoupen, returnorder,
+    excelreport, reports, salepdfreport, stockreportexcel, stockreportpdf, cancelledexcelreport,
+    cancelledpdfreport, monthsalepdfreport, yearalepdfreport, generateExcelReportDay,
+    generateExcelReportMonth, yearaleexcellreport, approverefund, rejectreturn
 }

@@ -23,11 +23,11 @@ const home = async (req, res) => {
 
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user }
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' }
         }
       }
     ]).exec();
@@ -51,7 +51,7 @@ const home = async (req, res) => {
     const bannerc = await bannercategorycollection.find()
     const offerbaner = await offersalecollection.find()
 
-    res.render('mainHome/home', { username, user, googleuser, product, numberOfItems, bannerc, offerbaner})
+    res.render('mainHome/home', { username, user, googleuser, product, numberOfItems, bannerc, offerbaner })
 
   }
   catch (err) {
@@ -77,7 +77,6 @@ const shop = async (req, res) => {
     const length = product1.length
     const pages = Math.ceil(length / 5)
 
-    console.log(length , pages);
 
     let numberOfItems;
 
@@ -90,11 +89,11 @@ const shop = async (req, res) => {
 
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user }
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' }
         }
       }
     ]).exec();
@@ -115,9 +114,9 @@ const shop = async (req, res) => {
     const username = req.session.username
     const googleuser = req.session.googleuser
 
-    const shop='shop'
+    const shop = 'shop'
 
-    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems ,pagenum, pages,shop })
+    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems, pagenum, pages, shop })
   }
   catch (err) {
     console.error('Error :', err);
@@ -141,7 +140,6 @@ const paginationshop = async (req, res) => {
     const length = product1.length
     const pages = Math.ceil(length / 5)
 
-    console.log(length , pages);
 
     let numberOfItems;
 
@@ -154,11 +152,11 @@ const paginationshop = async (req, res) => {
 
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user }
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' }
         }
       }
     ]).exec();
@@ -179,9 +177,9 @@ const paginationshop = async (req, res) => {
     const username = req.session.username
     const googleuser = req.session.googleuser
 
-    const shop='shop'
+    const shop = 'shop'
 
-    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems ,pagenum, pages ,shop})
+    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems, pagenum, pages, shop })
   }
   catch (err) {
     console.error('Error :', err);
@@ -204,11 +202,11 @@ const getproductview = async (req, res) => {
 
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user }
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' }
         }
       }
     ]).exec();
@@ -244,8 +242,8 @@ const category = async (req, res) => {
   try {
     let numberOfItems;
     const id = req.params.id
-    req.session.category=''
-    req.session.category=id
+    req.session.category = ''
+    req.session.category = id
     const product = await productCollection.find({ category: id })
     const category1 = await categorycollection.find()
 
@@ -253,11 +251,11 @@ const category = async (req, res) => {
 
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user }
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' }
         }
       }
     ]).exec();
@@ -304,7 +302,6 @@ const address = async (req, res) => {
 
 const postaddress = async (req, res) => {
   const user = req.session.user
-  // const {inputAddress, inputCity, inputState, inputZip }=req.body
 
   const address = {
     address1: req.body.inputAddress,
@@ -354,7 +351,7 @@ const updateaddress = async (req, res) => {
 
 
       if (updatedUser) {
-        console.log('Address updated successfully:', updatedUser);
+        console.log('Address updated successfully');
       }
       else {
         console.error('No user found or error updating address.');
@@ -379,7 +376,6 @@ const deleteaddrress = async (req, res) => {
   try {
 
     const id = req.body.deleteid
-    console.log(id);
     const user = req.session.user
 
     await registercollection.updateOne(
@@ -387,7 +383,6 @@ const deleteaddrress = async (req, res) => {
       { $pull: { address: { _id: id } } }
     )
       .then(() => {
-        console.log('Address removed successfully.');
         res.status(200).json({ error: 'Address removed successfully' });
       })
       .catch(err => {
@@ -412,11 +407,11 @@ const cancelorder = async (req, res) => {
   const amount2 = parseFloat(amount1.replace(/[^\d.]/g, ''));
 
   const data = {
-    productname : req.query.productname,
-    payment : req.query.payment,
-    amount : amount2,
-    orderid : req.query.orderid,
-    refundstatus : 'Completed'
+    productname: req.query.productname,
+    payment: req.query.payment,
+    amount: amount2,
+    orderid: req.query.orderid,
+    refundstatus: 'Completed'
   }
 
 
@@ -435,43 +430,42 @@ const cancelorder = async (req, res) => {
 
     const order = await registercollection.findOne(
       { 'orders._id': id },
-      { 'orders.$': 1, _id: 0 } 
+      { 'orders.$': 1, _id: 0 }
     );
-    
+
     const coupendiscount = order && order.orders[0] ? order.orders[0].coupendiscount : null;
-    
-    console.log('Coupon Discount for order:', coupendiscount);
-    
+
+
     let newtotal
     let data1
 
-      if(coupendiscount != null){
-        newtotal =+ amount2-coupendiscount
-        data1 = {
-          productname : req.query.productname,
-          payment : req.query.payment,
-          amount : amount2-coupendiscount,
-          orderid : req.query.orderid,
-          status : 'credited'
-        }
-        await registercollection.findOneAndUpdate(
-          {email:email},
-          {$inc:{'wallet.total':newtotal}}
-        )
-      }else{
-        newtotal =+ amount2
-        data1 = {
-          productname : req.query.productname,
-          payment : req.query.payment,
-          amount : amount2,
-          orderid : req.query.orderid,
-          status : 'credited'
-        }
-        await registercollection.findOneAndUpdate(
-          {email:email},
-          {$inc:{'wallet.total':newtotal}}
-        )
+    if (coupendiscount != null) {
+      newtotal = + amount2 - coupendiscount
+      data1 = {
+        productname: req.query.productname,
+        payment: req.query.payment,
+        amount: amount2 - coupendiscount,
+        orderid: req.query.orderid,
+        status: 'credited'
       }
+      await registercollection.findOneAndUpdate(
+        { email: email },
+        { $inc: { 'wallet.total': newtotal } }
+      )
+    } else {
+      newtotal = + amount2
+      data1 = {
+        productname: req.query.productname,
+        payment: req.query.payment,
+        amount: amount2,
+        orderid: req.query.orderid,
+        status: 'credited'
+      }
+      await registercollection.findOneAndUpdate(
+        { email: email },
+        { $inc: { 'wallet.total': newtotal } }
+      )
+    }
 
 
     await registercollection.findOneAndUpdate(
@@ -479,7 +473,7 @@ const cancelorder = async (req, res) => {
       { $push: { 'wallet.refund': data1 } },
       { new: true }
     );
-    
+
     res.redirect('/home/orders')
   }
   catch (error) {
@@ -513,32 +507,32 @@ const transporter = nodemailer.createTransport({
 const getotp = (req, res) => {
 
   const invalidotp = req.session.invalidforgetotp
-  req.session.invalidforgetotp=null
+  req.session.invalidforgetotp = null
 
-  res.render('mainHome/otp',{invalidotp})
+  res.render('mainHome/otp', { invalidotp })
 }
 
 // ---------------------post otp-------------------
 
 
-const postotp = async(req,res)=>{
+const postotp = async (req, res) => {
   const enteredotp = req.body.otp
   const email = req.session.user
-  if(otp==enteredotp){
+  if (otp == enteredotp) {
     await registercollection.updateOne({ email: email }, { $set: { password: password } })
     req.session.passwordupdated = {
       message: 'Password Updatd',
       type: 'success'
     }
-    password=null
+    password = null
     res.redirect('/home/profile')
   }
-  else{
+  else {
     req.session.invalidforgetotp = {
       message: 'otp not valid',
       type: 'danger'
     }
-  res.redirect('/home/otp')
+    res.redirect('/home/otp')
   }
 }
 
@@ -546,28 +540,28 @@ const postotp = async(req,res)=>{
 
 // -------------------------resend otp---------------------------
 
-const otpgenerator=(req,res)=>{
+const otpgenerator = (req, res) => {
 
   const registeremail = req.session.user
 
   otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
 
-    const mailOptions = {
-      from: 'testtdemoo11111@gmail.com',
-      to: `${registeremail}`,
-      subject: 'Your OTP Code',
-      text: `Your OTP code is: ${otp}`,
-    };
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log('Error sending email: ' + error);
-        res.json({ message: 'error otp sending' })
-      }
-      else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
-    res.redirect('/home/otp')
+  const mailOptions = {
+    from: 'testtdemoo11111@gmail.com',
+    to: `${registeremail}`,
+    subject: 'Your OTP Code',
+    text: `Your OTP code is: ${otp}`,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log('Error sending email: ' + error);
+      res.json({ message: 'error otp sending' })
+    }
+    else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+  res.redirect('/home/otp')
 }
 
 
@@ -576,7 +570,7 @@ const otpgenerator=(req,res)=>{
 const editprofilepassword = async (req, res) => {
 
   password = req.body.confirmpassword
-  
+
   const registeremail = req.session.user
 
   if (password != '') {
@@ -599,7 +593,6 @@ const editprofilepassword = async (req, res) => {
       }
     });
     res.json({ message: 'otp' })
-    // res.redirect('/home/otp')
   }
   else {
     res.redirect('/home/profile')
@@ -609,20 +602,20 @@ const editprofilepassword = async (req, res) => {
 
 // -------------------------post filterprice----------------
 
-const filterprice = async (req,res)=>{
+const filterprice = async (req, res) => {
 
   try {
 
-    
-  const minamountValue = req.body.minamountValue.replace('₹', '');
-  const maxamountValue = req.body.maxamountValue.replace('₹', '');
-  
+
+    const minamountValue = req.body.minamountValue.replace('₹', '');
+    const maxamountValue = req.body.maxamountValue.replace('₹', '');
 
 
 
-  const product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } })
 
-    res.send({minamountValue , maxamountValue})
+    const product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } })
+
+    res.send({ minamountValue, maxamountValue })
   }
   catch (err) {
     console.error('Error :', err);
@@ -634,51 +627,50 @@ const filterprice = async (req,res)=>{
 
 // -------------------------get filterprice----------------
 
-const viewfilerproduct = async (req,res)=>{
+const viewfilerproduct = async (req, res) => {
   try {
     let product
 
     const minamountValue = req.params.min.replace('₹', '');
     const maxamountValue = req.params.max.replace('₹', '');
 
-    if (minamountValue==undefined) {
-      minamountValue ='200'
-      maxamountValue='2000'
+    if (minamountValue == undefined) {
+      minamountValue = '200'
+      maxamountValue = '2000'
     }
 
     req.session.minamountValue = minamountValue
     req.session.maxamountValue = maxamountValue
-    
-    const sort = req.params.sort
-    console.log(sort);
 
-    if (sort =='1') {
+    const sort = req.params.sort
+
+    if (sort == '1') {
       product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: -1 })
 
     }
-    else if(sort=='-1') {
+    else if (sort == '-1') {
       product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: 1 })
     }
-    else{
-      if(minamountValue != '' && maxamountValue != ''){
+    else {
+      if (minamountValue != '' && maxamountValue != '') {
         product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } })
-  
+
       }
     }
-    
+
 
     let numberOfItems;
     const category = await categorycollection.find()
-    
+
     const user = req.session.user
 
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user }
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' }
         }
       }
     ]).exec();
@@ -699,9 +691,9 @@ const viewfilerproduct = async (req,res)=>{
     const username = req.session.username
     const googleuser = req.session.googleuser
 
-    const shop='shop1'
+    const shop = 'shop1'
 
-    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems,shop })
+    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems, shop })
   }
   catch (err) {
     console.error('Error :', err);
@@ -710,17 +702,17 @@ const viewfilerproduct = async (req,res)=>{
 }
 
 
-const sortedprice = async (req,res)=>{
+const sortedprice = async (req, res) => {
   try {
     let product
     let minamountValue
     let maxamountValue
 
-    if(req.session.minamountValue == undefined) {
+    if (req.session.minamountValue == undefined) {
       minamountValue = '200'
       maxamountValue = '2000'
     }
-    else{
+    else {
       minamountValue = req.session.minamountValue
       maxamountValue = req.session.maxamountValue
     }
@@ -728,33 +720,33 @@ const sortedprice = async (req,res)=>{
 
     const sort = req.params.sort
 
-    if (sort =='1') {
+    if (sort == '1') {
       product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: -1 })
 
     }
-    else if(sort=='-1') {
+    else if (sort == '-1') {
       product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: 1 })
     }
-    else{
-      if(minamountValue != '' && maxamountValue != ''){
+    else {
+      if (minamountValue != '' && maxamountValue != '') {
         product = await productCollection.find({ price: { $gte: minamountValue, $lte: maxamountValue } })
-  
+
       }
     }
-    
+
 
     let numberOfItems;
     const category = await categorycollection.find()
-    
+
     const user = req.session.user
 
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user }
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' }
         }
       }
     ]).exec();
@@ -774,9 +766,9 @@ const sortedprice = async (req,res)=>{
 
     const username = req.session.username
     const googleuser = req.session.googleuser
-    const shop='shop1'
+    const shop = 'shop1'
 
-    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems,shop })
+    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems, shop })
   }
   catch (err) {
     console.error('Error :', err);
@@ -791,51 +783,46 @@ const filteredcategory = async (req, res) => {
 
     const id = req.session.category
 
-    console.log(id);
 
     let product
 
     const minamountValue = req.params.min.replace('₹', '');
     const maxamountValue = req.params.max.replace('₹', '');
 
-    if (minamountValue==undefined) {
-      minamountValue ='200'
-      maxamountValue='2000'
+    if (minamountValue == undefined) {
+      minamountValue = '200'
+      maxamountValue = '2000'
     }
 
     req.session.minamountValue2 = minamountValue
     req.session.maxamountValue2 = maxamountValue
-    
+
     const sort = req.params.sort
-    console.log(sort);
 
-    if (sort =='1') {
-      product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: -1 })
+    if (sort == '1') {
+      product = await productCollection.find({ category: id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: -1 })
 
     }
-    else if(sort=='-1') {
-      product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: 1 })
+    else if (sort == '-1') {
+      product = await productCollection.find({ category: id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: 1 })
     }
-    else{
-      // if(minamountValue != '' && maxamountValue != ''){
-        product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } })
-      // }
+    else {
+      product = await productCollection.find({ category: id, price: { $gte: minamountValue, $lte: maxamountValue } })
     }
 
     let numberOfItems;
-   
-    // const product = await productCollection.find({ category: id })
+
     const category1 = await categorycollection.find()
 
     const user = req.session.user
 
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user }
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' }
         }
       }
     ]).exec();
@@ -870,57 +857,50 @@ const categorysortedprice = async (req, res) => {
 
     const id = req.session.category
 
-    console.log(id);
 
     let product
 
-    // const minamountValue = req.params.min.replace('₹', '');
-    // const maxamountValue = req.params.max.replace('₹', '');
 
     let minamountValue
     let maxamountValue
 
-    if(req.session.minamountValue2 ==undefined){
-      minamountValue='200'
-      maxamountValue='2000'
+    if (req.session.minamountValue2 == undefined) {
+      minamountValue = '200'
+      maxamountValue = '2000'
     }
-    else{
+    else {
       minamountValue = req.session.minamountValue2
       maxamountValue = req.session.maxamountValue2
     }
-    
-    
+
+
     const sort = req.params.sort
 
-    console.log(sort,minamountValue,maxamountValue);
 
-    if (sort =='1') {
-      product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: -1 })
+    if (sort == '1') {
+      product = await productCollection.find({ category: id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: -1 })
 
     }
-    else if(sort=='-1') {
-      product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: 1 })
+    else if (sort == '-1') {
+      product = await productCollection.find({ category: id, price: { $gte: minamountValue, $lte: maxamountValue } }).sort({ price: 1 })
     }
-    else{
-      // if(minamountValue != '' && maxamountValue != ''){
-        product = await productCollection.find({category:id, price: { $gte: minamountValue, $lte: maxamountValue } })  
-      // }
+    else {
+      product = await productCollection.find({ category: id, price: { $gte: minamountValue, $lte: maxamountValue } })
     }
 
     let numberOfItems;
-   
-    // const product = await productCollection.find({ category: id })
+
     const category1 = await categorycollection.find()
 
     const user = req.session.user
 
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user }
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' }
         }
       }
     ]).exec();
@@ -951,39 +931,36 @@ const categorysortedprice = async (req, res) => {
 
 // -----------------------search---------------------------
 
-const searchproduct = async(req,res)=>{
+const searchproduct = async (req, res) => {
   try {
-    
+
     const productname = req.body.search
 
     const pagenum = 0;
     const a = 5 * pagenum;
     const b = 5 * (pagenum + 1)
 
-    const product1 = await productCollection.find({productname:productname});
-    console.log(product1);
+    const product1 = await productCollection.find({ productname: productname });
 
     const length = product1.length
     const pages = Math.ceil(length / 5)
 
-    console.log(length , pages);
 
     let numberOfItems;
 
     const category = await categorycollection.find()
-    const product2 = await productCollection.find({productname:productname})
-    console.log(product2);
+    const product2 = await productCollection.find({ productname: productname })
     const product = product2.slice(a, b);
 
     const user = req.session.user
 
     const total = await registercollection.aggregate([
       {
-        $match: { email: user } // Match the document based on email
+        $match: { email: user }
       },
       {
         $project: {
-          numberOfItemsInCart: { $size: '$cart.items' } // Calculate the size of the items array
+          numberOfItemsInCart: { $size: '$cart.items' }
         }
       }
     ]).exec();
@@ -1004,9 +981,9 @@ const searchproduct = async(req,res)=>{
     const username = req.session.username
     const googleuser = req.session.googleuser
 
-    const shop='shop'
+    const shop = 'shop'
 
-    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems ,pagenum, pages,shop })
+    res.render('mainHome/shop', { username, user, googleuser, product, category, numberOfItems, pagenum, pages, shop })
   }
   catch (err) {
     console.error('Error :', err);
@@ -1026,25 +1003,21 @@ const returnproduct = async (req, res) => {
   const amount2 = parseFloat(amount1.replace(/[^\d.]/g, ''));
 
   const data = {
-    productname : req.query.productname,
-    payment : req.query.payment,
-    amount : amount2,
-    orderid : req.query.orderid,
+    productname: req.query.productname,
+    payment: req.query.payment,
+    amount: amount2,
+    orderid: req.query.orderid,
     user: email
   }
-  const orderidToCheck = req.query.orderid;  // ID you want to check
+  const orderidToCheck = req.query.orderid;
 
-  // Check if a document with the specified orderid already exists
   const existingDocument = await returnproductCollection.findOne({ orderid: req.query.orderid });
-  
+
   if (existingDocument) {
-    console.log(`A document with orderid '${orderidToCheck}' already exists.`);
-    // Handle accordingly (e.g., update the existing document, show an error message, etc.)
+    console.log('A document with orderid already exists.');
   } else {
-    // If the document doesn't exist, create a new one
     try {
       const newDocument = await returnproductCollection.create(data);
-      console.log('Document inserted successfully');
       const status = 'Return Pending'
 
       const updatedUser = await registercollection.findOneAndUpdate(
@@ -1059,7 +1032,7 @@ const returnproduct = async (req, res) => {
       console.error('Error inserting document:', error);
     }
   }
-  }
+}
 
 
 
@@ -1067,6 +1040,6 @@ const returnproduct = async (req, res) => {
 
 module.exports = {
   shop, home, getproductview, category, address, postaddress, updateaddress, deleteaddrress, cancelorder,
-  editprofilepassword, getotp ,postotp,otpgenerator,filterprice,viewfilerproduct,sortedprice,
-  filteredcategory,categorysortedprice,paginationshop,searchproduct,returnproduct
+  editprofilepassword, getotp, postotp, otpgenerator, filterprice, viewfilerproduct, sortedprice,
+  filteredcategory, categorysortedprice, paginationshop, searchproduct, returnproduct
 }

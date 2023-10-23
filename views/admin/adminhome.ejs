@@ -49,7 +49,7 @@
                                 class="fas fa-ticket-alt me-2"></i>Coupons</a>
                         <div style="text-align: center;" class="dropdown-menu bg-transparent border-0">
                             <a href="/admin/listcoupen" class="dropdown-item">List Coupons</a>
-                            <a class="active" href="/admin/addcoupen" class="dropdown-item">Add Coupons</a>
+                            <a href="/admin/addcoupen" class="dropdown-item">Add Coupons</a>
                         </div>
                     </div>
                     <!-- <div class="nav-item dropdown">
@@ -255,47 +255,5 @@
 
 
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<!-- <script>
-    // Function to fetch the data for the chart
-async function fetchDataForChart() {
-  try {
-    // Make an AJAX request to fetch the data
-    const response = await fetch('/api/sales-data'); // Replace with your actual API endpoint
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const data = await response.json();
-
-    // Update the chart with the fetched data
-    myChart1.data.datasets[0].data = data;
-    myChart1.update(); // Update the chart to reflect the changes
-  } catch (error) {
-    console.error('Error fetching data for chart:', error);
-  }
-}
-
-// Initialize the chart
-const ctx1 = $("#worldwide-sales").get(0).getContext("2d");
-const myChart1 = new Chart(ctx1, {
-  type: "bar",
-  data: {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    datasets: [{
-      label: "Sales",
-      data: [15, 30, 55, 65, 60, 80, 95,50,66,43,90,75], // Initially empty, will be populated with fetched data
-      backgroundColor: "rgba(0, 156, 255, .7)"
-    }]
-  },
-  options: {
-    responsive: true
-  }
-});
-
-// Fetch and update the data for the chart
-fetchDataForChart();
-
-</script> -->
-   
 
 <%- include('./include/footer') -%>
