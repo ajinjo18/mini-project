@@ -110,18 +110,24 @@ const getregiserotp = (req, res) => {
 
 
 const postregisterotp = async (req, res) => {
-    const registerotp = req.session.registerotp
-    const otp = req.body.otp
+    try{
+        const registerotp = req.session.registerotp
+        const otp = req.body.otp
 
-    if (otp == registerotp) {
-        const data = req.session.data
-        const successMessage = 'Successfully Registered'
-        await registercollection.insertMany([data])
-        res.redirect(`/user/register?success=${encodeURIComponent(successMessage)}`)
+        if (otp == registerotp) {
+            const data = req.session.data
+            const successMessage = 'Successfully Registered'
+            await registercollection.insertMany([data])
+            res.redirect(`/user/register?success=${encodeURIComponent(successMessage)}`)
+        }
+        else {
+            invalidregisterotp = 'Invalid OTP'
+            res.redirect(`/user/getotp?message=${encodeURIComponent(invalidregisterotp)}`)
+        }
     }
-    else {
-        invalidregisterotp = 'Invalid OTP'
-        res.redirect(`/user/getotp?message=${encodeURIComponent(invalidregisterotp)}`)
+    catch (err) {
+        console.error('Error :', err);
+        res.status(500).json({ error: 'Internal server error' });
     }
 }
 
