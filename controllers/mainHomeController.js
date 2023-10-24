@@ -435,16 +435,25 @@ const cancelorder = async (req, res) => {
 
     const coupendiscount = order && order.orders[0] ? order.orders[0].coupendiscount : null;
 
-
+    let newtotal1
+    let newtotal2
     let newtotal
     let data1
 
+    // let newtotal
+    // let data1
+
     if (coupendiscount != null) {
-      newtotal = + amount2 - coupendiscount
+      // newtotal = + amount2 - coupendiscount
+
+      newtotal1 = (coupendiscount / 100) * amount2
+      newtotal2 = amount2 - newtotal1
+      newtotal = + newtotal2
+
       data1 = {
         productname: req.query.productname,
         payment: req.query.payment,
-        amount: amount2 - coupendiscount,
+        amount: newtotal,
         orderid: req.query.orderid,
         status: 'credited'
       }
@@ -487,8 +496,8 @@ const cancelorder = async (req, res) => {
 // --------------------------------------------password----------------------------------
 
 
-let password;
-let otp;
+// let password;
+// let otp;
 
 
 // ---------------node mailer--------------
@@ -518,13 +527,15 @@ const getotp = (req, res) => {
 const postotp = async (req, res) => {
   const enteredotp = req.body.otp
   const email = req.session.user
+  const otp = req.session.profilepassword
+  const password = req.session.password1
+
   if (otp == enteredotp) {
     await registercollection.updateOne({ email: email }, { $set: { password: password } })
     req.session.passwordupdated = {
       message: 'Password Updatd',
       type: 'success'
     }
-    password = null
     res.redirect('/home/profile')
   }
   else {
@@ -544,7 +555,9 @@ const otpgenerator = (req, res) => {
 
   const registeremail = req.session.user
 
-  otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
+  const otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
+
+  req.session.profilepassword = otp
 
   const mailOptions = {
     from: 'testtdemoo11111@gmail.com',
@@ -569,13 +582,15 @@ const otpgenerator = (req, res) => {
 
 const editprofilepassword = async (req, res) => {
 
-  password = req.body.confirmpassword
+  req.session.password1 = req.body.confirmpassword
 
   const registeremail = req.session.user
 
   if (password != '') {
 
-    otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
+    const otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
+
+    req.session.profilepassword = otp
 
     const mailOptions = {
       from: 'testtdemoo11111@gmail.com',

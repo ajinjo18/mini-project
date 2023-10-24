@@ -149,7 +149,6 @@ const postregisteration = async (req, res) => {
         }
     }
     catch {
-        console.log('1');
         req.session.registeremail = req.body.email
         req.session.data = {
             name: req.body.name,

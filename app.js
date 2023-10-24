@@ -23,7 +23,8 @@ app.use((req, res, next)=>{
 
 app.use(session({
     secret:['gfhf','djhdhd','djdjdjj','jdhdh','dhdhd','jdjd','djdhfh',
-    'jdjdj','ghg','wnbjb','gggd','dhdh','hghjk','jhhhh','hhj'],
+    'jdjdj','ghg','wnbjb','gggd','dhdh','hghjk','jhhhh','hhj','kkpk','kkik',
+  'hhh','kyykk','lrell'],
     saveUninitialized:true,
     resave:false
 }))

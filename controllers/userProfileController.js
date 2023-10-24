@@ -64,8 +64,8 @@ const geteditprofile=async(req,res)=>{
 // -----------------------------------name and number edit-----------------------------
 
 
-let profiledata;
-let otp;
+// let profiledata;
+// let otp;
 
 // ---------------node mailer--------------
 
@@ -93,7 +93,9 @@ const getotp = (req, res) => {
 
 const postotp = async(req,res)=>{
   const enteredotp = req.body.otp
+  const otp = req.session.profiledataupdate
   const email = req.session.user
+  const profiledata = req.session.profiledata
 
   if(otp==enteredotp){
     await registercollection.updateOne({ email: email }, { $set: { name : profiledata.name , number : profiledata.number} })
@@ -119,7 +121,9 @@ const otpgenerator=(req,res)=>{
 
   const registeremail = req.session.user
 
-  otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
+  const otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
+
+  req.session.profiledataupdate = otp
 
     const mailOptions = {
       from: 'testtdemoo11111@gmail.com',
@@ -146,13 +150,14 @@ const posteditprofile =async(req,res)=>{
   try{
     const registeremail = req.session.user
 
-    profiledata={
+    req.session.profiledata={
       name:req.body.name,
       number:req.body.number
     }
 
 
-    otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
+    const otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
+    req.session.profiledataupdate = otp
 
     const mailOptions = {
       from: 'testtdemoo11111@gmail.com',
