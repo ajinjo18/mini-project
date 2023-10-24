@@ -2,7 +2,7 @@ const express= require('express')
 const app=express()
 const path=require('path')
 const session=require('express-session')
-const passport = require('./routes/passport-config')
+// const passport = require('./routes/passport-config')
 
 
 const userRouter=require('./routes/userRoutes')
@@ -32,8 +32,8 @@ app.use(session({
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // app.use((req,res,next)=>{
 //   console.log(req.body);
@@ -54,18 +54,18 @@ app.use('/home',mainHomeRouter)
 
 
 
-// Add a new route for Google OAuth login
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-);
+// // Add a new route for Google OAuth login
+// app.get('/auth/google',
+//   passport.authenticate('google', { scope: ['profile', 'email'] })
+// );
 
-// Callback route after Google OAuth authentication
-app.get('/auth/google/callback',
-  passport.authenticate('google', {
-    successRedirect: '/',
-    failureRedirect: '/user/login',
-  })
-);
+// // Callback route after Google OAuth authentication
+// app.get('/auth/google/callback',
+//   passport.authenticate('google', {
+//     successRedirect: '/',
+//     failureRedirect: '/user/login',
+//   })
+// );
 
 
 
