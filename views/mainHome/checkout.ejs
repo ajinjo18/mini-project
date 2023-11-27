@@ -210,7 +210,7 @@
                             </label>
                         </div>
                     </div>
-                    <button onclick="placeOrder()" id="button1" type="submit" class="site-btn">Place oder</button>
+                    <button id="button1" type="submit" class="site-btn">Place oder</button>
                 </div>
             </div>
         </div>
@@ -492,6 +492,7 @@
 
         const data1 = collectProductData()
         const data = collectFormData();
+
         const { grandtotal, coupenid, newtotal ,discount } = total();
 
         const outofstock = document.getElementById('outofstock')

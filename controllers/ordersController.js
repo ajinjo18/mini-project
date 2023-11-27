@@ -72,10 +72,13 @@ const pagenationorders = async (req, res) => {
 
 const search = async (req, res) => {
   const payload = req.body.payload.trim();
+  const userEmail = req.session.user
+
   try {
     const searchResult = await registercollection.aggregate([
       {
         $match: {
+          'email': userEmail,
           'orders.productName': { $regex: new RegExp('^' + payload + '.*', 'i') }
         }
       },
