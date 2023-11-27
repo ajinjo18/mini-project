@@ -26,16 +26,12 @@
       </header>
       <h3>Enter OTP Code</h3>
 
-      <% if(invalidotp) { %>
-        <div style="margin-top: 10px;" id="alert" class="alert alert-dismissible fade show alert-<%= invalidotp.type %>" role="alert">
-            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="close"></button>
-            <strong><%= invalidotp.message %></strong>
-        </div>
-      <% } %>
+      <div id="message" style="color: red;"></div>
 
-      <form action="/home/otp" method="post">
-        <input name="otp" class="input1" type="number">
-        <button type="submit" class="button1">Verify OTP</button>
+
+      <form>
+        <input id="otp" name="otp" class="input1" type="number">
+        <button type="button" id="button1" class="button1">Verify OTP</button>
         <div id="countdown">00:60</div>
         <div id="hiddenButton"> <!-- Initially hidden -->
             <a id="showButton" href="/home/resendotp">Resend OTP</a>
@@ -43,6 +39,36 @@
         </div>
       </form>
     </div>
+
+    <script>
+      document.getElementById('button1').addEventListener('click',()=>{
+        document.getElementById('message').innerHTML=''
+        const otp = document.getElementById('otp').value
+        const url = 'https://ajinjo.shop/home/otp'
+          fetch(url,{
+              method: 'POST',
+              headers: {
+                  'Content-Type' : 'application/json'
+              },
+              body: JSON.stringify({otp})
+          })
+          .then(response=> response.json())
+          .then(data=>{
+              if(data.message=='PasswordUpdatd'){
+                  window.location.href='/home/profile'
+              }
+              else if(data.message=='errorotp'){
+                  document.getElementById('message').innerHTML='Invalid OTP'
+                  document.getElementById('otp').value=''
+                  setTimeout(() => {
+                    document.getElementById('message').innerHTML=''
+                  }, 3000);
+              }
+          })
+      })
+    </script>
+
+
     <script>
       setTimeout(function() {
         var alertDiv = document.getElementById('alert');

@@ -21,18 +21,11 @@
               <div class="row justify-content-center">
                 <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">  
                   <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
-
-                  <% if(registered) { %>
-                    <div id="alert" class="alert alert-dismissible fade show alert-success" role="alert">
-                        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="close"></button>
-                        <strong><%= registered %></strong>
-                    </div>
-                  <% } %>
                   
-                  <% if(userexist) { %>
-                    <div id="alert" class="alert alert-dismissible fade show alert-<%= userexist.type %>" role="alert">
+                  <% if(alertmessage) { %>
+                    <div id="alert" class="alert alert-dismissible fade show alert-<%= alertmessage.type %>" role="alert">
                         <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="close"></button>
-                        <strong><%= userexist.message %></strong>
+                        <strong><%= alertmessage.message %></strong>
                     </div>
                   <% } %> 
   

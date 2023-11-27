@@ -119,10 +119,8 @@ z-index: 0
         }
     </style>
 
-    <style>
-
-
-h1 {
+<style>
+  h1 {
   font-family: 'Montserrat', sans-serif;
   color: #fff;
 }
@@ -130,30 +128,28 @@ h1 {
 /* You just need to get this field - start */
 
 .search-box {
-  width: 350px;
+  max-width: 350px; /* Set a maximum width to avoid it becoming too wide on larger screens */
+  width: 100%;
   position: relative;
   display: flex;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	margin: auto;
+  margin: 0 auto;
 }
 
 .search-input {
   width: 100%;
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
-  padding: 15px 45px 15px 15px;
+  padding: 15px;
   background-color: #afafc2;
   color: #6c6c6c;
   border-radius: 6px;
-  border:none;
+  border: none;
   transition: all .4s;
 }
 
 .search-input:focus {
-  border:none;
-  outline:none;
+  border: none;
+  outline: none;
   box-shadow: 0 1px 12px #b8c6db;
   -moz-box-shadow: 0 1px 12px #b8c6db;
   -webkit-box-shadow: 0 1px 12px #b8c6db;
@@ -163,8 +159,8 @@ h1 {
   background-color: transparent;
   font-size: 18px;
   padding: 6px 9px;
-  margin-left:-45px;
-  border:none;
+  margin-left: -45px;
+  border: none;
   color: #6c6c6c;
   transition: all .4s;
   z-index: 10;
@@ -177,11 +173,22 @@ h1 {
 }
 
 .search-btn:focus {
-  outline:none;
-  color:black;
+  outline: none;
+  color: black;
 }
 
-    </style>
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .search-box {
+    max-width: 100%; /* Allow it to take the full width on smaller screens */
+  }
+
+  .search-btn {
+    margin-left: 0; /* Center the button on smaller screens */
+  }
+}
+
+</style>
     
     <div class="container-xl px-4 mt-4">
         <!-- Account page navigation-->
@@ -199,12 +206,20 @@ h1 {
               <!-- You just need to get this field. Start -->
 <script src="https://kit.fontawesome.com/d97b87339f.js" crossorigin="anonymous"></script>
 
+<!-- <div style="margin-top: 50px;" class="search-box">
+  <input onkeyup="sendData(this)" name="name" class="search-input" type="text" placeholder="Search something..">
+  <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+</div>
+
+<section id="searchresult"></section> -->
+
 <div style="margin-top: 50px;" class="search-box">
   <input onkeyup="sendData(this)" name="name" class="search-input" type="text" placeholder="Search something..">
   <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
 </div>
 
 <section id="searchresult"></section>
+
 
   
 

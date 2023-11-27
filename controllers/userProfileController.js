@@ -1,6 +1,7 @@
 const registercollection = require('../model/registerSchema')
 const nodemailer = require('nodemailer');
 const generateOTP = require('generate-otp');
+const bcrypt = require('bcrypt')
 
 
 
@@ -61,11 +62,10 @@ const geteditprofile=async(req,res)=>{
 }
 
 
+
 // -----------------------------------name and number edit-----------------------------
 
 
-// let profiledata;
-// let otp;
 
 // ---------------node mailer--------------
 
@@ -81,10 +81,7 @@ const transporter = nodemailer.createTransport({
 // --------------------get otp-----------------
 
 const getotp = (req, res) => {
-  const invalidotp = req.session.invalidforgetotp
-  req.session.invalidforgetotp=null
-
-  res.render('mainHome/otpnumname',{invalidotp})
+  res.render('mainHome/otpnumname')
 }
 
 
@@ -93,54 +90,64 @@ const getotp = (req, res) => {
 
 const postotp = async(req,res)=>{
   const enteredotp = req.body.otp
-  const otp = req.session.profiledataupdate
   const email = req.session.user
-  const profiledata = req.session.profiledata
 
-  if(otp==enteredotp){
-    await registercollection.updateOne({ email: email }, { $set: { name : profiledata.name , number : profiledata.number} })
+  const check = await registercollection.findOne({email:email},{otp:1,tempname:1,tempnumber:1})
+  if (check.otp === null) {
+      return res.status(400).json({ message: 'errorotp' });
+  }
+  const sendOtp = check.otp
+
+  if(sendOtp == enteredotp){
+    await registercollection.updateOne({ email: email }, { $set: { name : check.tempname , number : check.tempnumber} })
+    await registercollection.findOneAndUpdate(
+      { email: email },
+      { $unset: { tempname: 1, tempnumber: 1 } }
+    );
     req.session.profileupdated = {
-      message: 'Profile Updatd',
+      message: 'profile updated',
       type: 'success'
     }
-    password=null
-    res.redirect('/home/profile')
+    return res.status(400).json({ message: 'Updated' });
   }
   else{
-    req.session.invalidforgetotp = {
-      message: 'otp not valid',
-      type: 'danger'
-    }
-  res.redirect('/home/2otp')
+    return res.status(400).json({ message: 'errorotp' });
   }
 }
 
 // -------------------------resend otp---------------------------
 
-const otpgenerator=(req,res)=>{
+const otpgenerator=async(req,res)=>{
 
-  const registeremail = req.session.user
+  const email = req.session.user
 
   const otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
+  await registercollection.findOneAndUpdate({email:email},{$set:{otp:otp}})
 
-  req.session.profiledataupdate = otp
 
-    const mailOptions = {
-      from: 'testtdemoo11111@gmail.com',
-      to: `${registeremail}`,
-      subject: 'Your OTP Code',
-      text: `Your OTP code is: ${otp}`,
-    };
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log('Error sending email: ' + error);
-        res.json({ message: 'error otp sending' })
-      }
-      else {
-        console.log('Email sent: ' + info.response);
-      }
-    });
-    res.redirect('/home/2otp')
+  const mailOptions = {
+    from: 'testtdemoo11111@gmail.com',
+    to: `${email}`,
+    subject: 'Your OTP Code',
+    text: `Your OTP code is: ${otp}`,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log('Error sending email: ' + error);
+      res.json({ message: 'error otp sending' })
+    }
+    else {
+      console.log('Email sent: ' + info.response);
+      setTimeout(async () => {
+        try {
+          await registercollection.findOneAndUpdate({ email: email }, { $unset: { otp: 1 } });
+        } catch (error) {
+          console.error('Error removing OTP:', error.message);
+        }
+      }, 60000);
+    }
+  });
+  res.redirect('/home/2otp')
 }
 
 // ----------------post edit user profile--------------
@@ -148,20 +155,22 @@ const otpgenerator=(req,res)=>{
 
 const posteditprofile =async(req,res)=>{
   try{
-    const registeremail = req.session.user
+    const email = req.session.user
 
-    req.session.profiledata={
-      name:req.body.name,
-      number:req.body.number
-    }
+    await registercollection.findOneAndUpdate(
+      { email: email },
+      { $unset: { tempname: 1, tempnumber: 1 } }
+    );
+      await registercollection.findOneAndUpdate({email:email},{$set:{tempname:req.body.name,tempnumber:req.body.number}})
 
 
     const otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
-    req.session.profiledataupdate = otp
+    await registercollection.findOneAndUpdate({email:email},{$set:{otp:otp}})
+
 
     const mailOptions = {
       from: 'testtdemoo11111@gmail.com',
-      to: `${registeremail}`,
+      to: `${email}`,
       subject: 'Your OTP Code',
       text: `Your OTP code is: ${otp}`,
     };
@@ -172,26 +181,16 @@ const posteditprofile =async(req,res)=>{
       }
       else {
         console.log('Email sent: ' + info.response);
+        setTimeout(async () => {
+          try {
+            await registercollection.findOneAndUpdate({ email: email }, { $unset: { otp: 1 } });
+          } catch (error) {
+            console.error('Error removing OTP:', error.message);
+          }
+        }, 60000);
       }
     });
     res.json({ message: 'otp' })
-    
-    
-    // const useremail=req.session.user
-    // const userdata=await registercollection.findOne({email:useremail},{password:1,_id:0})
-
-    // if(userdata.password==req.body.password){
-
-    //   const profiledata=req.session.profiledata
-    //   const useremail=req.session.user
-
-    //   await registercollection.updateOne({email:useremail},{$set:profiledata})
-
-    //   res.status(200).json({ message: "done password", type: 'success' })
-    // }
-    // else{
-    //   res.status(400).json({ message: "Invalid password", type: 'danger' })
-    // }
   }
   catch(err){
     console.error('Error :', err);

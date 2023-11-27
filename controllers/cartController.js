@@ -254,7 +254,7 @@ const addaddress = async (req, res) => {
     state: req.body.inputState,
     zip: req.body.inputZip
   }
-
+  
   const user = req.session.user
 
   if (address != '') {
@@ -262,10 +262,10 @@ const addaddress = async (req, res) => {
       { email: user },
       { $push: { address: address } }
     );
-    res.redirect('/home/checkout')
+    return res.status(200).json({ message: 'addressadded' });
   }
   else {
-    res.redirect('/home/checkout')
+    return res.status(400).json({ message: 'erroradding' });
   }
 }
 
@@ -537,6 +537,10 @@ const walletpayment = async (req, res) => {
 
       const walletbalance = walletbalance1.wallet.total
 
+      if(walletbalance == 0){
+        res.status(400).json({message:"insufficient balance", type: 'danger' });
+        return
+      }
 
       if(grandtotal > walletbalance ){
         res.status(400).json({message:"insufficient balance", type: 'danger' });

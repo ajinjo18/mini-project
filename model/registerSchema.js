@@ -2,6 +2,18 @@ const mongoose = require('../database/dbConnect')
 
 
 const registerschema = new mongoose.Schema({
+    temppassword:{
+        type: String
+    },
+    tempname:{
+        type: String
+    },
+    tempnumber:{
+        type: Number
+    },
+    otp:{
+        type: Number
+    },
     name: {
         type: String,
         required: true
@@ -9,7 +21,6 @@ const registerschema = new mongoose.Schema({
     email: {
         type: String,
         require: true,
-        unique: true
     },
     number: {
         type: Number
@@ -122,28 +133,22 @@ const registerschema = new mongoose.Schema({
             type: String
         },
         coupenid:{
-            unique:true,
             type: String
         },
         code: {
             type: String,
-            required: true
         },
         discount: {
             type: Number,
-            required: true
         },
         minvalue: {
             type: Number,
-            require:true
         },
         expirydate: {
             type: String,
-            required: true
         },
         discription: {
             type: String,
-            required: true
         }
     }],
     usedcoupens:[{
@@ -153,6 +158,7 @@ const registerschema = new mongoose.Schema({
     }],
     wallet:{
         total:{
+            default: 0,
             type: Number
         },
         refund:[{

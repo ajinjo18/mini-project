@@ -22,12 +22,13 @@ router.get('/addcart/:id',user.isUserLogged,user.isUserBlocked,addtocart.addtoca
 router.get('/profile',user.isUserLogged,user.isUserBlocked,profile.getprofile)
 router.post('/editprofilepassword',mainHome.editprofilepassword)
 
-
+// ----------------name and num edit---------------
 router.post('/editprofile',profile.posteditprofile)
 router.get('/2otp',profile.getotp)
 router.post('/2otp',profile.postotp)
 router.get('/resend2otp',profile.otpgenerator)
 
+// ----------password edit-----------
 router.get('/otp',mainHome.getotp)
 router.post('/otp',mainHome.postotp)
 router.get('/resendotp',mainHome.otpgenerator)
