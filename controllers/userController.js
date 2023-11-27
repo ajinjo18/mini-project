@@ -94,62 +94,57 @@ const postregisterotp = async (req, res) => {
 
 
 const postregisteration = async (req, res) => {
-    try {
-        const check = await registercollection.findOne({ email: req.body.email })
-        if(check === null){
-            req.session.registeremail = req.body.email
-            const data = {
-                name: req.body.name,
-                email: req.body.email,
-                password: await bcrypt.hash(req.body.password, 10),
-                blocked: req.body.isblocked
+    const check = await registercollection.findOne({ email: req.body.email })
+    if(check === null){
+        req.session.registeremail = req.body.email
+        const data = {
+            name: req.body.name,
+            email: req.body.email,
+            password: await bcrypt.hash(req.body.password, 10),
+            blocked: req.body.isblocked
+        }
+
+        await tempRegisterCollection.findOneAndDelete({ email:req.body.email });
+        await tempRegisterCollection.insertMany([data])
+
+        const otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
+
+        await tempRegisterCollection.findOneAndUpdate({email:req.body.email},{$set:{otp:otp}})
+
+        const mailOptions = {
+            from: 'testtdemoo11111@gmail.com',
+            to: `${req.body.email}`,
+            subject: 'Your OTP Code',
+            text: `Your OTP code is: ${otp}`,
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log('Error sending email: ' + error);
             }
-            await tempRegisterCollection.findOneAndDelete({ email:req.body.email });
-            await tempRegisterCollection.insertMany([data])
-
-            const otp = generateOTP.generate(6, { digits: true, alphabets: false, specialChars: false });
-
-            await tempRegisterCollection.findOneAndUpdate({email:req.body.email},{$set:{otp:otp}})
-
-            const mailOptions = {
-                from: 'testtdemoo11111@gmail.com',
-                to: `${req.body.email}`,
-                subject: 'Your OTP Code',
-                text: `Your OTP code is: ${otp}`,
-            };
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.log('Error sending email: ' + error);
-                }
-                else {
-                    console.log('Email sent: ' + info.response);
-                    setTimeout(async () => {
-                        try {
-                            await tempRegisterCollection.updateOne({ email: req.body.email }, { $unset: { otp: 1 } });
-                        } catch (error) {
-                            console.error('Error removing OTP:', error.message);
-                        }
-                    }, 60000);
-                }
+            else {
+                console.log('Email sent: ' + info.response);
                 setTimeout(async () => {
-                    await tempRegisterCollection.findOneAndDelete({ email:req.body.email });
-                }, 900000);
-                
-                res.redirect('/user/getotp')
-            });
-
-        }
-        else{
-            req.session.alertmessage = {
-                message: 'User Already Exist',
-                type: 'danger'
+                    try {
+                        await tempRegisterCollection.updateOne({ email: req.body.email }, { $unset: { otp: 1 } });
+                    } catch (error) {
+                        console.error('Error removing OTP:', error.message);
+                    }
+                }, 60000);
             }
-            res.redirect('/user/register')
-        }
+            setTimeout(async () => {
+                await tempRegisterCollection.findOneAndDelete({ email:req.body.email });
+            }, 900000);
+            
+            res.redirect('/user/getotp')
+        });
+
     }
-    catch (error) {
-        console.error('Error:', error.message);
-        res.status(500).json({ message: 'Server error' });
+    else{
+        req.session.alertmessage = {
+            message: 'User Already Exist',
+            type: 'danger'
+        }
+        res.redirect('/user/register')
     }
 
 }
